@@ -1,0 +1,11 @@
+/* 사이드바 플레이스홀더 스타일 - 로드 전 깜빡임 방지 */
+
+/* 사이드바 컨테이너 기본 스타일 - 영역만 미리 확보 */
+#sidebar-container {
+    width: 16rem; /* w-64 = 256px = 16rem */
+    min-height: 100vh;
+    background-color: #f8f9fa; /* light-secondary */
+    border-right: 1px solid #e5e7eb; /* border-gray-200 */
+    position: relative;
+    flex-shrink: 0;
+}
