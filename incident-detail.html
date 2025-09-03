@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Airport Security - 사건 상세</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Custom Dark Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-bg': '#ffffff',
+                        'light-secondary': '#f8f9fa',
+                        'light-tertiary': '#e9ecef',
+                        'primary-blue': '#3b82f6',
+                        'primary-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* 커스텀 스크롤바 스타일 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e9ecef;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #adb5bd;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #868e96;
+        }
+        
+        /* 3D 뷰 컨테이너 스타일 */
+        .three-js-container {
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-700 min-h-screen flex">
+    
+    <!-- 사이드바 메뉴 -->
+    <aside class="w-64 bg-light-secondary min-h-screen flex flex-col border-r border-gray-200">
+        <!-- 로고 영역 -->
+        <div class="h-20 flex items-center px-6 border-b border-gray-200">
+            <a href="incident-list.html" class="hover:opacity-80 transition-opacity">
+                <img src="Uriel_CI(png)/Uriel_logo.png" alt="Uriel Logo" class="h-10 w-auto cursor-pointer">
+            </a>
+        </div>
+        
+        <!-- 네비게이션 메뉴 -->
+        <nav class="flex-1 py-6">
+            <!-- 관제 운영 섹션 -->
+            <div class="mb-6">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    관제 운영
+                </h2>
+                <ul>
+                    <li>
+                        <a href="incident-list.html" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
+                            <i class="fas fa-list mr-3 w-5"></i>
+                            <span>사건 목록</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 분석 및 통계 섹션 -->
+            <div class="mb-6">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    분석 및 통계
+                </h2>
+                <ul>
+                    <li>
+                        <a href="analytics-dashboard.html" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
+                            <i class="fas fa-chart-bar mr-3 w-5"></i>
+                            <span>통계 대시보드</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- AI 관리 섹션 -->
+            <div class="mb-6">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    AI 관리
+                </h2>
+                <ul>
+                    <li>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
+                            <i class="fas fa-brain mr-3 w-5"></i>
+                            <span>AI 모델 관리</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 시스템 관리 섹션 -->
+            <div class="mb-6">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    시스템 관리
+                </h2>
+                <ul>
+                    <li>
+                        <a href="#" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
+                            <i class="fas fa-cog mr-3 w-5"></i>
+                            <span>설정</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- 하단 사용자 정보 -->
+        <div class="p-6 border-t border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-primary-blue rounded-full flex items-center justify-center mr-3">
+                    <i class="fas fa-user text-gray-900 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-900">관제관</p>
+                    <p class="text-xs text-gray-500">admin@airport.com</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="flex-1 overflow-y-auto">
+        <!-- 헤더 영역 -->
+        <header class="bg-light-secondary shadow-lg">
+            <div class="h-20 px-8 flex items-center">
+                <div class="flex items-center justify-between w-full">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-3 text-red-500"></i>
+                            사건 상세: INC-20251028-001
+                        </h1>
+                        <p class="text-sm text-gray-600 mt-1">방치 물품 상세 정보 및 처리 현황</p>
+                    </div>
+                    <a href="incident-list.html" class="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg transition-colors border border-gray-300 shadow-sm hover:shadow">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        목록으로 돌아가기
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 요약 정보 카드 -->
+        <section class="px-8 py-6">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6 border border-blue-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 상태 정보 -->
+                    <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl p-6 border-2 border-red-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-sm font-bold text-red-700 mb-3 uppercase tracking-wider">상태</h3>
+                        <div class="flex items-center">
+                            <span class="relative flex h-4 w-4 mr-3">
+                                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+                            </span>
+                            <span class="text-red-600 text-xl font-bold">신규 경고</span>
+                        </div>
+                        <p class="text-xs text-red-600 mt-3 font-semibold bg-red-100 inline-block px-3 py-1 rounded-full">⚠️ 우선 처리 필요</p>
+                    </div>
+                    
+                    <!-- 발생 위치 정보 -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-sm font-bold text-blue-700 mb-3 uppercase tracking-wider">발생 위치</h3>
+                        <p class="text-gray-900 text-lg font-bold">T1 제1여객터미널</p>
+                        <p class="text-blue-600 font-semibold text-lg">📍 3층 G28 게이트 앞</p>
+                        <p class="text-xs text-blue-700 mt-3 font-medium bg-blue-100 inline-block px-3 py-1 rounded-full">✈️ 국제선 출발 구역</p>
+                    </div>
+                    
+                    <!-- 경과 시간 정보 -->
+                    <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-sm font-bold text-orange-700 mb-3 uppercase tracking-wider">경과 시간</h3>
+                        <p class="text-orange-600 text-3xl font-bold" id="elapsed-time">36분 12초</p>
+                        <p class="text-xs text-orange-700 mt-3 font-medium bg-orange-100 inline-block px-3 py-1 rounded-full">⏰ 최초 감지: 2025-10-28 14:32</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 메인 콘텐츠 2열 그리드 -->
+        <section class="px-8 pb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- 왼쪽 열: 시각 자료 -->
+                <div class="space-y-6">
+                    <!-- 인터랙티브 3D 뷰 -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                            <i class="fas fa-cube mr-2 text-primary-blue"></i>
+                            인터랙티브 3D 뷰
+                        </h2>
+                        <div class="three-js-container rounded-2xl shadow-inner relative" style="width: 100%; height: 400px;">
+                            <!-- Three.js 캔버스 영역 -->
+                            <div id="3d-canvas" style="width: 100%; height: 100%; border-radius: 1rem;"></div>
+                            
+                            <!-- 컨트롤 버튼들 -->
+                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-white/90 backdrop-blur-sm rounded-xl px-4 py-2">
+                                <button id="play-pause-btn" class="bg-white hover:bg-blue-50 hover:text-blue-700 px-3 py-1.5 rounded-lg text-sm border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
+                                    <i class="fas fa-play"></i> 재생
+                                </button>
+                                <button id="reset-3d-btn" class="bg-white hover:bg-blue-50 hover:text-blue-700 px-3 py-1.5 rounded-lg text-sm border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
+                                    <i class="fas fa-undo"></i> 리셋
+                                </button>
+                                <button id="wireframe-btn" class="bg-white hover:bg-blue-50 hover:text-blue-700 px-3 py-1.5 rounded-lg text-sm border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
+                                    <i class="fas fa-circle"></i> 포인트 크기
+                                </button>
+                            </div>
+                            
+                            <!-- 안내 텍스트 -->
+                            <div class="absolute top-4 left-4 text-xs text-gray-600 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2">
+                                <p>🖼️ 마우스 드래그: 회전</p>
+                                <p>🔍 스크롤: 확대/축소</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 상황 2D 스크린샷 -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                            <i class="fas fa-camera mr-2 text-primary-blue"></i>
+                            라이다 화면
+                        </h2>
+                        <div class="bg-gradient-to-br from-gray-100 to-blue-50 rounded-2xl overflow-hidden border-2 border-blue-200 shadow-inner">
+                            <div class="relative">
+                                <div class="bg-gradient-to-br from-gray-700 to-gray-800 h-64 flex items-center justify-center">
+                                    <img src="image/라이다.gif" style="width:100%; height:100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 감식반 현장 사진 -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                            <i class="fas fa-images mr-2 text-primary-blue"></i>
+                            감식반 현장 사진
+                        </h2>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-24 flex items-center justify-center">
+                                <i class="fas fa-image text-2xl text-gray-600"></i>
+                            </div>
+                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-24 flex items-center justify-center">
+                                <i class="fas fa-image text-2xl text-gray-600"></i>
+                            </div>
+                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-24 flex items-center justify-center">
+                                <i class="fas fa-plus text-2xl text-gray-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-3">아직 현장 사진이 업로드되지 않았습니다.</p>
+                    </div>
+                </div>
+                
+                <!-- 오른쪽 열: 정보 -->
+                <div class="space-y-6">
+                    <!-- 지도 뷰 -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                            <i class="fas fa-map-marked-alt mr-2 text-primary-blue"></i>
+                            위치 정보 (Mini-Map)
+                        </h2>
+                        <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 relative h-64 border-2 border-blue-200 shadow-inner">
+                            <div class="bg-gradient-to-br from-blue-900/20 to-blue-800/20 h-full rounded flex items-center justify-center">
+                                <img src="image/평면도.png" style="width:100%; height:100%;">
+                            </div>
+                            <!-- 위치 핀 -->
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                <div class="relative">
+                                    <div class="relative">
+                                <i class="fas fa-map-marker-alt text-3xl text-red-500 relative"></i>
+                            </div>
+                                    <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-red-500 text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap">
+
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 사건 타임라인 -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                            <i class="fas fa-clock mr-2 text-primary-blue"></i>
+                            사건 타임라인
+                        </h2>
+                        <div class="space-y-4">
+                            <!-- 타임라인 아이템 1 -->
+                            <div class="flex items-start space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
+                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-red-100 to-pink-100 rounded-full flex items-center justify-center shadow-lg border-2 border-red-200">
+                                    <i class="fas fa-exclamation text-red-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="font-semibold text-gray-900">신규 경고 발생</p>
+                                        <span class="text-xs text-gray-500">15:02</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1">방치 시간 30분 초과, 자동 경고 생성</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 타임라인 아이템 2 -->
+                            <div class="flex items-start space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
+                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-full flex items-center justify-center shadow-lg border-2 border-yellow-200">
+                                    <i class="fas fa-eye text-yellow-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="font-semibold text-gray-900">고정 객체 최초 감지</p>
+                                        <span class="text-xs text-gray-500">14:32</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1">AI 시스템이 방치 물품으로 분류</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 타임라인 아이템 3 -->
+                            <div class="flex items-start space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
+                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center shadow-lg border-2 border-blue-200">
+                                    <i class="fas fa-video text-blue-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="font-semibold text-gray-900">CCTV 추적 시작</p>
+                                        <span class="text-xs text-gray-500">14:30</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1">카메라 C-T1-3F-28 활성화</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 관제사 조치 패널 -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                            <i class="fas fa-user-shield mr-2 text-primary-blue"></i>
+                            관제사 조치 패널
+                        </h2>
+                        
+                        <!-- 감식반 배정 -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">감식반 배정</label>
+                            <div class="flex space-x-2">
+                                <select class="flex-1 bg-white text-gray-900 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-blue">
+                                    <option value="">팀 선택...</option>
+                                    <option value="a">A팀 (대기중)</option>
+                                    <option value="b">B팀 (대기중)</option>
+                                    <option value="c">C팀 (출동중)</option>
+                                </select>
+                                <button class="bg-primary-blue hover:bg-blue-600 text-gray-900 px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fas fa-user-plus mr-2"></i>
+                                    배정
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 상태 변경 -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">상태 변경</label>
+                            <select class="w-full bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:border-primary-blue">
+                                <option value="new" selected>신규 경고</option>
+                                <option value="dispatched">출동 중</option>
+                                <option value="investigating">조사 중</option>
+                                <option value="completed">처리 완료</option>
+                                <option value="false-positive">오탐지</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 메모 추가 -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">메모 추가</label>
+                            <textarea 
+                                class="w-full bg-white text-gray-900 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-blue resize-none"
+                                rows="3"
+                                placeholder="특이사항 또는 추가 정보 입력..."
+                            ></textarea>
+                        </div>
+                        
+                        <!-- 액션 버튼들 -->
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-primary-green hover:bg-green-600 text-gray-900 px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-save mr-2"></i>
+                                저장
+                            </button>
+                            <button class="flex-1 bg-purple-600 hover:bg-purple-700 text-gray-900 px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-robot mr-2"></i>
+                                AI 분석 결과
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- AI 분석 정보 -->
+                    <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 border-2 border-purple-300 rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300">
+                        <h3 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-5 flex items-center border-b-2 border-purple-200 pb-3">
+                            <i class="fas fa-brain mr-2 text-purple-400"></i>
+                            AI 분석 요약
+                        </h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">객체 유형:</span>
+                                <span class="text-gray-900 font-medium">캐리어 가방 (95% 확률)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">위험도 평가:</span>
+                                <span class="text-yellow-400 font-medium">중간 (스코어: 6.5/10)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">예상 크기:</span>
+                                <span class="text-gray-900">70cm x 45cm x 25cm</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">권장 조치:</span>
+                                <span class="text-primary-green">즉시 확인 필요</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- JavaScript for Dynamic Elements -->
+    <script>
+        // 경과 시간 실시간 업데이트
+        let seconds = 12;
+        let minutes = 36;
+        
+        function updateElapsedTime() {
+            seconds++;
+            if (seconds >= 60) {
+                seconds = 0;
+                minutes++;
+            }
+            
+            const elapsedTimeElement = document.getElementById('elapsed-time');
+            if (elapsedTimeElement) {
+                elapsedTimeElement.textContent = `${minutes}분 ${seconds}초`;
+            }
+        }
+        
+        // 1초마다 경과 시간 업데이트
+        setInterval(updateElapsedTime, 1000);
+        
+        // 3D 뷰 회전 시뮬레이션 (실제로는 Three.js 사용)
+        console.log('Three.js 3D 뷰어 초기화 필요');
+        
+        // 현재 시간 표시
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ko-KR');
+            // 실제 구현시 헤더에 현재 시간 표시
+        }
+        
+        setInterval(updateCurrentTime, 1000);
+        
+        // 3D 캐리어 뷰어 초기화
+        if (typeof THREE !== 'undefined') {
+            // Scene 설정
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000); // 라이다 배경은 검정색
+            
+            // Camera 설정
+            const camera = new THREE.PerspectiveCamera(
+                75,
+                document.getElementById('3d-canvas').offsetWidth / 400,
+                0.1,
+                1000
+            );
+            camera.position.set(0, 0, 5);
+            camera.lookAt(0, 0, 0);
+            
+            // Renderer 설정
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(document.getElementById('3d-canvas').offsetWidth, 400);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('3d-canvas').appendChild(renderer.domElement);
+            
+            // 라이다 포인트 클라우드 생성
+            const group = new THREE.Group();
+            
+            // 포인트 클라우드를 위한 지오메트리와 속성
+            const pointsGeometry = new THREE.BufferGeometry();
+            const pointsArray = [];
+            const colorsArray = [];
+            
+            // 캐리어 형태를 포인트로 생성
+            const numPoints = 15000; // 포인트 수 증가
+            
+            // 캐리어 본체 포인트 생성
+            for (let i = 0; i < numPoints * 0.6; i++) {
+                // 본체 표면 포인트
+                const u = Math.random();
+                const v = Math.random();
+                const face = Math.floor(Math.random() * 6);
+                
+                let x, y, z;
+                const width = 1.5, height = 2, depth = 0.6;
+                
+                switch(face) {
+                    case 0: // 앞면
+                        x = (u - 0.5) * width;
+                        y = (v - 0.5) * height;
+                        z = depth / 2;
+                        break;
+                    case 1: // 뒷면
+                        x = (u - 0.5) * width;
+                        y = (v - 0.5) * height;
+                        z = -depth / 2;
+                        break;
+                    case 2: // 위면
+                        x = (u - 0.5) * width;
+                        y = height / 2;
+                        z = (v - 0.5) * depth;
+                        break;
+                    case 3: // 아래면
+                        x = (u - 0.5) * width;
+                        y = -height / 2;
+                        z = (v - 0.5) * depth;
+                        break;
+                    case 4: // 왼쪽
+                        x = -width / 2;
+                        y = (v - 0.5) * height;
+                        z = (u - 0.5) * depth;
+                        break;
+                    case 5: // 오른쪽
+                        x = width / 2;
+                        y = (v - 0.5) * height;
+                        z = (u - 0.5) * depth;
+                        break;
+                }
+                
+                // 약간의 노이즈 추가 (더 사실적인 라이다 효과)
+                x += (Math.random() - 0.5) * 0.01;
+                y += (Math.random() - 0.5) * 0.01;
+                z += (Math.random() - 0.5) * 0.01;
+                
+                pointsArray.push(x, y, z);
+                
+                // 라이다 스타일 색상 (녹색 계열 - 더 밝게)
+                const intensity = 0.7 + Math.random() * 0.3;
+                colorsArray.push(0, intensity, intensity * 0.4);
+            }
+            
+            // 손잡이 포인트 추가
+            for (let i = 0; i < numPoints * 0.15; i++) {
+                const u = Math.random();
+                const x = (u - 0.5) * 0.8;
+                const y = 1.1 + (Math.random() - 0.5) * 0.1;
+                const z = 0.05 + (Math.random() - 0.5) * 0.05;
+                
+                pointsArray.push(x, y, z);
+                
+                const intensity = 0.7 + Math.random() * 0.3;
+                colorsArray.push(0, intensity, intensity * 0.4);
+            }
+            
+            // 손잡이 기둥 포인트
+            for (let i = 0; i < numPoints * 0.1; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const height = Math.random() * 0.3;
+                const radius = 0.03 + (Math.random() - 0.5) * 0.01;
+                
+                const side = Math.random() < 0.5 ? -0.35 : 0.35;
+                const x = side + Math.cos(angle) * radius;
+                const y = 0.8 + height;
+                const z = 0.05 + Math.sin(angle) * radius;
+                
+                pointsArray.push(x, y, z);
+                
+                const intensity = 0.7 + Math.random() * 0.3;
+                colorsArray.push(0, intensity, intensity * 0.4);
+            }
+            
+            // 바퀴 포인트
+            const wheelPositions = [
+                [-0.6, -1.1, 0.25],
+                [0.6, -1.1, 0.25],
+                [-0.6, -1.1, -0.25],
+                [0.6, -1.1, -0.25]
+            ];
+            
+            for (let w = 0; w < wheelPositions.length; w++) {
+                const [wx, wy, wz] = wheelPositions[w];
+                for (let i = 0; i < numPoints * 0.04; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = Math.random() * 0.12;
+                    const thickness = (Math.random() - 0.5) * 0.08;
+                    
+                    const x = wx + thickness;
+                    const y = wy + Math.cos(angle) * radius;
+                    const z = wz + Math.sin(angle) * radius;
+                    
+                    pointsArray.push(x, y, z);
+                    
+                    const intensity = 0.7 + Math.random() * 0.3;
+                    colorsArray.push(0, intensity, intensity * 0.4);
+                }
+            }
+            
+            // 지퍼 디테일 포인트
+            for (let i = 0; i < numPoints * 0.05; i++) {
+                const y = -0.9 + Math.random() * 1.8;
+                const x = (Math.random() - 0.5) * 0.02;
+                const z = 0.31 + (Math.random() - 0.5) * 0.02;
+                
+                pointsArray.push(x, y, z);
+                
+                // 지퍼는 약간 다른 색상 (노란빛 녹색)
+                const intensity = 0.8 + Math.random() * 0.2;
+                colorsArray.push(intensity * 0.2, intensity, 0);
+            }
+            
+            // 바닥 그리드 포인트 (참고용)
+            for (let i = 0; i < 3000; i++) {
+                const x = (Math.random() - 0.5) * 10;
+                const y = -1.2;
+                const z = (Math.random() - 0.5) * 10;
+                
+                pointsArray.push(x, y, z);
+                
+                // 바닥은 어두운 녹색
+                colorsArray.push(0, 0.1, 0.02);
+            }
+            
+            // 버퍼에 데이터 설정
+            pointsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(pointsArray, 3));
+            pointsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsArray, 3));
+            
+            // 포인트 머티리얼
+            const pointsMaterial = new THREE.PointsMaterial({
+                size: 0.015, // 포인트 크기 조절
+                vertexColors: true,
+                sizeAttenuation: true,
+                opacity: 0.95,
+                transparent: true
+            });
+            
+            const pointCloud = new THREE.Points(pointsGeometry, pointsMaterial);
+            group.add(pointCloud);
+            
+            // 스캔라인 제거
+            
+            scene.add(group);
+            
+            // 라이다 스타일을 위해 조명 최소화
+            const ambientLight = new THREE.AmbientLight(0x00ff00, 0.05);
+            scene.add(ambientLight);
+            
+            // 포인트 라이트 추가 (라이다 발광 효과)
+            const pointLight = new THREE.PointLight(0x00ff00, 0.3, 10);
+            pointLight.position.set(0, 0, 3);
+            scene.add(pointLight);
+            
+            // 변수
+            let isPlaying = false;
+            
+            // 마우스 컨트롤
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetRotationX = 0;
+            let targetRotationY = 0;
+            let isMouseDown = false;
+            
+            const canvas = renderer.domElement;
+            
+            canvas.addEventListener('mousedown', () => isMouseDown = true);
+            canvas.addEventListener('mouseup', () => isMouseDown = false);
+            canvas.addEventListener('mouseleave', () => isMouseDown = false);
+            
+            canvas.addEventListener('mousemove', (event) => {
+                if (isMouseDown) {
+                    const rect = canvas.getBoundingClientRect();
+                    mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                    targetRotationY = mouseX * Math.PI * 2;
+                    targetRotationX = mouseY * Math.PI / 2;
+                }
+            });
+            
+            // 휠 이벤트 (줌)
+            canvas.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                const zoomSpeed = 0.003;
+                const delta = -event.deltaY * zoomSpeed; // 부호 반대로 변경
+                
+                // 카메라와 목표 지점 사이의 방향 벡터
+                const direction = new THREE.Vector3();
+                camera.getWorldDirection(direction);
+                
+                // 줌 이동 (중앙을 향해)
+                camera.position.x += direction.x * delta;
+                camera.position.y += direction.y * delta;
+                camera.position.z += direction.z * delta;
+                
+                // 줌 범위 제한 (더 가까이, 더 멀리)
+                const distance = camera.position.length();
+                if (distance < 0.5) {
+                    camera.position.normalize().multiplyScalar(0.5);
+                } else if (distance > 15) {
+                    camera.position.normalize().multiplyScalar(15);
+                }
+                
+                camera.lookAt(0, 0, 0);
+            });
+            
+            // 버튼 이벤트
+            document.getElementById('play-pause-btn').addEventListener('click', function() {
+                isPlaying = !isPlaying;
+                this.innerHTML = isPlaying ? 
+                    '<i class="fas fa-pause"></i> 일시정지' : 
+                    '<i class="fas fa-play"></i> 재생';
+            });
+            
+            document.getElementById('reset-3d-btn').addEventListener('click', () => {
+                group.rotation.set(0, 0, 0);
+                camera.position.set(0, 0, 5);
+                camera.lookAt(0, 0, 0);
+                targetRotationX = 0;
+                targetRotationY = 0;
+                isPlaying = false;
+                document.getElementById('play-pause-btn').innerHTML = '<i class="fas fa-play"></i> 재생';
+            });
+            
+            document.getElementById('wireframe-btn').addEventListener('click', () => {
+                // 포인트 크기 토글
+                if (pointsMaterial) {
+                    pointsMaterial.size = pointsMaterial.size === 0.015 ? 0.025 : 0.015;
+                    document.getElementById('wireframe-btn').innerHTML = pointsMaterial.size === 0.025 ?
+                        '<i class="fas fa-circle"></i> 포인트 크게' :
+                        '<i class="fas fa-circle"></i> 포인트 작게';
+                }
+            });
+            
+            // 애니메이션 루프
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                if (isPlaying) {
+                    group.rotation.y += 0.01;
+                }
+                
+                // 포인트 클라우드 깜빡임 효과
+                if (pointsMaterial) {
+                    const time = Date.now() * 0.001;
+                    pointsMaterial.opacity = 0.85 + Math.sin(time * 2) * 0.1;
+                }
+                
+                // 마우스 드래그 회전 적용
+                if (isMouseDown) {
+                    group.rotation.y += (targetRotationY - group.rotation.y) * 0.1;
+                    group.rotation.x += (targetRotationX - group.rotation.x) * 0.1;
+                } else if (!isPlaying) {
+                    // 마우스를 떼면 천천히 멈춤
+                    targetRotationY *= 0.95;
+                    targetRotationX *= 0.95;
+                    group.rotation.y += (targetRotationY - group.rotation.y) * 0.05;
+                    group.rotation.x += (targetRotationX - group.rotation.x) * 0.05;
+                }
+                
+                renderer.render(scene, camera);
+            }
+            
+            // 윈도우 리사이즈 핸들링
+            window.addEventListener('resize', () => {
+                const width = document.getElementById('3d-canvas').offsetWidth;
+                camera.aspect = width / 400;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, 400);
+            });
+            
+            animate();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사이트맵 - Uriel Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .sitemap-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #444;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .sitemap-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .sitemap-list li {
+            margin-bottom: 15px;
+        }
+
+        .sitemap-list a {
+            color: #555;
+            text-decoration: none;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .sitemap-list a:hover {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .sitemap-list a::before {
+            content: "📄";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .dashboard-link::before {
+            content: "📊" !important;
+        }
+
+        .incident-link::before {
+            content: "🚨" !important;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <img src="Uriel_CI(png)/Uriel_logo.png" alt="Uriel Logo" class="logo">
+            <h1>라이다/AI 기반 공항 내 방치 물품<br>모니터링 시스템</h1>
+            <p class="subtitle">신규 입사자 프로젝트</p>
+        </div>
+
+        <div class="sitemap-section">
+            <h2 class="section-title">📍 사이트맵</h2>
+            <ul class="sitemap-list">
+                <li>
+                    <a href="incident-list.html" class="incident-link">
+                        리스트
+                    </a>
+                </li>
+                <li>
+                    <a href="analytics-dashboard.html" class="dashboard-link">
+                        통계
+                    </a>
+                </li>
+                <li>
+                    <a href="incident-detail.html" class="incident-link">
+                        상세
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 UrielSoft Dashboard. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
