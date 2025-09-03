@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Airport Security - AI 분석 통계</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Sidebar Placeholder CSS -->
+    <link rel="stylesheet" href="css/sidebar-placeholder.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Dark Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-bg': '#ffffff',
+                        'light-secondary': '#f8f9fa',
+                        'light-tertiary': '#e9ecef',
+                        'primary-blue': '#3b82f6',
+                        'primary-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* 커스텀 스크롤바 스타일 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e9ecef;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #adb5bd;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #868e96;
+        }
+        
+        /* 진행률 바 애니메이션 */
+        @keyframes progressBar {
+            0% { width: 0%; }
+            100% { width: var(--progress); }
+        }
+        
+        .progress-animated {
+            animation: progressBar 1s ease-out forwards;
+        }
+        
+        /* AI 성능 게이지 */
+        .performance-gauge {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+        
+        .gauge-bg {
+            fill: none;
+            stroke: #e5e7eb;
+            stroke-width: 8;
+        }
+        
+        .gauge-progress {
+            fill: none;
+            stroke: #10b981;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-700 min-h-screen flex">
+    
+    <!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
+    <script src="js/notification.js"></script>
+    <script src="js/data-manager.js"></script>
+    <script src="js/common-auth.js"></script>
+
+    <!-- 사이드바 컨테이너 (공통 사이드바) -->
+    <div id="sidebar-container"></div>
+    
+    <!-- 공통 사이드바 스크립트 -->
+    <script src="js/sidebar-template.js"></script>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="flex-1 overflow-y-auto">
+        <!-- 헤더 영역 (공통 헤더) -->
+        <div id="header-container"></div>
+        
+        <!-- 핵심 AI 지표 카드 섹션 -->
+        <section class="px-8 py-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <!-- AI 정확도 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-green-500/20 rounded-lg p-3">
+                            <i class="fas fa-bullseye text-green-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">전체 기간</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">AI 정확도</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="aiAccuracy">0%</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-arrow-up text-primary-green text-sm mr-1"></i>
+                        <span class="text-primary-green text-sm">+2.1%</span>
+                        <span class="text-gray-500 text-sm ml-1">지난 주 대비</span>
+                    </div>
+                </div>
+                
+                <!-- 평균 신뢰도 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-blue-500/20 rounded-lg p-3">
+                            <i class="fas fa-chart-line text-blue-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">전체 기간</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">평균 신뢰도</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="avgConfidence">0%</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-arrow-up text-primary-green text-sm mr-1"></i>
+                        <span class="text-primary-green text-sm">+1.5%</span>
+                        <span class="text-gray-500 text-sm ml-1">개선됨</span>
+                    </div>
+                </div>
+                
+                <!-- 오탐지 비율 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-red-500/20 rounded-lg p-3">
+                            <i class="fas fa-times-circle text-red-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">전체 기간</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">오탐지 비율</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="falsePositiveRate">0%</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-arrow-down text-primary-green text-sm mr-1"></i>
+                        <span class="text-primary-green text-sm">-0.8%</span>
+                        <span class="text-gray-500 text-sm ml-1">감소</span>
+                    </div>
+                </div>
+                
+                <!-- 처리 속도 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-purple-500/20 rounded-lg p-3">
+                            <i class="fas fa-stopwatch text-purple-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">전체 기간</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">평균 분석 속도</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="avgProcessingTime">0초</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-minus text-gray-400 text-sm mr-1"></i>
+                        <span class="text-gray-400 text-sm">0.0%</span>
+                        <span class="text-gray-500 text-sm ml-1">변동 없음</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 차트 영역 -->
+        <section class="px-8 pb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- AI 정확도 트렌드 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-brain mr-2 text-purple-500"></i>
+                        AI 정확도 트렌드
+                    </h2>
+                    <div class="h-80">
+                        <canvas id="accuracyTrendChart" class="w-full h-full"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        시간에 따른 AI 모델의 정확도 변화 추이
+                    </p>
+                </div>
+                
+                <!-- 객체 인식 정확도 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-eye mr-2 text-blue-500"></i>
+                        객체별 인식 정확도
+                    </h2>
+                    <div class="h-80">
+                        <canvas id="objectAccuracyChart" class="w-full h-full"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        물품 유형별 AI 인식 정확도 분석
+                    </p>
+                </div>
+                
+                <!-- 신뢰도 분포 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-chart-pie mr-2 text-green-500"></i>
+                        신뢰도 분포
+                    </h2>
+                    <div class="flex justify-center">
+                        <canvas id="confidenceDistributionChart" class="w-full max-w-xs" height="300"></canvas>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mt-4 text-sm">
+                        <div class="text-center">
+                            <p id="high-confidence-percent" class="text-2xl font-bold text-primary-green">0%</p>
+                            <p class="text-gray-600">높은 신뢰도<br>(90%+)</p>
+                        </div>
+                        <div class="text-center">
+                            <p id="medium-confidence-percent" class="text-2xl font-bold text-yellow-500">0%</p>
+                            <p class="text-gray-600">중간 신뢰도<br>(70-90%)</p>
+                        </div>
+                        <div class="text-center">
+                            <p id="low-confidence-percent" class="text-2xl font-bold text-red-500">0%</p>
+                            <p class="text-gray-600">낮은 신뢰도<br>(70% 미만)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI 모델 성능 게이지 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-tachometer-alt mr-2 text-indigo-500"></i>
+                        AI 모델 성능 지표
+                    </h2>
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- 정확도 게이지 -->
+                        <div class="text-center">
+                            <div class="performance-gauge mb-4">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="50" class="gauge-bg"></circle>
+                                    <circle cx="60" cy="60" r="50" class="gauge-progress" id="accuracy-gauge" 
+                                            stroke-dasharray="314" stroke-dashoffset="314"></circle>
+                                    <text x="60" y="65" text-anchor="middle" class="fill-gray-900 text-lg font-bold" id="accuracy-gauge-text">0%</text>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-gray-700">정확도</h4>
+                        </div>
+                        
+                        <!-- 속도 게이지 -->
+                        <div class="text-center">
+                            <div class="performance-gauge mb-4">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="50" class="gauge-bg"></circle>
+                                    <circle cx="60" cy="60" r="50" class="gauge-progress" id="speed-gauge" 
+                                            stroke-dasharray="314" stroke-dashoffset="314" stroke="#3b82f6"></circle>
+                                    <text x="60" y="60" text-anchor="middle" class="fill-gray-900 text-sm font-bold" id="speed-gauge-text">0.0s</text>
+                                    <text x="60" y="75" text-anchor="middle" class="fill-gray-500 text-xs">평균</text>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-gray-700">처리 속도</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 추가 AI 통계 정보 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                <!-- 위험도 분류 성능 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-shield-alt mr-2 text-red-500"></i>
+                        위험도 분류 성능
+                    </h3>
+                    <div id="risk-classification-stats" class="space-y-3">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+                
+                <!-- 학습 데이터 현황 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-database mr-2 text-blue-500"></i>
+                        학습 데이터 현황
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-light-tertiary rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 text-sm">총 학습 샘플</span>
+                                <span class="text-primary-blue font-bold">312,450개</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-plus text-green-400 mr-1"></i>
+                                +1,250개 이번 주 추가
+                            </div>
+                        </div>
+                        <div class="bg-light-tertiary rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 text-sm">검증 데이터</span>
+                                <span class="text-yellow-500 font-bold">78,112개</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-check text-green-400 mr-1"></i>
+                                품질 검증 완료
+                            </div>
+                        </div>
+                        <div class="bg-light-tertiary rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 text-sm">모델 버전</span>
+                                <span class="text-purple-500 font-bold">v2.3.1</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-calendar text-blue-400 mr-1"></i>
+                                2일 전 업데이트
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 실시간 모니터링 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-heartbeat mr-2 text-green-500"></i>
+                        실시간 모니터링
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-green-50 rounded-lg p-3 border border-green-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-green-700 text-sm">시스템 상태</span>
+                                <span class="text-green-600 font-bold">
+                                    <i class="fas fa-circle text-xs mr-1"></i>정상
+                                </span>
+                            </div>
+                            <div class="text-xs text-green-600">
+                                마지막 체크: 방금 전
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-blue-700 text-sm">GPU 사용률</span>
+                                <span class="text-blue-600 font-bold">67%</span>
+                            </div>
+                            <div class="w-full bg-blue-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 67%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-yellow-700 text-sm">처리 대기</span>
+                                <span class="text-yellow-600 font-bold">3건</span>
+                            </div>
+                            <div class="text-xs text-yellow-600">
+                                평균 대기시간: 0.2초
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 데이터 매니저 로드 -->
+    <script src="js/data-manager.js"></script>
+    
+    <!-- Chart.js 초기화 스크립트 -->
+    <script>
+        // localStorage에서 데이터 가져오기
+        const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+        const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+        
+        // AI 분석 통계 계산
+        const totalIncidents = incidents.length;
+        const resolvedIncidents = incidents.filter(i => i.status === 'resolved');
+        
+        // AI 정확도 계산 (해결된 사건 중 AI 피드백 기준)
+        let correctPredictions = 0;
+        let totalRatedIncidents = 0;
+        
+        resolvedIncidents.forEach(incident => {
+            if (incident.resolution && incident.resolution.aiRating) {
+                totalRatedIncidents++;
+                // 3점 이상을 정확한 예측으로 간주
+                if (incident.resolution.aiRating >= 3) {
+                    correctPredictions++;
+                }
+            }
+        });
+        
+        const aiAccuracy = totalRatedIncidents > 0 ? Math.round((correctPredictions / totalRatedIncidents) * 100) : 92;
+        
+        // 오탐지 비율 계산
+        const falsePositives = resolvedIncidents.filter(i => 
+            i.resolution && i.resolution.description && i.resolution.description.includes('오탐')
+        ).length;
+        const falsePositiveRate = totalIncidents > 0 ? Math.round((falsePositives / totalIncidents) * 100) : 5;
+        
+        // 평균 신뢰도 계산 (가상 데이터)
+        const avgConfidence = 88;
+        
+        // 평균 처리 속도 (가상 데이터)
+        const avgProcessingTime = 1.2;
+        
+        // Chart.js 기본 설정
+        Chart.defaults.color = '#6b7280';
+        Chart.defaults.borderColor = '#d1d5db';
+        
+        // AI 정확도 트렌드 차트 (라인 차트)
+        const accuracyTrendCtx = document.getElementById('accuracyTrendChart').getContext('2d');
+        const accuracyTrendData = [85, 87, 89, 91, 88, 92, 90, 93, 91, 94, 92, aiAccuracy];
+        const accuracyTrendLabels = [];
+        
+        for (let i = 11; i >= 0; i--) {
+            const date = new Date();
+            date.setMonth(date.getMonth() - i);
+            accuracyTrendLabels.push(date.toLocaleDateString('ko-KR', { month: 'short' }));
+        }
+        
+        const accuracyTrendChart = new Chart(accuracyTrendCtx, {
+            type: 'line',
+            data: {
+                labels: accuracyTrendLabels,
+                datasets: [{
+                    label: 'AI 정확도 (%)',
+                    data: accuracyTrendData,
+                    backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                    borderColor: 'rgba(147, 51, 234, 1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgba(147, 51, 234, 1)',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#111827',
+                        bodyColor: '#6b7280',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 80,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 객체별 인식 정확도 바 차트
+        const objectTypes = ['캐리어', '백팩', '쇼핑백', '서류가방', '핸드백'];
+        const objectAccuracies = [95, 89, 92, 88, 91];
+        
+        const objectAccuracyCtx = document.getElementById('objectAccuracyChart').getContext('2d');
+        const objectAccuracyChart = new Chart(objectAccuracyCtx, {
+            type: 'bar',
+            data: {
+                labels: objectTypes,
+                datasets: [{
+                    label: '인식 정확도 (%)',
+                    data: objectAccuracies,
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(147, 51, 234, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(147, 51, 234, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#111827',
+                        bodyColor: '#6b7280',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 80,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 신뢰도 분포 파이 차트
+        const highConfidence = Math.round(totalIncidents * 0.65);
+        const mediumConfidence = Math.round(totalIncidents * 0.28);
+        const lowConfidence = totalIncidents - highConfidence - mediumConfidence;
+        
+        const confidenceDistributionCtx = document.getElementById('confidenceDistributionChart').getContext('2d');
+        const confidenceDistributionChart = new Chart(confidenceDistributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['높은 신뢰도 (90%+)', '중간 신뢰도 (70-90%)', '낮은 신뢰도 (70% 미만)'],
+                datasets: [{
+                    data: [highConfidence, mediumConfidence, lowConfidence],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(239, 68, 68, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            color: '#6b7280'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#111827',
+                        bodyColor: '#6b7280',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((context.parsed / total) * 100);
+                                return context.label + ': ' + percentage + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 위험도 분류 성능 UI 업데이트
+        const riskClassificationStats = document.getElementById('risk-classification-stats');
+        const riskAccuracies = { high: 94, medium: 89, low: 96 };
+        const riskColors = { high: 'red-500', medium: 'yellow-500', low: 'green-500' };
+        
+        riskClassificationStats.innerHTML = Object.entries(riskAccuracies).map(([risk, accuracy]) => {
+            const riskLabel = { high: '높음', medium: '중간', low: '낮음' }[risk];
+            const color = riskColors[risk];
+            return `
+                <div class="bg-light-tertiary rounded p-3 border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600 text-sm">위험도 ${riskLabel}</span>
+                        <span class="text-gray-900 font-bold">${accuracy}%</span>
+                    </div>
+                    <div class="w-full bg-gray-300 rounded-full h-2">
+                        <div class="bg-${color} h-2 rounded-full" style="width: ${accuracy}%"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // 성능 게이지 애니메이션
+        function animateGauge(gaugeId, textId, percentage, isSpeed = false) {
+            const gauge = document.getElementById(gaugeId);
+            const text = document.getElementById(textId);
+            const circumference = 314; // 2 * Math.PI * 50
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                gauge.style.strokeDashoffset = offset;
+                if (isSpeed) {
+                    text.textContent = avgProcessingTime + 's';
+                } else {
+                    text.textContent = percentage + '%';
+                }
+            }, 500);
+        }
+        
+        // 통계 카드 업데이트 및 게이지 애니메이션
+        document.getElementById('aiAccuracy').textContent = aiAccuracy + '%';
+        document.getElementById('avgConfidence').textContent = avgConfidence + '%';
+        document.getElementById('falsePositiveRate').textContent = falsePositiveRate + '%';
+        document.getElementById('avgProcessingTime').textContent = avgProcessingTime + '초';
+        
+        // 신뢰도 분포 퍼센트 업데이트
+        const totalForPercentage = highConfidence + mediumConfidence + lowConfidence || 1;
+        document.getElementById('high-confidence-percent').textContent = Math.round((highConfidence / totalForPercentage) * 100) + '%';
+        document.getElementById('medium-confidence-percent').textContent = Math.round((mediumConfidence / totalForPercentage) * 100) + '%';
+        document.getElementById('low-confidence-percent').textContent = Math.round((lowConfidence / totalForPercentage) * 100) + '%';
+        
+        // 게이지 애니메이션 실행
+        animateGauge('accuracy-gauge', 'accuracy-gauge-text', aiAccuracy);
+        animateGauge('speed-gauge', 'speed-gauge-text', (5 - avgProcessingTime) / 5 * 100, true); // 속도는 역산
+    </script>
+    
+    <!-- 공통 헤더 스크립트 -->
+    <script src="js/common-header.js"></script>
+    
+    <!-- 페이지 초기화 -->
+    <script>
+        // 헤더 초기화
+        CommonHeader.init('header-container', 
+            '<i class="fas fa-brain mr-3 text-purple-500"></i>AI 분석 통계',
+            'AI 모델 성능 및 분석 결과 통계 대시보드');
+    </script>
+</body>
+</html>

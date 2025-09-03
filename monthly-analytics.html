@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Airport Security - 월간 통계</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Sidebar Placeholder CSS -->
+    <link rel="stylesheet" href="css/sidebar-placeholder.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Dark Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-bg': '#ffffff',
+                        'light-secondary': '#f8f9fa',
+                        'light-tertiary': '#e9ecef',
+                        'primary-blue': '#3b82f6',
+                        'primary-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* 커스텀 스크롤바 스타일 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e9ecef;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #adb5bd;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #868e96;
+        }
+        
+        /* 히트맵 스타일 */
+        .heatmap-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        .heat-point {
+            position: absolute;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-700 min-h-screen flex">
+    
+    <!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
+    <script src="js/notification.js"></script>
+    <script src="js/data-manager.js"></script>
+    <script src="js/common-auth.js"></script>
+
+    <!-- 사이드바 컨테이너 (공통 사이드바) -->
+    <div id="sidebar-container"></div>
+    
+    <!-- 공통 사이드바 스크립트 -->
+    <script src="js/sidebar-template.js"></script>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="flex-1 overflow-y-auto">
+        <!-- 헤더 영역 (공통 헤더) -->
+        <div id="header-container"></div>
+        
+        <!-- 핵심 지표 카드 섹션 -->
+        <section class="px-8 py-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- 총 발생 건수 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-primary-blue/20 rounded-lg p-3">
+                            <i class="fas fa-exclamation-triangle text-primary-blue text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">최근 30일</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">총 발생 건수</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="totalIncidents">0</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-arrow-up text-primary-green text-sm mr-1"></i>
+                        <span class="text-primary-green text-sm">15.8%</span>
+                        <span class="text-gray-500 text-sm ml-1">전월 대비</span>
+                    </div>
+                </div>
+                
+                <!-- 평균 대응 시간 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-yellow-500/20 rounded-lg p-3">
+                            <i class="fas fa-clock text-yellow-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">최근 30일</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">평균 대응 시간</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="avgResponseTime">0분</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-arrow-down text-primary-green text-sm mr-1"></i>
+                        <span class="text-primary-green text-sm">12.4%</span>
+                        <span class="text-gray-500 text-sm ml-1">개선됨</span>
+                    </div>
+                </div>
+                
+                <!-- 처리중 건수 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-red-500/20 rounded-lg p-3">
+                            <i class="fas fa-percentage text-red-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">최근 30일</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">처리중 건수</h3>
+                    <p class="text-3xl font-bold text-gray-900" id="processingCount">0</p>
+                    <div class="flex items-center mt-3">
+                        <i class="fas fa-arrow-down text-primary-green text-sm mr-1"></i>
+                        <span class="text-primary-green text-sm">5.7%</span>
+                        <span class="text-gray-500 text-sm ml-1">감소</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 차트 영역 -->
+        <section class="px-8 pb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- 위치 기반 히트맵 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-map-marked-alt mr-2 text-primary-blue"></i>
+                        월간 위치별 히트맵
+                    </h2>
+                    <div class="relative bg-light-tertiary rounded-lg p-4 h-80 border border-gray-200">
+                        <!-- 공항 맵 배경 -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-gray-600">
+                                <i class="fas fa-plane text-6xl opacity-20"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 터미널 레이블 -->
+                        <div class="absolute top-4 left-4 text-xs text-gray-600 font-semibold">T1</div>
+                        <div class="absolute top-4 right-4 text-xs text-gray-600 font-semibold">T2</div>
+                        
+                        <!-- 히트맵 포인트들 -->
+                        <div class="heatmap-overlay">
+                            <!-- 핫스팟 1 - 높은 활동 -->
+                            <div class="heat-point bg-red-500/50 blur-xl" style="width: 100px; height: 100px; top: 30%; left: 25%;"></div>
+                            <div class="heat-point bg-red-600/70" style="width: 50px; height: 50px; top: 35%; left: 30%;"></div>
+                            
+                            <!-- 핫스팟 2 - 중간 활동 -->
+                            <div class="heat-point bg-orange-500/40 blur-lg" style="width: 80px; height: 80px; top: 50%; left: 60%;"></div>
+                            <div class="heat-point bg-orange-600/60" style="width: 40px; height: 40px; top: 53%; left: 63%;"></div>
+                            
+                            <!-- 핫스팟 3 - 낮은 활동 -->
+                            <div class="heat-point bg-yellow-500/30 blur-lg" style="width: 60px; height: 60px; top: 70%; left: 40%;"></div>
+                            
+                            <!-- 핫스팟 4 - 높은 활동 -->
+                            <div class="heat-point bg-red-500/60 blur-xl" style="width: 90px; height: 90px; top: 20%; left: 70%;"></div>
+                            
+                            <!-- 추가 핫스팟들 (월간 데이터로 더 많은 포인트) -->
+                            <div class="heat-point bg-orange-400/35 blur-lg" style="width: 45px; height: 45px; top: 60%; left: 80%;"></div>
+                            <div class="heat-point bg-yellow-400/25 blur-md" style="width: 35px; height: 35px; top: 40%; left: 15%;"></div>
+                        </div>
+                        
+                        <!-- 범례 -->
+                        <div class="absolute bottom-4 left-4 flex items-center space-x-4 text-xs">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
+                                <span class="text-gray-600">높음</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
+                                <span class="text-gray-600">중간</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
+                                <span class="text-gray-600">낮음</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        월간 주요 핫스팟: G28 게이트, B12 체크인 카운터, C08 면세점
+                    </p>
+                </div>
+                
+                <!-- 일별 발생 추이 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-chart-line mr-2 text-primary-blue"></i>
+                        일별 발생 추이
+                    </h2>
+                    <div class="h-80">
+                        <canvas id="lineChart" class="w-full h-full"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        피크 날짜: 주말 및 공휴일, 성수기 기간
+                    </p>
+                </div>
+                
+                <!-- 처리 결과 분포 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-chart-pie mr-2 text-primary-blue"></i>
+                        월간 처리 결과 분포
+                    </h2>
+                    <div class="flex justify-center">
+                        <canvas id="pieChart" class="w-full max-w-xs" height="300"></canvas>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mt-4 text-sm">
+                        <div class="text-center">
+                            <p id="lost-items-percent" class="text-2xl font-bold text-primary-green">0%</p>
+                            <p class="text-gray-600">단순분실물</p>
+                        </div>
+                        <div class="text-center">
+                            <p id="false-positive-percent" class="text-2xl font-bold text-yellow-500">0%</p>
+                            <p class="text-gray-600">오탐지</p>
+                        </div>
+                        <div class="text-center">
+                            <p id="no-danger-percent" class="text-2xl font-bold text-primary-blue">0%</p>
+                            <p class="text-gray-600">위험물 없음</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 방치 물품 유형별 통계 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-luggage-cart mr-2 text-primary-blue"></i>
+                        월간 물품 유형별 통계
+                    </h2>
+                    <div class="flex justify-center">
+                        <canvas id="donutChart" class="w-full max-w-xs" height="300"></canvas>
+                    </div>
+                    <div id="object-type-stats" class="grid grid-cols-2 gap-3 mt-4">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 추가 통계 정보 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                <!-- 월간 트렌드 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-primary-green"></i>
+                        월간 트렌드
+                    </h3>
+                    <div id="monthly-trend" class="space-y-3">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+                
+                <!-- 팀별 월간 성과 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-users mr-2 text-primary-blue"></i>
+                        팀별 월간 성과
+                    </h3>
+                    <div id="team-performance" class="space-y-3">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+                
+                <!-- AI 모델 월간 성능 -->
+                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-robot mr-2 text-purple-400"></i>
+                        AI 모델 월간 성능
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-light-tertiary rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 text-sm">월평균 정확도</span>
+                                <span class="text-primary-green font-bold">96.2%</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-arrow-up text-green-400 mr-1"></i>
+                                +3.1% 지난달 대비
+                            </div>
+                        </div>
+                        <div class="bg-light-tertiary rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 text-sm">월평균 처리 시간</span>
+                                <span class="text-yellow-400 font-bold">1.1초</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-arrow-down text-green-400 mr-1"></i>
+                                -0.1초 개선
+                            </div>
+                        </div>
+                        <div class="bg-light-tertiary rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 text-sm">학습 데이터</span>
+                                <span class="text-primary-blue font-bold">312K</span>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-database text-blue-400 mr-1"></i>
+                                월간 증가: +27K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 데이터 매니저 로드 -->
+    <script src="js/data-manager.js"></script>
+    
+    <!-- Chart.js 초기화 스크립트 -->
+    <script>
+        // localStorage에서 데이터 가져오기
+        const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+        const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+        
+        // 월간 통계는 전체 데이터 사용 (주간보다 더 많은 데이터여야 함)
+        const monthlyIncidents = incidents; // 전체 데이터 사용
+        
+        // 일별 발생 건수 계산을 위한 날짜 계산
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+        
+        // 일별 발생 건수 계산 (최근 30일 - 차트용)
+        const dailyData = [];
+        const dailyLabels = [];
+        
+        for (let i = 29; i >= 0; i--) {
+            const date = new Date(now.getTime() - (i * 24 * 60 * 60 * 1000));
+            const dateStr = date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+            dailyLabels.push(dateStr);
+            
+            const dayIncidents = incidents.filter(incident => {
+                const incidentDate = new Date(incident.detectedAt);
+                return incidentDate.toDateString() === date.toDateString();
+            });
+            dailyData.push(dayIncidents.length);
+        }
+        
+        // 위험도별 통계 계산 (전체 데이터)
+        const riskStats = {
+            high: monthlyIncidents.filter(i => i.riskLevel === 'high').length,
+            medium: monthlyIncidents.filter(i => i.riskLevel === 'medium').length,
+            low: monthlyIncidents.filter(i => i.riskLevel === 'low').length
+        };
+        
+        // 물품 유형별 통계 계산 (전체 데이터)
+        const objectTypes = {};
+        monthlyIncidents.forEach(incident => {
+            const type = incident.objectType;
+            objectTypes[type] = (objectTypes[type] || 0) + 1;
+        });
+        
+        // Chart.js 기본 설정
+        Chart.defaults.color = '#6b7280';
+        Chart.defaults.borderColor = '#d1d5db';
+        
+        // 일별 발생 추이 Line Chart
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        const lineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: '일별 발생 건수',
+                    data: dailyData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#111827',
+                        bodyColor: '#6b7280',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            maxTicksLimit: 10
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 처리 결과 분포 계산
+        const lostItemsCount = monthlyIncidents.filter(i => 
+            i.status === 'resolved' && 
+            (!i.resolution || (!i.resolution.description.includes('오탐') && !i.resolution.description.includes('위험물')))
+        ).length;
+        const falsePositiveCount = monthlyIncidents.filter(i => 
+            i.status === 'resolved' && 
+            i.resolution && 
+            i.resolution.description.includes('오탐')
+        ).length;
+        const noDangerCount = monthlyIncidents.filter(i => 
+            i.status === 'resolved' && 
+            i.resolution && 
+            i.resolution.description.includes('위험물 없음')
+        ).length;
+        
+        // 처리되지 않은 건수는 분류에서 제외하고 기존 3개 카테고리로만 계산
+        const totalResolvedCount = lostItemsCount + falsePositiveCount + noDangerCount || 1;
+        
+        // 퍼센트 계산 및 표시
+        document.getElementById('lost-items-percent').textContent = Math.round(lostItemsCount / totalResolvedCount * 100) + '%';
+        document.getElementById('false-positive-percent').textContent = Math.round(falsePositiveCount / totalResolvedCount * 100) + '%';
+        document.getElementById('no-danger-percent').textContent = Math.round(noDangerCount / totalResolvedCount * 100) + '%';
+        
+        // 처리 결과 분포 Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['단순분실물', '오탐지', '위험물 없음'],
+                datasets: [{
+                    data: [lostItemsCount, falsePositiveCount, noDangerCount],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(59, 130, 246, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(59, 130, 246, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            color: '#6b7280'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#111827',
+                        bodyColor: '#6b7280',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '건';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 방치 물품 유형별 통계 Donut Chart
+        const donutCtx = document.getElementById('donutChart').getContext('2d');
+        const donutChart = new Chart(donutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(objectTypes),
+                datasets: [{
+                    data: Object.values(objectTypes),
+                    backgroundColor: [
+                        'rgba(147, 51, 234, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(251, 146, 60, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(147, 51, 234, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(251, 146, 60, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            color: '#6b7280'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#111827',
+                        bodyColor: '#6b7280',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '건';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 물품 유형별 통계 UI 업데이트
+        const objectTypeStatsDiv = document.getElementById('object-type-stats');
+        const totalObjects = Object.values(objectTypes).reduce((a, b) => a + b, 0) || 1;
+        const colors = ['purple-500', 'blue-500', 'green-500', 'orange-500', 'red-500', 'yellow-500'];
+        
+        objectTypeStatsDiv.innerHTML = Object.entries(objectTypes)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 4)
+            .map((type, index) => {
+                const percentage = Math.round(type[1] / totalObjects * 100);
+                const color = colors[index % colors.length];
+                return `
+                    <div class="bg-light-tertiary rounded p-3 border border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600 text-sm">${type[0]}</span>
+                            <span class="text-gray-900 font-bold">${percentage}%</span>
+                        </div>
+                        <div class="w-full bg-gray-300 rounded-full h-2 mt-2">
+                            <div class="bg-${color} h-2 rounded-full" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        
+        // 월간 트렌드 계산 (월별로 변경 - 전체 기간)
+        const monthlyTrend = document.getElementById('monthly-trend');
+        const monthNames = [];
+        const monthlyCounts = new Array(6).fill(0);
+        
+        // 최근 6개월 계산
+        for (let i = 5; i >= 0; i--) {
+            const date = new Date();
+            date.setMonth(date.getMonth() - i);
+            monthNames.push(date.toLocaleDateString('ko-KR', { month: 'long' }));
+        }
+        
+        monthlyIncidents.forEach(incident => {
+            const incidentDate = new Date(incident.detectedAt);
+            const monthsAgo = (now.getFullYear() - incidentDate.getFullYear()) * 12 + 
+                            (now.getMonth() - incidentDate.getMonth());
+            const monthIndex = 5 - monthsAgo; // 역순으로 계산
+            if (monthIndex >= 0 && monthIndex < 6) {
+                monthlyCounts[monthIndex]++;
+            }
+        });
+        
+        monthlyTrend.innerHTML = monthNames.map((month, index) => {
+            const count = monthlyCounts[index];
+            const colorClass = count > 100 ? 'text-red-400' : count > 50 ? 'text-orange-400' : 'text-gray-900';
+            return `
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">${month}</span>
+                    <span class="${colorClass} font-medium">${count}건</span>
+                </div>
+            `;
+        }).join('');
+        
+        // 팀별 처리 성과 계산 (월간)
+        const teamPerformance = document.getElementById('team-performance');
+        const maxResolved = Math.max(...teams.map(t => t.totalResolved || 0), 1);
+        
+        teamPerformance.innerHTML = teams
+            .sort((a, b) => (b.totalResolved || 0) - (a.totalResolved || 0))
+            .slice(0, 4)
+            .map((team, index) => {
+                const resolved = team.totalResolved || 0;
+                const percentage = Math.round(resolved / maxResolved * 100);
+                const colors = ['bg-primary-blue', 'bg-primary-green', 'bg-yellow-500', 'bg-orange-500'];
+                return `
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-gray-600">${team.name}</span>
+                            <span class="text-gray-900 font-medium">${resolved}건</span>
+                        </div>
+                        <div class="w-full bg-gray-300 rounded-full h-2">
+                            <div class="${colors[index % colors.length]} h-2 rounded-full" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+    </script>
+    
+    <!-- 공통 헤더 스크립트 -->
+    <script src="js/common-header.js"></script>
+    
+    <!-- 페이지 초기화 -->
+    <script>
+        // 헤더 초기화
+        CommonHeader.init('header-container', 
+            '<i class="fas fa-chart-line mr-3 text-primary-blue"></i>월간 통계',
+            '방치 물품 감지 시스템 월간 운영 통계 및 분석');
+        
+        // 통계 카드 업데이트 (월간 데이터 사용)
+        document.getElementById('totalIncidents').textContent = monthlyIncidents.length;
+        document.getElementById('avgResponseTime').textContent = Math.round(monthlyIncidents.reduce((sum, i) => sum + (i.duration || 0), 0) / monthlyIncidents.length || 0) + '분';
+        document.getElementById('processingCount').textContent = monthlyIncidents.filter(i => i.status === 'assigned' || i.status === 'in_progress').length;
+    </script>
+</body>
+</html>

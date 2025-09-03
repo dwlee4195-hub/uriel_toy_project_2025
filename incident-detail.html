@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Airport Security - 사건 상세</title>
+    <title>AI Airport Security - 방치물품 상세</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Sidebar Placeholder CSS -->
+    <link rel="stylesheet" href="css/sidebar-placeholder.css">
     
     <!-- Three.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -58,126 +61,22 @@
 </head>
 <body class="bg-white text-gray-700 min-h-screen flex">
     
-    <!-- 사이드바 메뉴 -->
-    <aside class="w-64 bg-light-secondary min-h-screen flex flex-col border-r border-gray-200">
-        <!-- 로고 영역 -->
-        <div class="h-20 flex items-center px-6 border-b border-gray-200">
-            <a href="index.html" class="hover:opacity-80 transition-opacity">
-                <img src="Uriel_CI(png)/Uriel_logo.png" alt="Uriel Logo" class="h-10 w-auto cursor-pointer">
-            </a>
-        </div>
-        
-        <!-- 네비게이션 메뉴 -->
-        <nav class="flex-1 py-6">
-            <!-- 관제 운영 섹션 -->
-            <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    관제 운영
-                </h2>
-                <ul>
-                    <li>
-                        <a href="incident-list.html" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
-                            <i class="fas fa-list mr-3 w-5"></i>
-                            <span>사건 목록</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- 분석 및 통계 섹션 -->
-            <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    분석 및 통계
-                </h2>
-                <ul>
-                    <li>
-                        <a href="analytics-dashboard.html" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
-                            <i class="fas fa-chart-bar mr-3 w-5"></i>
-                            <span>통계</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- AI 관리 섹션 -->
-            <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    AI 관리
-                </h2>
-                <ul>
-                    <li>
-                        <a href="#" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
-                            <i class="fas fa-brain mr-3 w-5"></i>
-                            <span>AI 모델 관리</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- 시스템 관리 섹션 -->
-            <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    시스템 관리
-                </h2>
-                <ul>
-                    <li>
-                        <a href="#" class="flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors">
-                            <i class="fas fa-cog mr-3 w-5"></i>
-                            <span>설정</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        
-        <!-- 하단 여백 -->
-        <div class="p-6">
-        </div>
-    </aside>
+    <!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
+    <script src="js/notification.js"></script>
+    <script src="js/data-manager.js"></script>
+    <script src="js/common-auth.js"></script>
+
+    <!-- 사이드바 컨테이너 -->
+    <div id="sidebar-container"></div>
     
+    <!-- 공통 사이드바 스크립트 -->
+    <script src="js/sidebar-template.js"></script>
+
+
     <!-- 메인 콘텐츠 영역 -->
     <main class="flex-1 overflow-y-auto">
         <!-- 헤더 영역 -->
-        <header class="bg-light-secondary shadow-lg">
-            <div class="h-20 px-8 flex items-center">
-                <div class="flex items-center justify-between w-full">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                            <i class="fas fa-exclamation-triangle mr-3 text-red-500"></i>
-                            사건 상세: INC-20251028-001
-                        </h1>
-                        <p class="text-sm text-gray-600 mt-1">방치 물품 상세 정보 및 처리 현황</p>
-                    </div>
-                    
-                    <!-- 상단 우측 영역 -->
-                    <div class="flex items-center space-x-6">
-                        <a href="incident-list.html" class="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg transition-colors border border-gray-300 shadow-sm hover:shadow">
-                            <i class="fas fa-arrow-left mr-2"></i>
-                            목록으로 돌아가기
-                        </a>
-                        
-                        <!-- 알림 아이콘 -->
-                        <div class="relative">
-                            <button class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                                <i class="fas fa-bell text-xl"></i>
-                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">3</span>
-                            </button>
-                        </div>
-                        
-                        <!-- 사용자 정보 -->
-                        <div class="flex items-center border-l pl-6">
-                            <div class="w-8 h-8 bg-primary-blue rounded-full flex items-center justify-center mr-3">
-                                <i class="fas fa-user text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">관제관</p>
-                                <p class="text-xs text-gray-500">admin@airport.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <div id="header-container"></div>
         
         <!-- 요약 정보 카드 -->
         <section class="px-8 py-6">
@@ -190,24 +89,24 @@
                             <span class="relative flex h-4 w-4 mr-3">
                                 <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
                             </span>
-                            <span class="text-red-600 text-xl font-bold">신규 경고</span>
+                            <div id="processing-status" class="text-red-600 text-xl font-bold">로딩중...</div>
                         </div>
-                        <p class="text-xs text-red-600 mt-3 font-semibold bg-red-100 inline-block px-3 py-1 rounded-full">⚠️ 우선 처리 필요</p>
+                        <div id="risk-level" class="text-xs text-red-600 mt-3 font-semibold">⚠️ 위험도 확인중...</div>
                     </div>
                     
                     <!-- 발생 위치 정보 -->
                     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300">
                         <h3 class="text-sm font-bold text-blue-700 mb-3 uppercase tracking-wider">발생 위치</h3>
-                        <p class="text-gray-900 text-lg font-bold">T1 제1여객터미널</p>
-                        <p class="text-blue-600 font-semibold text-lg">📍 3층 G28 게이트 앞</p>
-                        <p class="text-xs text-blue-700 mt-3 font-medium bg-blue-100 inline-block px-3 py-1 rounded-full">✈️ 국제선 출발 구역</p>
+                        <p class="text-gray-900 text-lg font-bold" id="terminal-info">터미널 확인중...</p>
+                        <p class="text-blue-600 font-semibold text-lg">📍 <span id="incident-location">위치 확인중...</span></p>
+                        <p class="text-xs text-blue-700 mt-3 font-medium bg-blue-100 inline-block px-3 py-1 rounded-full" id="zone-info">✈️ 구역 정보 로딩중...</p>
                     </div>
                     
                     <!-- 경과 시간 정보 -->
                     <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all duration-300">
                         <h3 class="text-sm font-bold text-orange-700 mb-3 uppercase tracking-wider">경과 시간</h3>
-                        <p class="text-orange-600 text-3xl font-bold" id="elapsed-time">36분 12초</p>
-                        <p class="text-xs text-orange-700 mt-3 font-medium bg-orange-100 inline-block px-3 py-1 rounded-full">⏰ 최초 감지: 2025-10-28 14:32</p>
+                        <p class="text-orange-600 text-3xl font-bold" id="elapsed-time">계산중...</p>
+                        <p class="text-xs text-orange-700 mt-3 font-medium bg-orange-100 inline-block px-3 py-1 rounded-full">⏰ 최초 감지: <span id="detected-time">확인중...</span></p>
                     </div>
                 </div>
             </div>
@@ -223,7 +122,7 @@
                     <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
                         <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
                             <i class="fas fa-cube mr-2 text-primary-blue"></i>
-                            인터랙티브 3D 뷰
+                            AI 3D 포인트클라우드 분석뷰
                         </h2>
                         <div class="three-js-container rounded-2xl shadow-inner relative" style="width: 100%; height: 400px;">
                             <!-- Three.js 캔버스 영역 -->
@@ -271,18 +170,13 @@
                             <i class="fas fa-images mr-2 text-primary-blue"></i>
                             감식반 현장 사진
                         </h2>
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-24 flex items-center justify-center">
-                                <i class="fas fa-image text-2xl text-gray-600"></i>
-                            </div>
-                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-24 flex items-center justify-center">
-                                <i class="fas fa-image text-2xl text-gray-600"></i>
-                            </div>
-                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-24 flex items-center justify-center">
-                                <i class="fas fa-plus text-2xl text-gray-600"></i>
+                        <div id="field-photos-container">
+                            <!-- 현장 사진들이 동적으로 로드됨 -->
+                            <div class="text-center text-gray-500 py-8">
+                                <i class="fas fa-spinner fa-spin mb-2"></i>
+                                <p>현장 사진 확인중...</p>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-500 mt-3">아직 현장 사진이 업로드되지 않았습니다.</p>
                     </div>
                 </div>
                 
@@ -318,107 +212,13 @@
                             <i class="fas fa-clock mr-2 text-primary-blue"></i>
                             사건 타임라인
                         </h2>
-                        <div class="space-y-4">
-                            <!-- 타임라인 아이템 1 -->
-                            <div class="flex items-start space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
-                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-red-100 to-pink-100 rounded-full flex items-center justify-center shadow-lg border-2 border-red-200">
-                                    <i class="fas fa-exclamation text-red-500"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <p class="font-semibold text-gray-900">신규 경고 발생</p>
-                                        <span class="text-xs text-gray-500">15:02</span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mt-1">방치 시간 30분 초과, 자동 경고 생성</p>
-                                </div>
-                            </div>
-                            
-                            <!-- 타임라인 아이템 2 -->
-                            <div class="flex items-start space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
-                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-full flex items-center justify-center shadow-lg border-2 border-yellow-200">
-                                    <i class="fas fa-eye text-yellow-500"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <p class="font-semibold text-gray-900">고정 객체 최초 감지</p>
-                                        <span class="text-xs text-gray-500">14:32</span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mt-1">AI 시스템이 방치 물품으로 분류</p>
-                                </div>
-                            </div>
-                            
-                            <!-- 타임라인 아이템 3 -->
-                            <div class="flex items-start space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
-                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center shadow-lg border-2 border-blue-200">
-                                    <i class="fas fa-video text-blue-500"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <p class="font-semibold text-gray-900">CCTV 추적 시작</p>
-                                        <span class="text-xs text-gray-500">14:30</span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mt-1">카메라 C-T1-3F-28 활성화</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 관제사 조치 패널 -->
-                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
-                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
-                            <i class="fas fa-user-shield mr-2 text-primary-blue"></i>
-                            관제사 조치 패널
-                        </h2>
                         
-                        <!-- 감식반 배정 -->
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-600 mb-2">감식반 배정</label>
-                            <div class="flex space-x-2">
-                                <select class="flex-1 bg-white text-gray-900 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-blue">
-                                    <option value="">팀 선택...</option>
-                                    <option value="a">A팀 (대기중)</option>
-                                    <option value="b">B팀 (대기중)</option>
-                                    <option value="c">C팀 (출동중)</option>
-                                </select>
-                                <button class="bg-primary-blue hover:bg-blue-600 text-gray-900 px-4 py-2 rounded-lg transition-colors">
-                                    <i class="fas fa-user-plus mr-2"></i>
-                                    배정
-                                </button>
+                        <div class="space-y-4" id="incident-timeline">
+                            <!-- 타임라인은 JS에서 동적으로 생성 -->
+                            <div class="text-center text-gray-500 py-8">
+                                <i class="fas fa-spinner fa-spin mb-2"></i>
+                                <p>타임라인 로딩중...</p>
                             </div>
-                        </div>
-                        
-                        <!-- 상태 변경 -->
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-600 mb-2">상태 변경</label>
-                            <select class="w-full bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:border-primary-blue">
-                                <option value="new" selected>신규 경고</option>
-                                <option value="dispatched">출동 중</option>
-                                <option value="investigating">조사 중</option>
-                                <option value="completed">처리 완료</option>
-                                <option value="false-positive">오탐지</option>
-                            </select>
-                        </div>
-                        
-                        <!-- 메모 추가 -->
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-600 mb-2">메모 추가</label>
-                            <textarea 
-                                class="w-full bg-white text-gray-900 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-blue resize-none"
-                                rows="3"
-                                placeholder="특이사항 또는 추가 정보 입력..."
-                            ></textarea>
-                        </div>
-                        
-                        <!-- 액션 버튼들 -->
-                        <div class="flex space-x-2">
-                            <button class="flex-1 bg-primary-green hover:bg-green-600 text-gray-900 px-4 py-2 rounded-lg transition-colors">
-                                <i class="fas fa-save mr-2"></i>
-                                저장
-                            </button>
-                            <button class="flex-1 bg-purple-600 hover:bg-purple-700 text-gray-900 px-4 py-2 rounded-lg transition-colors">
-                                <i class="fas fa-robot mr-2"></i>
-                                AI 분석 결과
-                            </button>
                         </div>
                     </div>
                     
@@ -431,19 +231,21 @@
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">객체 유형:</span>
-                                <span class="text-gray-900 font-medium">캐리어 가방 (95% 확률)</span>
+                                <span class="text-gray-900 font-medium" id="ai-object-type">확인중...</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">위험도 평가:</span>
-                                <span class="text-yellow-400 font-medium">중간 (스코어: 6.5/10)</span>
+                                <span class="text-gray-600">신뢰도:</span>
+                                <span class="text-blue-600 font-medium" id="ai-confidence">분석중...</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">예상 크기:</span>
-                                <span class="text-gray-900">70cm x 45cm x 25cm</span>
+                                <span class="text-gray-600">위험 점수:</span>
+                                <span class="text-orange-600 font-medium" id="risk-score">계산중...</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">권장 조치:</span>
-                                <span class="text-primary-green">즉시 확인 필요</span>
+                                <span class="text-gray-600">의심 특징:</span>
+                                <div class="text-right">
+                                    <div id="suspicious-features" class="text-xs">분석중...</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -454,26 +256,6 @@
     
     <!-- JavaScript for Dynamic Elements -->
     <script>
-        // 경과 시간 실시간 업데이트
-        let seconds = 12;
-        let minutes = 36;
-        
-        function updateElapsedTime() {
-            seconds++;
-            if (seconds >= 60) {
-                seconds = 0;
-                minutes++;
-            }
-            
-            const elapsedTimeElement = document.getElementById('elapsed-time');
-            if (elapsedTimeElement) {
-                elapsedTimeElement.textContent = `${minutes}분 ${seconds}초`;
-            }
-        }
-        
-        // 1초마다 경과 시간 업데이트
-        setInterval(updateElapsedTime, 1000);
-        
         // 3D 뷰 회전 시뮬레이션 (실제로는 Three.js 사용)
         console.log('Three.js 3D 뷰어 초기화 필요');
         
@@ -517,132 +299,184 @@
             const pointsArray = [];
             const colorsArray = [];
             
-            // 캐리어 형태를 포인트로 생성
-            const numPoints = 15000; // 포인트 수 증가
+            // URL 파라미터에서 incidentId 가져와서 물품 타입 확인
+            const urlParams = new URLSearchParams(window.location.search);
+            const incidentId = urlParams.get('id');
             
-            // 캐리어 본체 포인트 생성
-            for (let i = 0; i < numPoints * 0.6; i++) {
-                // 본체 표면 포인트
-                const u = Math.random();
-                const v = Math.random();
-                const face = Math.floor(Math.random() * 6);
+            let objectType = 'luggage'; // 기본값
+            if (incidentId) {
+                console.log('Loading incident for 3D view:', incidentId);
+                const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+                const incident = incidents.find(i => i.id === incidentId);
+                console.log('Found incident:', incident);
                 
-                let x, y, z;
-                const width = 1.5, height = 2, depth = 0.6;
-                
-                switch(face) {
-                    case 0: // 앞면
-                        x = (u - 0.5) * width;
-                        y = (v - 0.5) * height;
-                        z = depth / 2;
-                        break;
-                    case 1: // 뒷면
-                        x = (u - 0.5) * width;
-                        y = (v - 0.5) * height;
-                        z = -depth / 2;
-                        break;
-                    case 2: // 위면
-                        x = (u - 0.5) * width;
-                        y = height / 2;
-                        z = (v - 0.5) * depth;
-                        break;
-                    case 3: // 아래면
-                        x = (u - 0.5) * width;
-                        y = -height / 2;
-                        z = (v - 0.5) * depth;
-                        break;
-                    case 4: // 왼쪽
-                        x = -width / 2;
-                        y = (v - 0.5) * height;
-                        z = (u - 0.5) * depth;
-                        break;
-                    case 5: // 오른쪽
-                        x = width / 2;
-                        y = (v - 0.5) * height;
-                        z = (u - 0.5) * depth;
-                        break;
+                if (incident) {
+                    // aiAnalysis.objectType 확인 (영어)
+                    if (incident.aiAnalysis && incident.aiAnalysis.objectType) {
+                        objectType = incident.aiAnalysis.objectType;
+                        console.log('Using aiAnalysis objectType:', objectType);
+                    }
+                    // 없으면 incident.objectType 확인 (한국어 -> 영어 변환)
+                    else if (incident.objectType) {
+                        const koreanToEnglish = {
+                            '캐리어': 'luggage',
+                            '백팩': 'backpack', 
+                            '쇼핑백': 'shopping_bag',
+                            '서류가방': 'briefcase'
+                        };
+                        objectType = koreanToEnglish[incident.objectType] || 'luggage';
+                        console.log('Using converted objectType:', incident.objectType, '->', objectType);
+                    }
                 }
-                
-                // 약간의 노이즈 추가 (더 사실적인 라이다 효과)
-                x += (Math.random() - 0.5) * 0.01;
-                y += (Math.random() - 0.5) * 0.01;
-                z += (Math.random() - 0.5) * 0.01;
-                
-                pointsArray.push(x, y, z);
-                
-                // 라이다 스타일 색상 (녹색 계열 - 더 밝게)
-                const intensity = 0.7 + Math.random() * 0.3;
-                colorsArray.push(0, intensity, intensity * 0.4);
+            }
+            console.log('Final objectType for 3D view:', objectType);
+            
+            // 물품 종류별 포인트 클라우드 생성
+            const numPoints = 15000;
+            
+            function generateObjectPoints(type) {
+                switch(type) {
+                    case 'luggage': // 캐리어
+                        return generateLuggagePoints();
+                    case 'backpack': // 백팩  
+                        return generateBackpackPoints();
+                    case 'shopping_bag': // 쇼핑백
+                        return generateShoppingBagPoints();
+                    case 'briefcase': // 서류가방
+                        return generateBriefcasePoints();
+                    default:
+                        return generateLuggagePoints();
+                }
             }
             
-            // 손잡이 포인트 추가
-            for (let i = 0; i < numPoints * 0.15; i++) {
-                const u = Math.random();
-                const x = (u - 0.5) * 0.8;
-                const y = 1.1 + (Math.random() - 0.5) * 0.1;
-                const z = 0.05 + (Math.random() - 0.5) * 0.05;
+            function generateLuggagePoints() {
+                const points = [];
                 
-                pointsArray.push(x, y, z);
+                // 캐리어 본체
+                generateBoxPoints(points, 1.5, 2, 0.6, [0, 0, 0], numPoints * 0.6);
                 
-                const intensity = 0.7 + Math.random() * 0.3;
-                colorsArray.push(0, intensity, intensity * 0.4);
+                // 손잡이
+                generateBoxPoints(points, 0.8, 0.1, 0.1, [0, 1.1, 0.05], numPoints * 0.15);
+                generateBoxPoints(points, 0.1, 0.3, 0.1, [-0.35, 0.95, 0.05], numPoints * 0.05);
+                generateBoxPoints(points, 0.1, 0.3, 0.1, [0.35, 0.95, 0.05], numPoints * 0.05);
+                
+                // 바퀴들
+                generateCylinderPoints(points, 0.12, 0.08, [-0.6, -1.1, 0.25], numPoints * 0.03);
+                generateCylinderPoints(points, 0.12, 0.08, [0.6, -1.1, 0.25], numPoints * 0.03);
+                generateCylinderPoints(points, 0.12, 0.08, [-0.6, -1.1, -0.25], numPoints * 0.03);
+                generateCylinderPoints(points, 0.12, 0.08, [0.6, -1.1, -0.25], numPoints * 0.03);
+                
+                return points;
             }
             
-            // 손잡이 기둥 포인트
-            for (let i = 0; i < numPoints * 0.1; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const height = Math.random() * 0.3;
-                const radius = 0.03 + (Math.random() - 0.5) * 0.01;
+            function generateBackpackPoints() {
+                const points = [];
                 
-                const side = Math.random() < 0.5 ? -0.35 : 0.35;
-                const x = side + Math.cos(angle) * radius;
-                const y = 0.8 + height;
-                const z = 0.05 + Math.sin(angle) * radius;
+                // 백팩 본체
+                generateBoxPoints(points, 0.6, 0.8, 0.3, [0, 0.4, 0], numPoints * 0.7);
                 
-                pointsArray.push(x, y, z);
+                // 어깨끈들
+                generateBoxPoints(points, 0.05, 0.6, 0.02, [-0.2, 0.4, -0.2], numPoints * 0.1);
+                generateBoxPoints(points, 0.05, 0.6, 0.02, [0.2, 0.4, -0.2], numPoints * 0.1);
                 
-                const intensity = 0.7 + Math.random() * 0.3;
-                colorsArray.push(0, intensity, intensity * 0.4);
+                // 상단 고리
+                generateCylinderPoints(points, 0.08, 0.03, [0, 0.9, 0], numPoints * 0.1);
+                
+                return points;
             }
             
-            // 바퀴 포인트
-            const wheelPositions = [
-                [-0.6, -1.1, 0.25],
-                [0.6, -1.1, 0.25],
-                [-0.6, -1.1, -0.25],
-                [0.6, -1.1, -0.25]
-            ];
+            function generateShoppingBagPoints() {
+                const points = [];
+                
+                // 쇼핑백 몸체 (더 얇게)
+                generateBoxPoints(points, 0.7, 0.6, 0.15, [0, 0.3, 0], numPoints * 0.8);
+                
+                // 손잡이들 (원형)
+                generateTorusPoints(points, 0.08, 0.015, [-0.2, 0.7, 0], numPoints * 0.1);
+                generateTorusPoints(points, 0.08, 0.015, [0.2, 0.7, 0], numPoints * 0.1);
+                
+                return points;
+            }
             
-            for (let w = 0; w < wheelPositions.length; w++) {
-                const [wx, wy, wz] = wheelPositions[w];
-                for (let i = 0; i < numPoints * 0.04; i++) {
+            function generateBriefcasePoints() {
+                const points = [];
+                
+                // 서류가방 몸체 (납작)
+                generateBoxPoints(points, 0.8, 0.15, 0.6, [0, 0.3, 0], numPoints * 0.7);
+                
+                // 손잡이
+                generateBoxPoints(points, 0.15, 0.05, 0.03, [0, 0.45, 0], numPoints * 0.15);
+                
+                // 잠금장치들
+                generateBoxPoints(points, 0.05, 0.03, 0.02, [-0.3, 0.3, 0.32], numPoints * 0.075);
+                generateBoxPoints(points, 0.05, 0.03, 0.02, [0.3, 0.3, 0.32], numPoints * 0.075);
+                
+                return points;
+            }
+            
+            // 헬퍼 함수들
+            function generateBoxPoints(points, width, height, depth, center, count) {
+                for (let i = 0; i < count; i++) {
+                    const u = Math.random();
+                    const v = Math.random();
+                    const face = Math.floor(Math.random() * 6);
+                    
+                    let x, y, z;
+                    
+                    switch(face) {
+                        case 0: x = (u - 0.5) * width; y = (v - 0.5) * height; z = depth / 2; break;
+                        case 1: x = (u - 0.5) * width; y = (v - 0.5) * height; z = -depth / 2; break;
+                        case 2: x = (u - 0.5) * width; y = height / 2; z = (v - 0.5) * depth; break;
+                        case 3: x = (u - 0.5) * width; y = -height / 2; z = (v - 0.5) * depth; break;
+                        case 4: x = -width / 2; y = (v - 0.5) * height; z = (u - 0.5) * depth; break;
+                        case 5: x = width / 2; y = (v - 0.5) * height; z = (u - 0.5) * depth; break;
+                    }
+                    
+                    x += center[0] + (Math.random() - 0.5) * 0.01;
+                    y += center[1] + (Math.random() - 0.5) * 0.01;
+                    z += center[2] + (Math.random() - 0.5) * 0.01;
+                    
+                    points.push([x, y, z]);
+                }
+            }
+            
+            function generateCylinderPoints(points, radius, height, center, count) {
+                for (let i = 0; i < count; i++) {
                     const angle = Math.random() * Math.PI * 2;
-                    const radius = Math.random() * 0.12;
-                    const thickness = (Math.random() - 0.5) * 0.08;
+                    const r = Math.random() * radius;
+                    const h = (Math.random() - 0.5) * height;
                     
-                    const x = wx + thickness;
-                    const y = wy + Math.cos(angle) * radius;
-                    const z = wz + Math.sin(angle) * radius;
+                    const x = center[0] + Math.cos(angle) * r;
+                    const y = center[1] + h;
+                    const z = center[2] + Math.sin(angle) * r;
                     
-                    pointsArray.push(x, y, z);
-                    
-                    const intensity = 0.7 + Math.random() * 0.3;
-                    colorsArray.push(0, intensity, intensity * 0.4);
+                    points.push([x, y, z]);
                 }
             }
             
-            // 지퍼 디테일 포인트
-            for (let i = 0; i < numPoints * 0.05; i++) {
-                const y = -0.9 + Math.random() * 1.8;
-                const x = (Math.random() - 0.5) * 0.02;
-                const z = 0.31 + (Math.random() - 0.5) * 0.02;
-                
-                pointsArray.push(x, y, z);
-                
-                // 지퍼는 약간 다른 색상 (노란빛 녹색)
-                const intensity = 0.8 + Math.random() * 0.2;
-                colorsArray.push(intensity * 0.2, intensity, 0);
+            function generateTorusPoints(points, majorRadius, minorRadius, center, count) {
+                for (let i = 0; i < count; i++) {
+                    const u = Math.random() * Math.PI * 2;
+                    const v = Math.random() * Math.PI * 2;
+                    
+                    const x = center[0] + (majorRadius + minorRadius * Math.cos(v)) * Math.cos(u);
+                    const y = center[1] + minorRadius * Math.sin(v);
+                    const z = center[2] + (majorRadius + minorRadius * Math.cos(v)) * Math.sin(u);
+                    
+                    points.push([x, y, z]);
+                }
             }
+            
+            // 물품별 포인트 생성 및 배열에 추가
+            const objectPoints = generateObjectPoints(objectType);
+            
+            objectPoints.forEach(point => {
+                pointsArray.push(point[0], point[1], point[2]);
+                
+                // 라이다 스타일 색상 (녹색 계열)
+                const intensity = 0.7 + Math.random() * 0.3;
+                colorsArray.push(0, intensity, intensity * 0.4);
+            });
             
             // 바닥 그리드 포인트 (참고용)
             for (let i = 0; i < 3000; i++) {
@@ -804,6 +638,38 @@
             
             animate();
         }
+    </script>
+    
+    <!-- 데이터 매니저 로드 -->
+    <script src="js/data-manager.js"></script>
+    
+    <!-- 사건 상세 스크립트 -->
+    <script src="js/incident-detail.js"></script>
+    
+    <!-- 사진 모달 -->
+    <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
+        <div class="relative bg-white rounded-lg max-w-4xl max-h-full overflow-auto">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="modal-photo-title" class="text-lg font-semibold">현장 사진</h3>
+                <button onclick="closePhotoModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <img id="modal-photo-image" src="" alt="현장 사진" class="max-w-full h-auto">
+                <div class="mt-4">
+                    <p id="modal-photo-caption" class="text-gray-700 mb-2"></p>
+                    <p id="modal-photo-time" class="text-sm text-gray-500"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 공통 헤더 스크립트 및 초기화 -->
+    <script src="js/common-header.js"></script>
+    <script>
+        // 공통 헤더 초기화
+        CommonHeader.init('header-container', '<i class="fas fa-file-alt mr-3 text-primary-blue"></i>방치물품 상세', '방치 물품 상세 정보 및 처리 현황');
     </script>
 </body>
 </html>

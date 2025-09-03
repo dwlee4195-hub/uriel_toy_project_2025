@@ -161,13 +161,11 @@
             <p class="text-sm text-gray-600">
                 © 2025 UrielSoft. All rights reserved.
             </p>
-            <div class="mt-2 flex items-center justify-center space-x-4 text-xs text-gray-500">
-                <span><i class="fas fa-shield-alt mr-1"></i>보안 접속</span>
-                <span>|</span>
-                <span><i class="fas fa-lock mr-1"></i>SSL 암호화</span>
-            </div>
         </div>
     </div>
+    
+    <!-- 데이터 매니저 로드 -->
+    <script src="js/data-manager.js"></script>
     
     <script>
         // 비밀번호 표시/숨기기 토글
@@ -202,25 +200,56 @@
                 return;
             }
             
-            // 로그인 처리 (모든 입력에 대해 성공)
-            errorMessage.classList.add('hidden');
-            
             // 로딩 효과
             const submitButton = this.querySelector('button[type="submit"]');
             const originalText = submitButton.innerHTML;
             submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>로그인 중...';
             submitButton.disabled = true;
             
-            // 1초 후 리다이렉트
-            setTimeout(() => {
-                window.location.href = 'incident-list.html';
-            }, 1000);
+            // dataManager를 사용한 로그인 처리
+            const result = window.dataManager.login(username, password);
+            
+            if (result.success) {
+                // 감식팀 웹 로그인 차단
+                if (result.user.role === 'inspector' || result.user.role === 'team_leader' || result.user.role === 'team_member') {
+                    errorText.textContent = '감식팀은 모바일 앱에서만 로그인 가능합니다.';
+                    errorMessage.classList.remove('hidden');
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                    // 로그아웃 처리
+                    window.dataManager.logout();
+                    return;
+                }
+                
+                // 로그인 성공
+                errorMessage.classList.add('hidden');
+                
+                // 1초 후 리다이렉트
+                setTimeout(() => {
+                    window.location.href = 'incident-list.html';
+                }, 1000);
+            } else {
+                // 로그인 실패
+                errorText.textContent = result.message;
+                errorMessage.classList.remove('hidden');
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }
         });
         
         // Enter 키 이벤트 처리
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+        
+        // 페이지 로드 시 세션 체크
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = window.dataManager.getCurrentUser();
+            if (currentUser) {
+                // 이미 로그인된 상태면 메인 페이지로 이동
+                window.location.href = 'incident-list.html';
             }
         });
     </script>

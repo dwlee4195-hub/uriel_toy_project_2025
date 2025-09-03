@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#3b82f6">
+    <title>내정보 - 공항 감식팀</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-bg': '#ffffff',
+                        'light-secondary': '#f8f9fa',
+                        'light-tertiary': '#e9ecef',
+                        'primary-blue': '#3b82f6',
+                        'primary-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .safe-top { padding-top: env(safe-area-inset-top); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    
+    <!-- 상단 헤더 -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <button onclick="history.back()" class="mr-3">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </button>
+                <h1 class="font-bold text-lg">내정보</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 메인 콘텐츠 -->
+    <main class="pt-16 pb-20 safe-top">
+        
+        <!-- 프로필 섹션 -->
+        <div class="p-4">
+            <div class="bg-white rounded-xl shadow-sm p-6 text-center mb-6">
+                <div class="bg-primary-blue rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user text-white text-2xl"></i>
+                </div>
+                <h2 class="font-bold text-xl text-gray-900 mb-1" id="user-name">로딩중...</h2>
+                <p class="text-gray-600 mb-2" id="user-role">역할 확인중...</p>
+                <p class="text-sm text-gray-500" id="user-team">팀 정보 확인중...</p>
+            </div>
+            
+            <!-- 활동 통계 -->
+            <div class="bg-white rounded-xl shadow-sm mb-6">
+                <div class="p-4 border-b border-gray-100">
+                    <h3 class="font-bold text-gray-700">이번 달 활동</h3>
+                </div>
+                <div class="p-4">
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p class="text-2xl font-bold text-primary-blue" id="completed-count">-</p>
+                            <p class="text-sm text-gray-600">완료한 업무</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-orange-500" id="active-count">-</p>
+                            <p class="text-sm text-gray-600">진행중인 업무</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 설정 메뉴 -->
+            <div class="bg-white rounded-xl shadow-sm mb-6">
+                <div class="p-4 border-b border-gray-100">
+                    <h3 class="font-bold text-gray-700">설정</h3>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <button onclick="toggleNotifications()" class="w-full flex items-center justify-between p-4 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-bell text-gray-400 mr-3"></i>
+                            <span>알림 설정</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-sm text-green-600 mr-2" id="notification-status">활성화됨</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </button>
+                    
+                    <button onclick="showAppInfo()" class="w-full flex items-center justify-between p-4 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle text-gray-400 mr-3"></i>
+                            <span>앱 정보</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 로그아웃 -->
+            <div class="bg-white rounded-xl shadow-sm">
+                <button onclick="logout()" class="w-full flex items-center justify-center p-4 text-red-600">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    <span>로그아웃</span>
+                </button>
+            </div>
+        </div>
+        
+    </main>
+    
+    <!-- 하단 탭 메뉴 -->
+    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+        <div class="grid grid-cols-4 h-14">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">홈</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-clipboard-list text-xl"></i>
+                <span class="text-xs mt-1">업무</span>
+            </a>
+            <a href="map.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-map-marked-alt text-xl"></i>
+                <span class="text-xs mt-1">지도</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center justify-center text-primary-blue">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">내정보</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- 알림 시스템 -->
+    <script src="../js/notification.js"></script>
+    
+    <!-- 데이터 매니저 -->
+    <script src="../js/data-manager.js"></script>
+    
+    <script>
+        // 로그인 체크
+        function checkAuth() {
+            if (!window.dataManager || !window.dataManager.getCurrentUser()) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+        
+        // 사용자 정보 표시
+        function displayUserInfo() {
+            const user = window.dataManager.getCurrentUser();
+            if (!user) return;
+            
+            // 이름 표시
+            document.getElementById('user-name').textContent = user.name;
+            
+            // 역할 표시
+            let roleLabel = '';
+            switch(user.role) {
+                case 'admin': roleLabel = '관리자'; break;
+                case 'supervisor': roleLabel = '감독관'; break;
+                case 'team_leader': roleLabel = '팀장'; break;
+                case 'team_member': roleLabel = '팀원'; break;
+                default: roleLabel = user.role;
+            }
+            document.getElementById('user-role').textContent = roleLabel;
+            
+            // 팀 정보 표시
+            let teamInfo = user.department || '감식팀';
+            if (user.teamId) {
+                const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+                const team = teams.find(t => t.id === user.teamId);
+                if (team) {
+                    teamInfo = `${team.name} - ${teamInfo}`;
+                }
+            }
+            document.getElementById('user-team').textContent = teamInfo;
+        }
+        
+        // 활동 통계 표시
+        function displayStats() {
+            const tasks = JSON.parse(localStorage.getItem('incidents') || '[]');
+            const currentUser = window.dataManager.getCurrentUser();
+            
+            if (!currentUser) return;
+            
+            // 사용자 팀 정보
+            let userTeamData = null;
+            if (currentUser.teamId) {
+                const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+                userTeamData = teams.find(t => t.id === currentUser.teamId);
+            }
+            
+            // 이번 달 업무 필터링
+            const thisMonth = new Date().getMonth();
+            const thisYear = new Date().getFullYear();
+            
+            const monthlyTasks = tasks.filter(task => {
+                if (!userTeamData || task.assignedTeam !== userTeamData.id) return false;
+                
+                const taskDate = new Date(task.detectedAt || task.timestamp || Date.now());
+                return taskDate.getMonth() === thisMonth && taskDate.getFullYear() === thisYear;
+            });
+            
+            const completedCount = monthlyTasks.filter(t => t.status === 'resolved').length;
+            const activeCount = monthlyTasks.filter(t => t.status === 'assigned' || t.status === 'in_progress').length;
+            
+            document.getElementById('completed-count').textContent = completedCount;
+            document.getElementById('active-count').textContent = activeCount;
+        }
+        
+        // 알림 설정 토글
+        function toggleNotifications() {
+            const currentStatus = document.getElementById('notification-status').textContent;
+            const newStatus = currentStatus === '활성화됨' ? '비활성화됨' : '활성화됨';
+            const newClass = newStatus === '활성화됨' ? 'text-green-600' : 'text-gray-500';
+            
+            document.getElementById('notification-status').textContent = newStatus;
+            document.getElementById('notification-status').className = `text-sm ${newClass} mr-2`;
+            
+            showSuccess(`알림이 ${newStatus}`);
+        }
+        
+        // 앱 정보 표시
+        function showAppInfo() {
+            // 일단 아무것도 하지 않음
+        }
+        
+        // 로그아웃
+        function logout() {
+            if (confirm('로그아웃하시겠습니까?')) {
+                if (window.dataManager && window.dataManager.logout) {
+                    window.dataManager.logout();
+                }
+                showSuccess('로그아웃되었습니다.');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
+        }
+        
+        // 페이지 초기화
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+            
+            // 사용자 정보 표시
+            displayUserInfo();
+            
+            // 통계 표시
+            displayStats();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#3b82f6">
+	<title>알림 - 공항 감식팀</title>
+
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<!-- Custom Configuration -->
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						'light-bg': '#ffffff',
+						'light-secondary': '#f8f9fa',
+						'light-tertiary': '#e9ecef',
+						'primary-blue': '#3b82f6',
+						'primary-green': '#10b981'
+					}
+				}
+			}
+		}
+	</script>
+
+	<style>
+        .safe-top {
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* 스와이프 삭제 애니메이션 */
+        .swipe-delete {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .swipe-delete.removing {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+	</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+<!-- 상단 헤더 -->
+<header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+	<div class="px-4 py-3 flex items-center justify-between">
+		<div class="flex items-center">
+			<button onclick="history.back()" class="mr-3">
+				<i class="fas fa-arrow-left text-xl"></i>
+			</button>
+			<h1 class="font-bold text-lg">알림</h1>
+		</div>
+		<div class="flex items-center space-x-3">
+			<button onclick="markAllAsRead()" class="text-sm text-primary-blue">
+				모두 읽음
+			</button>
+			<button onclick="clearAll()" class="text-sm text-red-500">
+				모두 삭제
+			</button>
+		</div>
+	</div>
+
+</header>
+
+<!-- 메인 콘텐츠 -->
+<main class="pt-20 pb-20 safe-top">
+	<div class="px-4 py-4">
+
+		<!-- 새 알림 -->
+		<div class="mb-6">
+			<h2 class="text-sm font-semibold text-gray-500 mb-3">새 알림</h2>
+
+			<!-- 업무 배정 알림 -->
+			<div class="notification-item bg-white rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm"
+				 data-type="assignment" data-id="1">
+				<div class="p-4">
+					<div class="flex items-start">
+						<div class="bg-orange-100 p-2 rounded-full mr-3">
+							<i class="fas fa-clipboard-list text-orange-600"></i>
+						</div>
+						<div class="flex-1">
+							<div class="flex items-center justify-between mb-1">
+								<span class="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-semibold">업무배정</span>
+								<span class="text-xs text-gray-500">30분 전</span>
+							</div>
+							<h3 class="font-bold text-gray-900 mb-1">방치물품 확인 요청</h3>
+							<p class="text-sm text-gray-600 mb-2">T1-2F-G07 게이트 방치물품 확인이 배정되었습니다.</p>
+							<button onclick="viewDetail(1)" class="text-primary-blue text-sm font-medium">
+								상세보기 <i class="fas fa-chevron-right ml-1"></i>
+							</button>
+						</div>
+						<button onclick="deleteNotification(1)" class="ml-2 text-gray-400 hover:text-gray-600">
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- 업무 배정 알림 2 -->
+			<div class="notification-item bg-white rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm"
+				 data-type="assignment" data-id="2">
+				<div class="p-4">
+					<div class="flex items-start">
+						<div class="bg-orange-100 p-2 rounded-full mr-3">
+							<i class="fas fa-clipboard-list text-orange-600"></i>
+						</div>
+						<div class="flex-1">
+							<div class="flex items-center justify-between mb-1">
+								<span class="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-semibold">업무배정</span>
+								<span class="text-xs text-gray-500">1시간 전</span>
+							</div>
+							<h3 class="font-bold text-gray-900 mb-1">방치물품 확인 요청</h3>
+							<p class="text-sm text-gray-600 mb-2">T2-3F-G22 게이트 방치물품 확인이 배정되었습니다.</p>
+							<button onclick="viewDetail(2)" class="text-primary-blue text-sm font-medium">
+								상세보기 <i class="fas fa-chevron-right ml-1"></i>
+							</button>
+						</div>
+						<button onclick="deleteNotification(2)" class="ml-2 text-gray-400 hover:text-gray-600">
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 공지사항 -->
+		<div class="mb-6">
+			<h2 class="text-sm font-semibold text-gray-500 mb-3">공지사항</h2>
+
+			<!-- 시스템 공지 1 -->
+			<div class="notification-item bg-blue-50 rounded-xl mb-3" data-type="notice" data-id="3">
+				<div class="p-4">
+					<div class="flex items-start">
+						<div class="bg-blue-100 p-2 rounded-full mr-3">
+							<i class="fas fa-bullhorn text-blue-600"></i>
+						</div>
+						<div class="flex-1">
+							<div class="flex items-center justify-between mb-1">
+								<span class="bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full font-semibold">공지</span>
+								<span class="text-xs text-gray-500">오늘 오전 9:00</span>
+							</div>
+							<h3 class="font-semibold text-gray-900 mb-1">시스템 점검 안내</h3>
+							<p class="text-sm text-gray-600">오늘 오후 6시부터 7시까지 정기 시스템 점검이 예정되어 있습니다.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 시스템 공지 2 -->
+			<div class="notification-item bg-blue-50 rounded-xl mb-3" data-type="notice" data-id="4">
+				<div class="p-4">
+					<div class="flex items-start">
+						<div class="bg-blue-100 p-2 rounded-full mr-3">
+							<i class="fas fa-info-circle text-blue-600"></i>
+						</div>
+						<div class="flex-1">
+							<div class="flex items-center justify-between mb-1">
+								<span class="bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full font-semibold">공지</span>
+								<span class="text-xs text-gray-500">어제</span>
+							</div>
+							<h3 class="font-semibold text-gray-900 mb-1">AI 모델 업데이트</h3>
+							<p class="text-sm text-gray-600">방치물품 감지 AI가 v2.3.1로 업데이트되어 정확도가 향상되었습니다.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 빈 상태 (알림이 없을 때) -->
+		<div id="empty-state" class="hidden text-center py-12">
+			<div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+				<i class="fas fa-bell-slash text-3xl text-gray-400"></i>
+			</div>
+			<p class="text-gray-500 font-medium">새로운 알림이 없습니다</p>
+			<p class="text-sm text-gray-400 mt-1">중요한 정보가 있으면 알려드릴게요</p>
+		</div>
+
+	</div>
+</main>
+
+<!-- 하단 탭 메뉴 -->
+<nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+	<div class="grid grid-cols-4 h-14">
+		<a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+			<i class="fas fa-home text-xl"></i>
+			<span class="text-xs mt-1">홈</span>
+		</a>
+		<a href="tasks.html" class="flex flex-col items-center justify-center text-gray-600">
+			<i class="fas fa-clipboard-list text-xl"></i>
+			<span class="text-xs mt-1">업무</span>
+		</a>
+		<a href="map.html" class="flex flex-col items-center justify-center text-gray-600">
+			<i class="fas fa-map-marked-alt text-xl"></i>
+			<span class="text-xs mt-1">지도</span>
+		</a>
+		<a href="profile.html" class="flex flex-col items-center justify-center text-gray-600">
+			<i class="fas fa-user text-xl"></i>
+			<span class="text-xs mt-1">내정보</span>
+		</a>
+	</div>
+</nav>
+
+<!-- 알림 시스템 -->
+<script src="../js/notification.js"></script>
+
+<!-- 데이터 매니저 -->
+<script src="../js/data-manager.js"></script>
+
+<script>
+	// 로그인 체크
+	function checkAuth() {
+		if (!window.dataManager || !window.dataManager.getCurrentUser()) {
+			window.location.href = 'login.html';
+			return false;
+		}
+		return true;
+	}
+
+	// 페이지 초기화
+	window.addEventListener('DOMContentLoaded', function () {
+		if (!checkAuth()) return;
+	});
+
+	// 알림 필터링
+	function filterNotifications(type) {
+		// 모든 필터 버튼 스타일 초기화
+		const buttons = document.querySelectorAll('.filter-btn');
+		buttons.forEach(btn => {
+			btn.classList.remove('bg-primary-blue', 'text-white');
+			btn.classList.add('bg-white', 'text-gray-600');
+		});
+
+		// 선택된 버튼 활성화
+		event.target.classList.remove('bg-white', 'text-gray-600');
+		event.target.classList.add('bg-primary-blue', 'text-white');
+
+		// 알림 필터링
+		const notifications = document.querySelectorAll('.notification-item');
+		notifications.forEach(notif => {
+			if (type === 'all' || notif.dataset.type === type) {
+				notif.style.display = 'block';
+			} else {
+				notif.style.display = 'none';
+			}
+		});
+	}
+
+	// 모두 읽음 처리
+	function markAllAsRead() {
+		const notifications = document.querySelectorAll('.notification-item');
+		notifications.forEach(notif => {
+			notif.classList.add('bg-gray-50', 'opacity-75');
+			notif.classList.remove('bg-white', 'border-l-4');
+		});
+		showSuccess('모든 알림을 읽음 처리했습니다');
+	}
+
+	// 모두 삭제
+	function clearAll() {
+		const container = document.querySelector('main > div');
+		container.innerHTML = document.getElementById('empty-state').outerHTML;
+		document.getElementById('empty-state').classList.remove('hidden');
+		showSuccess('모든 알림이 삭제되었습니다');
+	}
+
+	// 개별 알림 삭제
+	function deleteNotification(id) {
+		const notif = document.querySelector(`[data-id="${id}"]`);
+		if (notif) {
+			notif.classList.add('swipe-delete', 'removing');
+			setTimeout(() => {
+				notif.remove();
+				checkEmpty();
+			}, 300);
+		}
+	}
+
+
+	// 상세보기
+	function viewDetail(id) {
+		window.location.href = 'task-detail.html';
+	}
+
+	// 빈 상태 체크
+	function checkEmpty() {
+		const notifications = document.querySelectorAll('.notification-item');
+		if (notifications.length === 0) {
+			document.getElementById('empty-state').classList.remove('hidden');
+		}
+	}
+</script>
+</body>
+</html>

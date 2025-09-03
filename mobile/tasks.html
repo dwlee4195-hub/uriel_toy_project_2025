@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#3b82f6">
+    <title>업무 내역 - 공항 감식팀</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-bg': '#ffffff',
+                        'light-secondary': '#f8f9fa',
+                        'light-tertiary': '#e9ecef',
+                        'primary-blue': '#3b82f6',
+                        'primary-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .safe-top { padding-top: env(safe-area-inset-top); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    
+    <!-- 상단 헤더 -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <button onclick="history.back()" class="mr-3">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </button>
+                <h1 class="font-bold text-lg">팀 업무 내역</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-sm text-gray-500">3팀</span>
+            </div>
+        </div>
+        
+        <!-- 상태 필터 탭 -->
+        <div class="bg-light-secondary px-4 py-2 flex space-x-2 overflow-x-auto">
+            <button onclick="filterTasks('all')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-primary-blue text-white whitespace-nowrap">
+                전체
+            </button>
+            <button onclick="filterTasks('progress')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-white text-gray-600 whitespace-nowrap">
+                처리중
+            </button>
+            <button onclick="filterTasks('completed')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-white text-gray-600 whitespace-nowrap">
+                완료
+            </button>
+        </div>
+    </header>
+    
+    <!-- 메인 콘텐츠 -->
+    <main class="pt-32 pb-20 safe-top">
+        
+        <!-- 통계 요약 -->
+        <div class="p-4 bg-white border-b border-gray-200">
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div>
+                    <p class="text-2xl font-bold text-orange-500">2</p>
+                    <p class="text-xs text-gray-600">출동중</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-green-500">8</p>
+                    <p class="text-xs text-gray-600">완료</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="px-4 py-4">
+            
+            <!-- 오늘 업무 섹션 -->
+            <div class="mb-6">
+                <h2 class="text-sm font-semibold text-gray-500 mb-3">오늘 (2025년 1월 3일)</h2>
+                
+                <!-- 처리중 업무 -->
+                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-blue-500 shadow-sm" data-status="progress">
+                    <a href="task-detail.html" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-spinner text-blue-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full font-semibold">처리중</span>
+                                    <span class="text-xs text-gray-500">10:45 AM</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 mb-1">T2-2F-G15 방치물품</h3>
+                                <p class="text-sm text-gray-600">검은색 캐리어 - 김철수 담당</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 대기중 업무 -->
+                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm" data-status="pending">
+                    <a href="task-detail.html" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-orange-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-clock text-orange-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-semibold">대기중</span>
+                                    <span class="text-xs text-gray-500">11:30 AM</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 mb-1">T1-2F-G07 방치물품</h3>
+                                <p class="text-sm text-gray-600">회색 백팩 - 미배정</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 대기중 업무 2 -->
+                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm" data-status="pending">
+                    <a href="task-detail.html" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-orange-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-clock text-orange-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-semibold">대기중</span>
+                                    <span class="text-xs text-gray-500">12:15 PM</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 mb-1">T2-3F-G22 방치물품</h3>
+                                <p class="text-sm text-gray-600">파란색 캐리어 - 미배정</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 완료 업무 -->
+                <div class="task-item bg-gray-50 rounded-xl mb-3 opacity-75" data-status="completed">
+                    <a href="task-detail.html" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-green-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-check text-green-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-semibold">완료</span>
+                                    <span class="text-xs text-gray-500">09:30 AM</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-700 mb-1">T1-1F-G03 방치물품</h3>
+                                <p class="text-sm text-gray-500">노란색 가방 - 박영수 처리완료</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 어제 업무 섹션 -->
+            <div class="mb-6">
+                <h2 class="text-sm font-semibold text-gray-500 mb-3">어제 (2025년 1월 2일)</h2>
+                
+                <!-- 완료 업무들 -->
+                <div class="task-item bg-gray-50 rounded-xl mb-3 opacity-75" data-status="completed">
+                    <a href="task-detail.html" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-green-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-check text-green-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-semibold">완료</span>
+                                    <span class="text-xs text-gray-500">어제 4:30 PM</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-700 mb-1">T2-1F-G03 방치물품</h3>
+                                <p class="text-sm text-gray-500">검은색 백팩 - 김철수 처리완료</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="task-item bg-gray-50 rounded-xl mb-3 opacity-75" data-status="completed">
+                    <a href="task-detail.html" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-green-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-check text-green-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-semibold">완료</span>
+                                    <span class="text-xs text-gray-500">어제 2:15 PM</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-700 mb-1">T1-3F-G28 방치물품</h3>
+                                <p class="text-sm text-gray-500">빨간색 가방 - 이영희 처리완료</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- 하단 탭 메뉴 -->
+    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+        <div class="grid grid-cols-4 h-14">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">홈</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center justify-center text-primary-blue">
+                <i class="fas fa-clipboard-list text-xl"></i>
+                <span class="text-xs mt-1">업무</span>
+            </a>
+            <a href="map.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-map-marked-alt text-xl"></i>
+                <span class="text-xs mt-1">지도</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">내정보</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- 알림 시스템 -->
+    <script src="../js/notification.js"></script>
+    
+    <!-- 데이터 매니저 -->
+    <script src="../js/data-manager.js"></script>
+    
+    <script>
+        // 로그인 체크
+        function checkAuth() {
+            if (!window.dataManager || !window.dataManager.getCurrentUser()) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+        
+        // localStorage에서 업무 데이터 가져오기
+        function loadTasksFromStorage() {
+            // incident-list와 동일한 데이터 소스 사용
+            const incidents = localStorage.getItem('incidents');
+            if (incidents) {
+                return JSON.parse(incidents);
+            }
+            // incidentsData fallback
+            const storedData = localStorage.getItem('incidentsData');
+            if (storedData) {
+                return JSON.parse(storedData);
+            }
+            return [];
+        }
+        
+        // 업무 리스트 렌더링
+        function renderTasks() {
+            const allTasks = loadTasksFromStorage();
+            const currentUser = window.dataManager.getCurrentUser();
+            
+            // 사용자의 teamId로 팀 정보 찾기
+            let userTeamData = null;
+            if (currentUser && currentUser.teamId) {
+                const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+                userTeamData = teams.find(t => t.id === currentUser.teamId);
+            }
+            
+            // 현재 팀에 배정된 업무만 필터링
+            const tasks = allTasks.filter(task => {
+                // 신규 상태는 제외하지만, 완료된 업무는 assignedTeam이 없어도 포함
+                if (task.status === 'pending' && !task.assignedTeam) return false;
+                // 완료된 업무는 팀 배정 여부 관계없이 모두 포함
+                if (task.status === 'resolved') return true;
+                // 나머지는 사용자 팀에 배정된 업무만
+                return userTeamData && task.assignedTeam === userTeamData.id;
+            });
+            
+            // 팀 표시 업데이트
+            const teamDisplay = document.querySelector('.flex.items-center.space-x-3 span');
+            if (teamDisplay && userTeamData) {
+                teamDisplay.textContent = userTeamData.name;
+            }
+            
+            // 날짜별 그룹화 (최근 7일간)
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            const sevenDaysAgo = new Date(Date.now() - 7 * 86400000);
+            
+            const todayTasks = tasks.filter(task => {
+                const taskDate = new Date(task.detectedAt || task.timestamp || Date.now()).toDateString();
+                return taskDate === today;
+            });
+            
+            const yesterdayTasks = tasks.filter(task => {
+                const taskDate = new Date(task.detectedAt || task.timestamp || Date.now()).toDateString();
+                return taskDate === yesterday;
+            });
+            
+            // 최근 7일간의 완료된 업무 추가 (오늘/어제 제외)
+            const recentCompletedTasks = tasks.filter(task => {
+                const taskDate = new Date(task.detectedAt || task.timestamp || Date.now());
+                return task.status === 'resolved' && 
+                       taskDate >= sevenDaysAgo && 
+                       taskDate.toDateString() !== today && 
+                       taskDate.toDateString() !== yesterday;
+            }).slice(0, 10); // 최대 10개만
+            
+            // 통계 업데이트 (전체 팀 업무 기준)
+            const processing = tasks.filter(t => t.status === 'assigned' || t.status === 'in_progress').length;
+            const completed = tasks.filter(t => t.status === 'resolved').length;
+            
+            // 통계 HTML 업데이트 (2열 레이아웃)
+            const statsHTML = `
+                <div>
+                    <p class="text-2xl font-bold text-orange-500">${processing}</p>
+                    <p class="text-xs text-gray-600">출동중</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-green-500">${completed}</p>
+                    <p class="text-xs text-gray-600">완료</p>
+                </div>
+            `;
+            
+            const statsContainer = document.querySelector('.grid.grid-cols-2.gap-3');
+            if (statsContainer) {
+                statsContainer.innerHTML = statsHTML;
+            }
+            
+            // 오늘 업무 렌더링
+            const todaySection = document.querySelector('.mb-6');
+            if (todaySection) {
+                const todayDate = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+                let todayHTML = `<h2 class="text-sm font-semibold text-gray-500 mb-3">오늘 (${todayDate})</h2>`;
+                
+                todayTasks.forEach(task => {
+                    todayHTML += createTaskHTML(task);
+                });
+                
+                if (todayTasks.length === 0) {
+                    todayHTML += `
+                        <div class="bg-gray-50 rounded-xl p-4 text-center text-gray-500">
+                            <i class="fas fa-check-circle text-2xl mb-2"></i>
+                            <p>오늘 배정된 업무가 없습니다</p>
+                        </div>
+                    `;
+                }
+                
+                todaySection.innerHTML = todayHTML;
+            }
+            
+            // 어제 업무 렌더링
+            let mainContainer = document.querySelector('.px-4.py-4');
+            if (!mainContainer) {
+                console.error('Main container not found');
+                return;
+            }
+            
+            // 기존 어제 섹션 제거
+            const existingYesterdaySection = mainContainer.querySelector('.mb-6:nth-child(2)');
+            if (existingYesterdaySection) {
+                existingYesterdaySection.remove();
+            }
+            
+            // 기존 최근 완료 섹션 제거
+            const existingRecentSection = mainContainer.querySelector('.mb-6:nth-child(3)');
+            if (existingRecentSection) {
+                existingRecentSection.remove();
+            }
+            
+            // 어제 업무가 있으면 추가
+            if (yesterdayTasks.length > 0) {
+                const yesterdayDate = new Date(Date.now() - 86400000).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+                let yesterdayHTML = `<div class="mb-6"><h2 class="text-sm font-semibold text-gray-500 mb-3">어제 (${yesterdayDate})</h2>`;
+                
+                yesterdayTasks.forEach(task => {
+                    yesterdayHTML += createTaskHTML(task);
+                });
+                
+                yesterdayHTML += '</div>';
+                mainContainer.insertAdjacentHTML('beforeend', yesterdayHTML);
+            }
+            
+            // 최근 완료 업무가 있으면 추가
+            if (recentCompletedTasks.length > 0) {
+                let recentHTML = `<div class="mb-6"><h2 class="text-sm font-semibold text-gray-500 mb-3">최근 완료 업무</h2>`;
+                
+                recentCompletedTasks.forEach(task => {
+                    recentHTML += createTaskHTML(task);
+                });
+                
+                recentHTML += '</div>';
+                mainContainer.insertAdjacentHTML('beforeend', recentHTML);
+            }
+        }
+        
+        // 개별 업무 HTML 생성
+        function createTaskHTML(task) {
+            let statusConfig = {};
+            switch(task.status) {
+                case 'pending':
+                    statusConfig = {
+                        color: 'red',
+                        icon: 'exclamation-triangle',
+                        label: '신규',
+                        opacity: ''
+                    };
+                    break;
+                case 'assigned':
+                case 'in_progress':
+                    statusConfig = {
+                        color: 'orange',
+                        icon: 'spinner',
+                        label: '출동중',
+                        opacity: ''
+                    };
+                    break;
+                case 'resolved':
+                    statusConfig = {
+                        color: 'green',
+                        icon: 'check',
+                        label: '완료',
+                        opacity: 'bg-gray-50 opacity-75'
+                    };
+                    break;
+                default:
+                    statusConfig = {
+                        color: 'gray',
+                        icon: 'question',
+                        label: '미정',
+                        opacity: ''
+                    };
+            }
+            
+            const time = task.time || (task.detectedAt ? new Date(task.detectedAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '방금');
+            
+            // 팀원 이름 가져오기 (실제 데이터에는 팀 ID만 있으므로)
+            let assignedInfo = '미배정';
+            if (task.assignedTeam) {
+                const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+                const team = teams.find(t => t.id === task.assignedTeam);
+                if (team) {
+                    assignedInfo = `${team.name} ${task.status === 'resolved' ? '완료' : '담당'}`;
+                }
+            }
+            
+            return `
+                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-${statusConfig.color}-500 shadow-sm ${statusConfig.opacity}" data-status="${task.status}">
+                    <a href="task-detail.html?id=${task.id}" class="block p-4">
+                        <div class="flex items-start">
+                            <div class="bg-${statusConfig.color}-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-${statusConfig.icon} text-${statusConfig.color}-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="bg-${statusConfig.color}-100 text-${statusConfig.color}-600 text-xs px-2 py-0.5 rounded-full font-semibold">${statusConfig.label}</span>
+                                    <span class="text-xs text-gray-500">${time}</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 mb-1">${task.location || 'T1-1F'} 방치물품</h3>
+                                <p class="text-sm text-gray-600">${task.objectType || task.item || '미확인 물품'} - ${assignedInfo}</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }
+        
+        // 데이터 초기화
+        function initializeData() {
+            // incident-list와 동일한 데이터 구조 사용
+            if (!localStorage.getItem('incidents') && !localStorage.getItem('teams')) {
+                // 팀 데이터 초기화
+                const teams = [
+                    { id: 'team-001', name: '1팀', status: 'available', members: 4, currentAssignment: null, totalResolved: 23 },
+                    { id: 'team-002', name: '2팀', status: 'busy', members: 3, currentAssignment: 'INC-2025-002', totalResolved: 19 },
+                    { id: 'team-003', name: '3팀', status: 'available', members: 4, currentAssignment: null, totalResolved: 31 }
+                ];
+                localStorage.setItem('teams', JSON.stringify(teams));
+                
+                // 사건 데이터 초기화
+                const incidents = [
+                    {
+                        id: 'INC-2025-001',
+                        status: 'in_progress',
+                        location: 'T2-2F-G15',
+                        objectType: '검은색 캐리어',
+                        riskLevel: 'medium',
+                        detectedAt: new Date().toISOString(),
+                        assignedTeam: 'team-003',
+                        assignedAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'INC-2025-002',
+                        status: 'assigned',
+                        location: 'T1-2F-G07',
+                        objectType: '회색 백팩',
+                        riskLevel: 'low',
+                        detectedAt: new Date().toISOString(),
+                        assignedTeam: 'team-002',
+                        assignedAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'INC-2025-003',
+                        status: 'pending',
+                        location: 'T2-3F-G22',
+                        objectType: '파란색 캐리어',
+                        riskLevel: 'high',
+                        detectedAt: new Date().toISOString(),
+                        assignedTeam: null
+                    },
+                    {
+                        id: 'INC-2025-004',
+                        status: 'resolved',
+                        location: 'T1-1F-G03',
+                        objectType: '노란색 가방',
+                        riskLevel: 'low',
+                        detectedAt: new Date(Date.now() - 3600000).toISOString(),
+                        assignedTeam: 'team-003',
+                        resolution: {
+                            description: '소유자 확인 완료',
+                            resolvedAt: new Date().toISOString()
+                        }
+                    },
+                    {
+                        id: 'INC-2025-005',
+                        status: 'resolved',
+                        location: 'T2-1F-G03',
+                        objectType: '검은색 백팩',
+                        riskLevel: 'medium',
+                        detectedAt: new Date(Date.now() - 86400000).toISOString(),
+                        assignedTeam: 'team-003',
+                        resolution: {
+                            description: '소유자 확인 완료',
+                            resolvedAt: new Date(Date.now() - 80000000).toISOString()
+                        }
+                    }
+                ];
+                localStorage.setItem('incidents', JSON.stringify(incidents));
+            }
+        }
+        
+        // 페이지 초기화
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+            
+            // 데이터 초기화
+            initializeData();
+            
+            // 업무 렌더링
+            renderTasks();
+            
+            // 5초마다 데이터 새로고침
+            setInterval(renderTasks, 5000);
+        });
+        
+        // 업무 필터링
+        function filterTasks(status) {
+            // 모든 필터 버튼 스타일 초기화
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-primary-blue', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-600');
+            });
+            
+            // 선택된 버튼 활성화
+            event.target.classList.remove('bg-white', 'text-gray-600');
+            event.target.classList.add('bg-primary-blue', 'text-white');
+            
+            // 상태 매핑 (UI 상태 -> 실제 데이터 상태)
+            const statusMap = {
+                'new': ['pending'],
+                'progress': ['assigned', 'in_progress'],
+                'completed': ['resolved']
+            };
+            
+            // 업무 필터링
+            const tasks = document.querySelectorAll('.task-item');
+            tasks.forEach(task => {
+                const taskStatus = task.dataset.status;
+                if (status === 'all') {
+                    task.style.display = 'block';
+                } else if (statusMap[status] && statusMap[status].includes(taskStatus)) {
+                    task.style.display = 'block';
+                } else {
+                    task.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

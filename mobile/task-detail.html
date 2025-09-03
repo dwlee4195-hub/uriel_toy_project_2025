@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#3b82f6">
+    <title>업무 상세 - 공항 감식팀</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-bg': '#ffffff',
+                        'light-secondary': '#f8f9fa', 
+                        'light-tertiary': '#e9ecef',
+                        'primary-blue': '#3b82f6',
+                        'primary-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .safe-top { padding-top: env(safe-area-inset-top); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    
+    <!-- 상단 헤더 -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <button onclick="history.back()" class="mr-3">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </button>
+                <h1 class="font-bold text-lg">업무 상세</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 메인 콘텐츠 -->
+    <main class="pt-16 pb-20 safe-top">
+        <div class="px-4 py-4">
+            
+            <!-- 업무 정보 -->
+            <div class="bg-white rounded-xl shadow-sm mb-4 border border-gray-200">
+                <div class="p-4">
+                    <h2 class="font-bold text-gray-700 mb-3">업무 정보</h2>
+                    <div id="task-info" class="space-y-2">
+                        <!-- 동적으로 렌더링됨 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 위치 지도 -->
+            <div class="bg-white rounded-xl shadow-sm mb-4 border border-gray-200">
+                <div class="p-4">
+                    <h2 class="font-bold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>
+                        물품 위치
+                    </h2>
+                    <div id="location-map" class="bg-gray-100 rounded-lg h-48 flex items-center justify-center relative overflow-hidden">
+                        <!-- 지도 영역 -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-green-100">
+                            <div class="w-full h-full relative">
+                                <!-- 공항 터미널 레이아웃 시뮬레이션 -->
+                                <div class="absolute top-4 left-4 bg-white rounded p-2 shadow-sm">
+                                    <p class="text-xs font-bold text-gray-700" id="location-label">위치: -</p>
+                                </div>
+                                <!-- 물품 위치 마커 -->
+                                <div id="location-marker" class="absolute hidden">
+                                    <div class="bg-red-500 w-4 h-4 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
+                                    <div class="bg-red-500 w-2 h-2 rounded-full absolute top-1 left-1 bg-white"></div>
+                                </div>
+                                <!-- 격자 패턴 -->
+                                <div class="absolute inset-0 opacity-20">
+                                    <svg width="100%" height="100%">
+                                        <defs>
+                                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#333" stroke-width="0.5"/>
+                                            </pattern>
+                                        </defs>
+                                        <rect width="100%" height="100%" fill="url(#grid)" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="z-10 text-center">
+                            <i class="fas fa-map text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-600 text-sm">공항 터미널 지도</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI 분석 결과 -->
+            <div class="bg-white rounded-xl shadow-sm mb-4 border border-gray-200">
+                <div class="p-4">
+                    <h2 class="font-bold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-brain mr-2 text-purple-500"></i>
+                        AI 분석 결과
+                    </h2>
+                    <div id="ai-analysis" class="space-y-3">
+                        <!-- 동적으로 렌더링됨 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 현장 사진 첨부 -->
+            <div class="bg-white rounded-xl shadow-sm mb-4 border border-gray-200">
+                <div class="p-4">
+                    <h2 class="font-bold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-camera mr-2 text-blue-500"></i>
+                        현장 사진
+                    </h2>
+                    
+                    <!-- 사진 업로드 영역 -->
+                    <div class="mb-4">
+                        <input type="file" id="photo-input" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoUpload(event)">
+                        <button onclick="document.getElementById('photo-input').click()" class="w-full bg-blue-50 border-2 border-dashed border-blue-200 rounded-lg p-4 text-blue-600 hover:bg-blue-100 transition-colors">
+                            <i class="fas fa-camera text-2xl mb-2"></i>
+                            <p class="font-medium">사진 촬영/첨부</p>
+                            <p class="text-sm opacity-75">현장 상황을 기록해주세요</p>
+                        </button>
+                    </div>
+                    
+                    <!-- 업로드된 사진들 미리보기 -->
+                    <div id="photos-container" class="space-y-3">
+                        <!-- 동적으로 사진들이 추가됩니다 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 처리완료 버튼 (처리중인 경우만 표시) -->
+            <div id="completion-section" class="hidden">
+                <button onclick="showCompletionModal()" class="w-full bg-primary-blue text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+                    처리 완료
+                </button>
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- 처리완료 모달 -->
+    <div id="completion-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6">
+            <h3 class="font-bold text-lg mb-4">처리 결과 선택</h3>
+            <p class="text-sm text-gray-600 mb-4">방치물품의 처리 결과를 선택해주세요.</p>
+            
+            <div class="space-y-3 mb-4">
+                <button onclick="completeTask('lost')" class="w-full p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-suitcase text-blue-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">단순 분실물</p>
+                            <p class="text-sm text-gray-600">소유자 확인 또는 분실물 센터 이관</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="completeTask('false')" class="w-full p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors">
+                    <div class="flex items-center">
+                        <div class="bg-gray-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-ban text-gray-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">오탐지</p>
+                            <p class="text-sm text-gray-600">AI 오탐지로 확인됨</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="completeTask('safe')" class="w-full p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-check-circle text-green-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">위험물 없음</p>
+                            <p class="text-sm text-gray-600">확인 결과 안전한 물품</p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- AI 정확도 피드백 섹션 -->
+            <div class="border-t pt-4 mb-4">
+                <h4 class="font-semibold text-gray-800 mb-2">AI 분석 정확도 평가</h4>
+                <p class="text-sm text-gray-600 mb-3">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
+                    귀하의 피드백은 AI 성능 향상에 큰 도움이 됩니다
+                </p>
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-gray-700">AI 정확도</span>
+                        <div class="flex space-x-1" id="rating-stars">
+                            <i class="fas fa-star text-gray-300 cursor-pointer text-xl" data-rating="1"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer text-xl" data-rating="2"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer text-xl" data-rating="3"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer text-xl" data-rating="4"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer text-xl" data-rating="5"></i>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-500 text-right">
+                        <span id="rating-text">별점을 선택해주세요</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="hideCompletionModal()" class="w-full py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                취소
+            </button>
+        </div>
+    </div>
+    
+    <!-- 알림 시스템 -->
+    <script src="../js/notification.js"></script>
+    
+    <!-- 데이터 매니저 -->
+    <script src="../js/data-manager.js"></script>
+    
+    <script>
+        let currentTaskId = null;
+        
+        // 페이지 초기화
+        window.addEventListener('DOMContentLoaded', function() {
+            // URL 파라미터에서 task ID 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            currentTaskId = urlParams.get('id');
+            
+            if (currentTaskId) {
+                loadTaskDetail(currentTaskId);
+            } else {
+                showError('업무 정보를 찾을 수 없습니다');
+                setTimeout(() => history.back(), 2000);
+            }
+        });
+        
+        // 업무 상세 정보 로드
+        function loadTaskDetail(taskId) {
+            const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            
+            const task = incidents.find(i => i.id === taskId);
+            if (!task) {
+                showError('업무 정보를 찾을 수 없습니다');
+                setTimeout(() => history.back(), 2000);
+                return;
+            }
+            
+            // 업무 정보 렌더링
+            renderTaskInfo(task, teams);
+            
+            // 위치 지도 렌더링
+            renderLocationMap(task);
+            
+            // AI 분석 결과 렌더링
+            renderAIAnalysis(task);
+            
+            // 기존 사진들 로드
+            loadExistingPhotos();
+            
+            // 처리완료 버튼 표시 여부
+            const completionSection = document.getElementById('completion-section');
+            if (task.status === 'assigned' || task.status === 'in_progress') {
+                completionSection.classList.remove('hidden');
+            } else {
+                completionSection.classList.add('hidden');
+            }
+        }
+        
+        // 업무 정보 렌더링
+        function renderTaskInfo(task, teams) {
+            const assignedTeam = teams.find(t => t.id === task.assignedTeam);
+            const teamName = assignedTeam ? assignedTeam.name : '미배정';
+            
+            const riskLevel = {
+                'high': '높음',
+                'medium': '중간',
+                'low': '낮음'
+            }[task.riskLevel] || '미정';
+            
+            const statusLabel = {
+                'pending': '신규 경고',
+                'assigned': '출동중',
+                'in_progress': '처리중',
+                'resolved': '처리완료'
+            }[task.status] || '미정';
+            
+            const detectedTime = new Date(task.detectedAt);
+            const timeStr = detectedTime.toLocaleString('ko-KR');
+            
+            const infoHTML = `
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div class="col-span-2 mb-2">
+                        <div class="flex items-center">
+                            <div class="bg-${task.status === 'resolved' ? 'green' : task.status === 'pending' ? 'red' : 'orange'}-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-${task.status === 'resolved' ? 'check-circle text-green-600' : task.status === 'pending' ? 'exclamation-triangle text-red-600' : 'spinner fa-spin text-orange-600'}"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-lg">${statusLabel}</p>
+                                <p class="text-sm text-gray-600">${task.id}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">위치:</span>
+                        <span class="font-medium ml-1">${task.location}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">물품:</span>
+                        <span class="font-medium ml-1">${task.objectType}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">위험도:</span>
+                        <span class="font-medium ml-1">${riskLevel}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">담당팀:</span>
+                        <span class="font-medium ml-1">${teamName}</span>
+                    </div>
+                    <div class="col-span-2">
+                        <span class="text-gray-500">감지시각:</span>
+                        <span class="font-medium ml-1">${timeStr}</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('task-info').innerHTML = infoHTML;
+        }
+        
+        // 위치 지도 렌더링
+        function renderLocationMap(task) {
+            const locationLabel = document.getElementById('location-label');
+            const locationMarker = document.getElementById('location-marker');
+            
+            locationLabel.textContent = `위치: ${task.location}`;
+            
+            // 위치에 따른 마커 위치 계산 (시뮬레이션)
+            const locations = {
+                'T1-3F-G01': { top: '20%', left: '15%' },
+                'T1-3F-G02': { top: '25%', left: '20%' },
+                'T1-3F-G03': { top: '30%', left: '25%' },
+                'T1-3F-G28': { top: '40%', left: '60%' },
+                'T1-3F-G29': { top: '45%', left: '65%' },
+                'T2-2F-B12': { top: '60%', left: '30%' },
+                'T2-2F-B15': { top: '65%', left: '35%' },
+                'T2-2F-C08': { top: '50%', left: '40%' },
+                'T2-2F-C12': { top: '55%', left: '45%' },
+                'T2-2F-D05': { top: '70%', left: '20%' },
+                'default': { top: '50%', left: '50%' }
+            };
+            
+            const position = locations[task.location] || locations.default;
+            locationMarker.style.top = position.top;
+            locationMarker.style.left = position.left;
+            locationMarker.classList.remove('hidden');
+        }
+        
+        // AI 분석 결과 렌더링
+        function renderAIAnalysis(task) {
+            const container = document.getElementById('ai-analysis');
+            
+            // 하드코딩된 AI 분석 결과
+            const riskColor = getRiskColor(task.riskLevel);
+            const confidence = 94; // 고정된 신뢰도
+            const riskScore = task.riskLevel === 'high' ? '8.5' : task.riskLevel === 'medium' ? '6.2' : '3.1';
+            const objectType = task.objectType;
+            
+            // 하드코딩된 탐지 요소
+            const suspiciousFeatures = [
+                '방치물', 
+                task.riskLevel === 'high' ? '대형물품' : '중간시간 방치',
+                task.riskLevel === 'high' ? '혼잡구역' : '업무시간'
+            ];
+            
+            const analysisHTML = `
+                <div class="space-y-3">
+                    <!-- 객체 분류 -->
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">객체 분류</span>
+                            <span class="text-sm font-bold text-gray-900">${objectType}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-xs text-gray-500 mr-2">신뢰도</span>
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: ${confidence}%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-gray-700 ml-2">${confidence}%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 위험도 점수 -->
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">위험도 점수</span>
+                            <span class="text-sm font-bold ${riskColor}">${riskScore}/10.0</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div class="${getRiskBarColor(task.riskLevel)} h-2 rounded-full" style="width: ${parseFloat(riskScore) * 10}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 의심 요소 -->
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="mb-2">
+                            <span class="text-sm font-medium text-gray-600">AI 탐지 요소</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            ${suspiciousFeatures.map(feature => 
+                                `<span class="inline-block bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-full">${feature}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = analysisHTML;
+        }
+        
+        // 객체 타입 한글 변환
+        function getObjectTypeKorean(objectType) {
+            const types = {
+                'luggage': '캐리어',
+                'backpack': '백팩',
+                'shopping_bag': '쇼핑백',
+                'briefcase': '서류가방',
+                'handbag': '핸드백',
+                'sports_bag': '스포츠가방'
+            };
+            return types[objectType] || objectType;
+        }
+        
+        // 위험도 색상 가져오기
+        function getRiskColor(riskLevel) {
+            const colors = {
+                'high': 'text-red-600',
+                'medium': 'text-orange-600',
+                'low': 'text-green-600'
+            };
+            return colors[riskLevel] || 'text-gray-600';
+        }
+        
+        // 위험도 바 색상 가져오기
+        function getRiskBarColor(riskLevel) {
+            const colors = {
+                'high': 'bg-red-500',
+                'medium': 'bg-orange-500',
+                'low': 'bg-green-500'
+            };
+            return colors[riskLevel] || 'bg-gray-500';
+        }
+        
+        // 탐지 요소 한글 변환
+        function getFeatureKorean(feature) {
+            const features = {
+                'unattended': '방치물',
+                'large_size': '대형물품',
+                'near_crowded_area': '혼잡구역',
+                'medium_duration': '중간시간 방치',
+                'business_hours': '업무시간',
+                'suspicious_shape': '의심스러운 형태'
+            };
+            return features[feature] || feature;
+        }
+        
+        // 사진 업로드 처리
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 파일 크기 체크 (원본 10MB 이상이면 경고)
+            if (file.size > 10 * 1024 * 1024) {
+                showError('파일이 너무 큽니다. 10MB 이하의 사진을 선택해주세요.');
+                return;
+            }
+            
+            compressImage(file, (compressedDataUrl) => {
+                // 새로운 사진 데이터 생성
+                const photoData = {
+                    taskId: currentTaskId,
+                    photoId: Date.now().toString(),
+                    timestamp: new Date().toISOString(),
+                    data: compressedDataUrl,
+                    originalSize: file.size,
+                    compressedSize: compressedDataUrl.length
+                };
+                
+                // localStorage 용량 체크
+                const currentStorage = JSON.stringify(localStorage);
+                const newDataSize = JSON.stringify(photoData).length;
+                const estimatedTotal = currentStorage.length + newDataSize;
+                
+                // 5MB 제한 체크 (여유분 고려)
+                if (estimatedTotal > 4.5 * 1024 * 1024) {
+                    showError('저장 공간이 부족합니다. 기존 사진을 삭제해주세요.');
+                    return;
+                }
+                
+                // localStorage에서 기존 사진들 가져오기
+                const allPhotos = JSON.parse(localStorage.getItem('task_photos') || '[]');
+                
+                // 새 사진 추가
+                allPhotos.push(photoData);
+                localStorage.setItem('task_photos', JSON.stringify(allPhotos));
+                
+                // 사진 컨테이너에 새 사진 추가
+                addPhotoToContainer(photoData);
+                
+                // 사진 개수 업데이트
+                const updatedTaskPhotos = allPhotos.filter(p => p.taskId === currentTaskId);
+                updatePhotosCount(updatedTaskPhotos.length);
+                
+                // 파일 입력 초기화
+                event.target.value = '';
+                
+                // 압축 정보 표시
+                const compressionRatio = ((file.size - photoData.compressedSize) / file.size * 100).toFixed(1);
+                showSuccess(`사진이 저장되었습니다.`);
+            });
+        }
+        
+        // 이미지 압축 함수
+        function compressImage(file, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                // 최대 크기 설정 (너비 기준 1200px, 높이 비례 조정)
+                const MAX_WIDTH = 1200;
+                const MAX_HEIGHT = 1200;
+                
+                let { width, height } = img;
+                
+                // 비율 유지하면서 리사이즈
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height = (height * MAX_WIDTH) / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width = (width * MAX_HEIGHT) / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // 이미지 그리기
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // 압축된 데이터 URL 생성 (JPEG 품질 0.7)
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                callback(compressedDataUrl);
+            };
+            
+            // 파일을 이미지로 로드
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 사진 컨테이너에 사진 추가
+        function addPhotoToContainer(photoData) {
+            const container = document.getElementById('photos-container');
+            const photoIndex = Date.now(); // 고유 인덱스
+            
+            const photoDiv = document.createElement('div');
+            photoDiv.id = `photo-${photoData.photoId}`;
+            photoDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
+            
+            // 압축 정보 계산
+            const sizeInfo = photoData.originalSize && photoData.compressedSize ? 
+                `압축: ${formatFileSize(photoData.originalSize)} → ${formatFileSize(photoData.compressedSize)}` :
+                '';
+            
+            photoDiv.innerHTML = `
+                <img src="${photoData.data}" class="w-full h-48 object-cover" alt="현장 사진">
+                <div class="p-3 bg-gray-50">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-600">촬영시간</p>
+                            <p class="text-xs text-gray-500">${new Date(photoData.timestamp).toLocaleString('ko-KR')}</p>
+                            ${sizeInfo ? `<p class="text-xs text-gray-400 mt-1">${sizeInfo}</p>` : ''}
+                        </div>
+                        <button onclick="removePhoto('${photoData.photoId}')" class="text-red-500 text-sm hover:underline flex items-center">
+                            <i class="fas fa-trash mr-1"></i>삭제
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(photoDiv);
+        }
+        
+        // 파일 크기 포맷팅 함수
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        // 특정 사진 삭제
+        function removePhoto(photoId) {
+            // DOM에서 제거
+            const photoElement = document.getElementById(`photo-${photoId}`);
+            if (photoElement) {
+                photoElement.remove();
+            }
+            
+            // localStorage에서 사진 데이터 삭제
+            const allPhotos = JSON.parse(localStorage.getItem('task_photos') || '[]');
+            const filteredPhotos = allPhotos.filter(p => p.photoId !== photoId);
+            localStorage.setItem('task_photos', JSON.stringify(filteredPhotos));
+            
+            // 사진 개수 업데이트
+            const taskPhotos = filteredPhotos.filter(p => p.taskId === currentTaskId);
+            updatePhotosCount(taskPhotos.length);
+            
+            showSuccess('사진이 삭제되었습니다');
+        }
+        
+        // 기존 사진들 로드
+        function loadExistingPhotos() {
+            const allPhotos = JSON.parse(localStorage.getItem('task_photos') || '[]');
+            const taskPhotos = allPhotos.filter(p => p.taskId === currentTaskId);
+            
+            const container = document.getElementById('photos-container');
+            container.innerHTML = ''; // 기존 내용 초기화
+            
+            // 시간순 정렬 (최신순)
+            taskPhotos.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            taskPhotos.forEach(photo => {
+                addPhotoToContainer(photo);
+            });
+            
+            // 사진 개수 표시 업데이트
+            updatePhotosCount(taskPhotos.length);
+        }
+        
+        // 사진 개수 표시 업데이트
+        function updatePhotosCount(count) {
+            // 사진 섹션 헤더 찾기
+            const photoHeaders = document.querySelectorAll('h2');
+            for (let header of photoHeaders) {
+                if (header.innerHTML.includes('현장 사진')) {
+                    const countText = count > 0 ? ` (${count})` : '';
+                    header.innerHTML = `
+                        <i class="fas fa-camera mr-2 text-blue-500"></i>
+                        현장 사진${countText}
+                    `;
+                    break;
+                }
+            }
+            
+            // 새로운 사진 개수로 함수 재호출하여 헤더 업데이트
+            const allPhotos = JSON.parse(localStorage.getItem('task_photos') || '[]');
+            const taskPhotos = allPhotos.filter(p => p.taskId === currentTaskId);
+            const actualCount = taskPhotos.length;
+            
+            if (actualCount !== count) {
+                // 실제 사진 개수와 다르면 다시 업데이트
+                for (let header of photoHeaders) {
+                    if (header.innerHTML.includes('현장 사진')) {
+                        const correctCountText = actualCount > 0 ? ` (${actualCount})` : '';
+                        header.innerHTML = `
+                            <i class="fas fa-camera mr-2 text-blue-500"></i>
+                            현장 사진${correctCountText}
+                        `;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // 처리완료 모달 표시
+        function showCompletionModal() {
+            document.getElementById('completion-modal').classList.remove('hidden');
+            initializeRatingSystem();
+        }
+        
+        // 처리완료 모달 숨기기
+        function hideCompletionModal() {
+            document.getElementById('completion-modal').classList.add('hidden');
+            resetRatingSystem();
+        }
+        
+        // 전역 변수로 선택된 별점과 완료 타입 저장
+        let selectedRating = 0;
+        let selectedCompletionType = '';
+        
+        // 별점 시스템 초기화
+        function initializeRatingSystem() {
+            const stars = document.querySelectorAll('#rating-stars i');
+            const ratingText = document.getElementById('rating-text');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = parseInt(star.dataset.rating);
+                    selectedRating = rating;
+                    updateStars(rating);
+                    updateRatingText(rating);
+                });
+                
+                star.addEventListener('mouseover', () => {
+                    if (selectedRating === 0) {
+                        const rating = parseInt(star.dataset.rating);
+                        updateStars(rating, true);
+                        updateRatingText(rating, true);
+                    }
+                });
+            });
+            
+            // 마우스가 별점 영역을 벗어날 때
+            document.getElementById('rating-stars').addEventListener('mouseleave', () => {
+                if (selectedRating === 0) {
+                    updateStars(0);
+                    updateRatingText(0);
+                }
+            });
+        }
+        
+        // 별점 표시 업데이트
+        function updateStars(rating, isHover = false) {
+            const stars = document.querySelectorAll('#rating-stars i');
+            stars.forEach((star, index) => {
+                const starRating = parseInt(star.dataset.rating);
+                if (starRating <= rating) {
+                    if (isHover && selectedRating === 0) {
+                        star.className = 'fas fa-star text-yellow-400 cursor-pointer text-xl';
+                    } else {
+                        star.className = 'fas fa-star text-yellow-500 cursor-pointer text-xl';
+                    }
+                } else {
+                    star.className = 'fas fa-star text-gray-300 cursor-pointer text-xl';
+                }
+            });
+        }
+        
+        // 별점 텍스트 업데이트
+        function updateRatingText(rating, isHover = false) {
+            const ratingText = document.getElementById('rating-text');
+            const texts = {
+                0: '별점을 선택해주세요',
+                1: '매우 부정확함',
+                2: '부정확함',
+                3: '보통',
+                4: '정확함',
+                5: '매우 정확함'
+            };
+            
+            if (isHover && selectedRating === 0) {
+                ratingText.textContent = texts[rating];
+                ratingText.className = 'text-xs text-gray-400 text-right';
+            } else {
+                ratingText.textContent = texts[rating];
+                if (rating > 0) {
+                    ratingText.className = 'text-xs text-blue-600 text-right font-medium';
+                } else {
+                    ratingText.className = 'text-xs text-gray-500 text-right';
+                }
+            }
+        }
+        
+        // 별점 시스템 리셋
+        function resetRatingSystem() {
+            selectedRating = 0;
+            selectedCompletionType = '';
+            updateStars(0);
+            updateRatingText(0);
+        }
+        
+        // 업무 처리 완료
+        function completeTask(type) {
+            // AI 피드백 평가가 필요한지 확인
+            if (selectedRating === 0) {
+                showError('AI 정확도 평가를 먼저 선택해주세요');
+                return;
+            }
+            
+            const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            
+            const taskIndex = incidents.findIndex(i => i.id === currentTaskId);
+            if (taskIndex === -1) return;
+            
+            let description = '';
+            switch(type) {
+                case 'lost':
+                    description = '단순 분실물로 확인되어 처리 완료';
+                    break;
+                case 'false':
+                    description = '오탐지로 확인됨';
+                    break;
+                case 'safe':
+                    description = '위험물 없음 - 안전한 물품으로 확인';
+                    break;
+            }
+            
+            // 업무 상태 업데이트
+            incidents[taskIndex].status = 'resolved';
+            incidents[taskIndex].resolution = {
+                description: description,
+                resolvedAt: new Date().toISOString(),
+                type: type,
+                aiRating: selectedRating, // AI 정확도 피드백 평가 추가
+                ratingText: {
+                    1: '매우 부정확함',
+                    2: '부정확함',
+                    3: '보통',
+                    4: '정확함',
+                    5: '매우 정확함'
+                }[selectedRating]
+            };
+            
+            // 팀 상태 해제
+            const teamId = incidents[taskIndex].assignedTeam;
+            if (teamId) {
+                const teamIndex = teams.findIndex(t => t.id === teamId);
+                if (teamIndex !== -1) {
+                    teams[teamIndex].status = 'available';
+                    teams[teamIndex].currentAssignment = null;
+                    teams[teamIndex].totalResolved = (teams[teamIndex].totalResolved || 0) + 1;
+                }
+            }
+            
+            // 저장
+            localStorage.setItem('incidents', JSON.stringify(incidents));
+            localStorage.setItem('teams', JSON.stringify(teams));
+            
+            // 모달 닫기
+            hideCompletionModal();
+            
+            // 성공 메시지
+            showSuccess(`처리가 완료되었습니다 (AI 평가: ${selectedRating}점)`);
+            
+            // 페이지 새로고침
+            setTimeout(() => {
+                loadTaskDetail(currentTaskId);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

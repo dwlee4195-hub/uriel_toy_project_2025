@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사이트맵 - Uriel Dashboard</title>
+    <title>공항 보안 관리 시스템 - UrielSoft</title>
     <style>
         * {
             margin: 0;
@@ -13,16 +13,16 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
             position: relative;
             overflow: hidden;
         }
         
+        /* 배경 애니메이션 */
         body::before {
             content: '';
             position: absolute;
@@ -31,184 +31,343 @@
             right: 0;
             bottom: 0;
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 0, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(0, 255, 0, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(0, 100, 255, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
         }
         
-        .grid-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(rgba(0, 255, 0, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 0, 0.02) 1px, transparent 1px);
-            background-size: 100px 100px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
         .container {
             background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.2);
-            padding: 50px;
-            max-width: 800px;
-            width: 100%;
-            position: relative;
-            z-index: 10;
-        }
-
-        .logo-section {
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
             text-align: center;
-            margin-bottom: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 스크롤바 스타일링 */
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
 
         .logo {
-            width: 150px;
+            max-width: 120px;
             height: auto;
             margin-bottom: 20px;
         }
 
         h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2c3e50;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
         }
 
         .subtitle {
-            color: #666;
-            text-align: center;
-            margin-bottom: 40px;
+            color: #7f8c8d;
+            font-size: 1em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .description {
+            color: #5a6c7d;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .feature {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-icon {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .feature h3 {
+            color: #2c3e50;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .feature p {
+            color: #6c757d;
+            font-size: 0.8em;
+        }
+
+        .login-section {
+            margin-top: 25px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
             font-size: 1.1em;
-        }
-
-        .sitemap-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            color: #444;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .sitemap-list {
-            list-style: none;
-            padding-left: 20px;
-        }
-
-        .sitemap-list li {
-            margin-bottom: 15px;
-        }
-
-        .sitemap-list a {
-            color: #555;
+            font-weight: 600;
             text-decoration: none;
-            font-size: 1.1em;
-            display: flex;
-            align-items: center;
+            display: inline-block;
             transition: all 0.3s ease;
-            padding: 10px 15px;
-            border-radius: 8px;
-            background: rgba(102, 126, 234, 0.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
         }
 
-        .sitemap-list a:hover {
-            background: rgba(102, 126, 234, 0.15);
-            color: #667eea;
-            transform: translateX(5px);
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
         }
 
-        .sitemap-list a::before {
-            content: "📄";
-            margin-right: 10px;
-            font-size: 1.2em;
+        .login-btn:hover::before {
+            left: 100%;
         }
 
-        .dashboard-link::before {
-            content: "📊" !important;
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
         }
 
-        .incident-link::before {
-            content: "🚨" !important;
+        .demo-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
         }
 
-        .login-link::before {
-            content: "🔐" !important;
+        .demo-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .demo-btn.secondary {
+            background: #6c757d;
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .demo-btn.secondary:hover {
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
         }
 
         .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            color: #999;
-            font-size: 0.9em;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.85em;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .container {
-                padding: 30px 20px;
+                padding: 20px;
+                margin: 10px;
+                max-height: 95vh;
             }
-
+            
             h1 {
-                font-size: 2em;
+                font-size: 1.5em;
             }
-
+            
+            .features {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .login-btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 배경 효과 -->
-    <div class="grid-bg"></div>
-    
     <div class="container">
-        <div class="logo-section">
-            <a href="index.html" style="text-decoration: none;">
-                <img src="Uriel_CI(png)/Uriel_logo.png" alt="Uriel Logo" class="logo">
-            </a>
-            <h1>라이다/AI 기반 공항 내 방치 물품<br>모니터링 시스템</h1>
-            <p class="subtitle">신규 입사자 프로젝트</p>
+        <img src="Uriel_CI(png)/Uriel_logo.png" alt="Uriel Logo" class="logo">
+        
+        <h1>공항 보안 관리 시스템</h1>
+        <p class="subtitle">라이다/AI 기반 방치물품 모니터링 솔루션</p>
+        
+        <div class="description">
+            실시간 라이다 센서와 AI 분석을 통해 공항 내 방치물품을 자동 감지하고 
+            감식팀에게 즉시 알림을 제공하는 통합 보안 관리 시스템입니다.
         </div>
 
-        <div class="sitemap-section">
-            <h2 class="section-title">📍 사이트맵</h2>
-            <ul class="sitemap-list">
-                <li>
-                    <a href="login.html" class="login-link">
-                        로그인
-                    </a>
-                </li>
-                <li>
-                    <a href="incident-list.html" class="incident-link">
-                        리스트
-                    </a>
-                </li>
-                <li>
-                    <a href="analytics-dashboard.html" class="dashboard-link">
-                        통계
-                    </a>
-                </li>
-                <li>
-                    <a href="incident-detail.html" class="incident-link">
-                        상세
-                    </a>
-                </li>
-            </ul>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <h3>실시간 감지</h3>
+                <p>라이다 센서로 24시간 모니터링</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>AI 분석</h3>
+                <p>딥러닝 기반 위험도 판정</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>모바일 지원</h3>
+                <p>감식팀 전용 모바일 앱</p>
+            </div>
+        </div>
+
+        <div class="login-section">
+            <a href="login.html" class="login-btn">
+                🛡️ 관제센터 접속
+            </a>
+        </div>
+
+        <!-- 모바일 앱 접속 섹션 -->
+        <div class="mobile-section" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <h3 style="color: #495057; margin-bottom: 5px; font-size: 1em;">📱 감식팀 모바일</h3>
+                    <p style="color: #6c757d; font-size: 0.85em; margin: 0;">모바일 인터페이스 테스트</p>
+                </div>
+                <a href="mobile/login.html" class="demo-btn" style="background: #17a2b8; padding: 10px 20px; font-size: 0.9em;">
+                    📱 모바일 접속
+                </a>
+            </div>
+            
+            <details style="background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: left;">
+                <summary style="color: #495057; font-size: 0.9em; cursor: pointer; font-weight: 500;">💡 PC에서 테스트 방법 (클릭)</summary>
+                <div style="margin-top: 10px; padding-left: 10px;">
+                    <p style="color: #6c757d; font-size: 0.85em; line-height: 1.6; margin: 0;">
+                        <strong>F12</strong> → <strong>Ctrl+Shift+M</strong> → 기기 선택 → 모바일 접속
+                    </p>
+                </div>
+            </details>
+        </div>
+
+        <div class="demo-section">
+            <p style="color: #6c757d; margin-bottom: 10px; font-size: 0.9em;">데모 및 관리(데모 데이터 관리)</p>
+            <a href="javascript:addRandomIncident()" class="demo-btn">📦 분실물 추가</a>
+            <a href="javascript:resetAllData()" class="demo-btn secondary">🔄 데이터 초기화 (최초 접속시 필수)</a>
         </div>
 
         <div class="footer">
-            <p>© 2025 UrielSoft Dashboard. All rights reserved.</p>
+            <p>© 2025 UrielSoft. 신입사원 프로젝트</p>
         </div>
     </div>
+
+    <!-- 데이터 매니저 스크립트 로드 -->
+    <script src="js/data-manager.js"></script>
+    
+    <script>
+        // 랜덤 분실물 생성 함수
+        function addRandomIncident() {
+            const locations = [
+                'T1-3F-G01', 'T1-3F-G02', 'T1-3F-G03', 'T1-3F-G28', 'T1-3F-G29',
+                'T2-2F-B12', 'T2-2F-B15', 'T2-2F-C08', 'T2-2F-C12', 'T2-2F-D05',
+                'T1-1F-체크인카운터', 'T2-1F-면세점', 'T1-2F-라운지', 'T2-3F-푸드코트',
+                'T1-지하1F-주차장', 'T2-지하2F-기계실', 'T1-4F-전망대'
+            ];
+            
+            const objectTypes = [
+                '캐리어', '백팩', '쇼핑백', '핸드백', '서류가방', 
+                '노트북가방', '스포츠가방', '여행가방', '기타'
+            ];
+            
+            const riskLevels = ['low', 'medium', 'high'];
+            const riskWeights = [0.6, 0.3, 0.1];
+            
+            function getWeightedRandom(items, weights) {
+                const random = Math.random();
+                let cumulative = 0;
+                for (let i = 0; i < weights.length; i++) {
+                    cumulative += weights[i];
+                    if (random < cumulative) {
+                        return items[i];
+                    }
+                }
+                return items[items.length - 1];
+            }
+            
+            // 30분 전에 감지된 것으로 설정 (30분 경과 후 경고 발생)
+            const detectedTime = new Date(Date.now() - (30 * 60 * 1000));
+            
+            const newIncident = {
+                id: 'INC-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-6),
+                location: locations[Math.floor(Math.random() * locations.length)],
+                objectType: objectTypes[Math.floor(Math.random() * objectTypes.length)],
+                riskLevel: getWeightedRandom(riskLevels, riskWeights),
+                detectedAt: detectedTime.toISOString(),
+                duration: 30, // 30분 경과
+                status: 'pending',
+                assignedTeam: null,
+                assignedAt: null
+            };
+            
+            const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+            incidents.push(newIncident);
+            localStorage.setItem('incidents', JSON.stringify(incidents));
+            
+            showNotification(`방치물품 경고 발생!\n위치: ${newIncident.location}\n물품: ${newIncident.objectType}\n위험도: ${newIncident.riskLevel === 'high' ? '높음' : newIncident.riskLevel === 'medium' ? '중간' : '낮음'}\n방치시간: 30분 경과`);
+        }
+        
+        // 간단한 알림 함수
+        function showNotification(message) {
+            alert(message);
+        }
+    </script>
 </body>
 </html>
