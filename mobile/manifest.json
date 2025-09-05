@@ -2,11 +2,11 @@
   "name": "공항 감식팀 모바일",
   "short_name": "감식팀",
   "description": "공항 내 방치물품 감식팀 전용 모바일 앱",
-  "start_url": "/mobile/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
   "icons": [
     {
       "src": "icon-192.png",
@@ -24,20 +24,20 @@
   "categories": ["security", "utilities"],
   "lang": "ko-KR",
   "dir": "ltr",
-  "scope": "/mobile/",
+  "scope": "./",
   "shortcuts": [
     {
       "name": "새 보고서",
       "short_name": "보고서",
       "description": "새로운 상황 보고서 작성",
-      "url": "/mobile/report.html",
+      "url": "./report.html",
       "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "업무 목록",
       "short_name": "업무",
       "description": "배정된 업무 확인",
-      "url": "/mobile/tasks.html",
+      "url": "./tasks.html",
       "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
     }
   ]

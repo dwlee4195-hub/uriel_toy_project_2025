@@ -1,22 +1,30 @@
 // 서비스 워커 - 오프라인 지원 및 캐싱
-const CACHE_NAME = 'inspection-team-v1';
+const CACHE_NAME = 'inspection-team-v3'; // 버전 업데이트로 캐시 강제 초기화
+// 로컬 HTML 파일만 캐싱 (JS 파일은 제외)
 const urlsToCache = [
-  '/mobile/',
-  '/mobile/index.html',
-  '/mobile/tasks.html',
-  '/mobile/task-detail.html',
-  '/mobile/manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+  './',
+  './index.html',
+  './tasks.html',
+  './task-detail.html',
+  './notifications.html',
+  './login.html'
 ];
 
 // 설치 이벤트
 self.addEventListener('install', event => {
+  self.skipWaiting(); // 즉시 활성화
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('캐시 열기');
-        return cache.addAll(urlsToCache);
+        // 로컬 리소스만 캐싱
+        return Promise.all(
+          urlsToCache.map(url => {
+            return cache.add(url).catch(err => {
+              console.warn(`${url} 캐싱 실패, 무시하고 계속 진행`);
+            });
+          })
+        );
       })
   );
 });
@@ -27,37 +35,64 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
+          // 모든 이전 버전 캐시 삭제
           if (cacheName !== CACHE_NAME) {
             console.log('오래된 캐시 삭제:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
+    }).then(() => {
+      // 모든 클라이언트 즉시 제어
+      return self.clients.claim();
     })
   );
 });
 
 // Fetch 이벤트 - 네트워크 우선, 실패시 캐시
 self.addEventListener('fetch', event => {
+  const requestURL = new URL(event.request.url);
+  
+  // 외부 리소스는 Service Worker가 처리하지 않음
+  if (requestURL.origin !== location.origin) {
+    return; // 브라우저가 직접 처리
+  }
+  
+  // chrome-extension:// 프로토콜 무시
+  if (event.request.url.startsWith('chrome-extension://')) {
+    return;
+  }
+  
+  // JavaScript 파일은 캐시하지 않음 (항상 최신 버전 사용)
+  if (event.request.url.includes('.js')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  
+  // 로컬 HTML 파일은 네트워크 우선, 실패시 캐시
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        // 유효한 응답이면 캐시에 저장
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME)
-          .then(cache => {
+        // 네트워크 성공시 캐시 업데이트
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseToCache);
           });
-
+        }
         return response;
       })
       .catch(() => {
         // 네트워크 실패시 캐시에서 가져오기
-        return caches.match(event.request);
+        return caches.match(event.request).then(response => {
+          if (response) {
+            return response;
+          }
+          // 오프라인 fallback
+          if (event.request.destination === 'document') {
+            return caches.match('./index.html');
+          }
+        });
       })
   );
 });

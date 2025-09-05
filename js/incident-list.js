@@ -472,19 +472,19 @@ function showNotification(type, message) {
     notification.className = 'notification-item';
     
     const colors = {
-        success: 'bg-green-900 border-green-700 text-green-900',
-        error: 'bg-red-900 border-red-700 text-red-900',
-        info: 'bg-blue-900 border-blue-700 text-blue-900'
+        success: 'bg-green-900/90 border-green-500/50 text-green-200',
+        error: 'bg-red-900/90 border-red-500/50 text-red-200',
+        info: 'bg-blue-900/90 border-blue-500/50 text-blue-200'
     };
     
     const icons = {
-        success: 'fa-check-circle text-green-600',
-        error: 'fa-exclamation-circle text-red-600',
-        info: 'fa-info-circle text-blue-600'
+        success: 'fa-check-circle text-green-400',
+        error: 'fa-exclamation-circle text-red-400',
+        info: 'fa-info-circle text-blue-400'
     };
     
     notification.innerHTML = `
-        <div class="${colors[type]} border-2 px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3">
+        <div class="${colors[type]} border-2 px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3 backdrop-blur-sm">
             <i class="fas ${icons[type]} text-lg"></i>
             <p class="font-medium">${message}</p>
         </div>

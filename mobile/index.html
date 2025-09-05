@@ -23,9 +23,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -55,47 +55,47 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-dark-bg text-gray-200">
     
     <!-- 상단 헤더 -->
-    <header class="bg-light-secondary border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+    <header class="bg-dark-secondary border-b border-gray-700 fixed top-0 left-0 right-0 z-50 safe-top">
         <div class="px-4 py-3">
             <!-- 상단 줄 - 로고와 사용자 정보 -->
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center">
                     <img src="../Uriel_CI(png)/Uriel_logo.png" alt="Uriel" class="h-8 mr-3">
                     <div>
-                        <h1 class="font-bold text-gray-900">공항 감식팀</h1>
-                        <p class="text-xs text-gray-600">모바일 관제 시스템</p>
+                        <h1 class="font-bold text-gray-100">공항 감식팀</h1>
+                        <p class="text-xs text-gray-400">모바일 관제 시스템</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
                     <!-- 알림 -->
                     <button class="relative p-2" onclick="showNotifications()">
-                        <i class="fas fa-bell text-gray-600"></i>
+                        <i class="fas fa-bell text-gray-400"></i>
                         <span id="notification-badge" class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold text-xs">2</span>
                     </button>
                     <!-- 로그아웃 -->
                     <button onclick="logout()" class="p-2">
-                        <i class="fas fa-sign-out-alt text-gray-600"></i>
+                        <i class="fas fa-sign-out-alt text-gray-400"></i>
                     </button>
                 </div>
             </div>
             
             <!-- 하단 줄 - 사용자 정보 -->
-            <div class="flex items-center justify-between bg-white rounded-lg px-3 py-2">
+            <div class="flex items-center justify-between bg-dark-tertiary rounded-lg px-3 py-2">
                 <div class="flex items-center">
                     <div class="bg-primary-blue rounded-full w-8 h-8 flex items-center justify-center mr-2">
                         <i class="fas fa-user text-white text-sm"></i>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-900" id="user-name">로딩중...</p>
-                        <p class="text-xs text-gray-500" id="user-info">인증 확인중...</p>
+                        <p class="text-sm font-medium text-gray-100" id="user-name">로딩중...</p>
+                        <p class="text-xs text-gray-400" id="user-info">인증 확인중...</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-xs text-gray-500">현재 시각</p>
-                    <p class="text-sm font-medium text-gray-900" id="current-time">00:00</p>
+                    <p class="text-xs text-gray-400">현재 시각</p>
+                    <p class="text-sm font-medium text-gray-100" id="current-time">00:00</p>
                 </div>
             </div>
         </div>
@@ -107,42 +107,42 @@
         <div class="p-4 space-y-4">
             
             <!-- 오늘의 업무 현황 -->
-            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-                <h2 class="font-bold text-gray-700 mb-3 flex items-center">
+            <div class="bg-dark-secondary rounded-xl shadow-lg p-4 border border-gray-700">
+                <h2 class="font-bold text-gray-200 mb-3 flex items-center">
                     <i class="fas fa-calendar-day mr-2 text-primary-blue"></i>
                     오늘의 업무 현황
                 </h2>
                 <div class="grid grid-cols-2 gap-3">
                     <!-- 동적으로 업데이트됨 -->
                     <div class="text-center">
-                        <p class="text-2xl font-bold text-gray-300">-</p>
-                        <p class="text-xs text-gray-600">출동중</p>
+                        <p class="text-2xl font-bold text-amber-400">-</p>
+                        <p class="text-xs text-gray-400">출동중</p>
                     </div>
-                    <div class="text-center border-l border-gray-200">
-                        <p class="text-2xl font-bold text-gray-300">-</p>
-                        <p class="text-xs text-gray-600">완료</p>
+                    <div class="text-center border-l border-gray-700">
+                        <p class="text-2xl font-bold text-blue-400">-</p>
+                        <p class="text-xs text-gray-400">완료</p>
                     </div>
                 </div>
             </div>
             
             <!-- 배정된 업무 리스트 -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100">
-                <div class="p-4 border-b border-gray-100">
-                    <h2 class="font-bold text-gray-700 flex items-center">
+            <div class="bg-dark-secondary rounded-xl shadow-lg border border-gray-700">
+                <div class="p-4 border-b border-gray-700">
+                    <h2 class="font-bold text-gray-200 flex items-center">
                         <i class="fas fa-tasks mr-2 text-primary-blue"></i>
                         배정된 업무
                     </h2>
                 </div>
-                <div class="divide-y divide-gray-100">
+                <div class="divide-y divide-gray-700">
                     <!-- 동적으로 업데이트됨 -->
-                    <div class="p-4 text-center text-gray-500">
+                    <div class="p-4 text-center text-gray-400">
                         <i class="fas fa-spinner fa-spin mb-2"></i>
                         <p class="text-sm">업무 목록 로딩중...</p>
                     </div>
                 </div>
                 
                 <!-- 모두 보기 버튼 -->
-                <div class="p-3 bg-gray-50">
+                <div class="p-3 bg-dark-tertiary">
                     <a href="tasks.html" class="text-primary-blue text-sm font-medium text-center block">
                         모든 업무 보기 <i class="fas fa-arrow-right ml-1"></i>
                     </a>
@@ -153,21 +153,21 @@
     </main>
     
     <!-- 하단 탭 메뉴 -->
-    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 tab-bar">
+    <nav class="bg-dark-secondary border-t border-gray-700 fixed bottom-0 left-0 right-0 z-50 tab-bar">
         <div class="grid grid-cols-4 h-14">
             <a href="index.html" class="flex flex-col items-center justify-center text-primary-blue">
                 <i class="fas fa-home text-xl"></i>
                 <span class="text-xs mt-1">홈</span>
             </a>
-            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-400 hover:text-primary-blue transition-colors">
                 <i class="fas fa-clipboard-list text-xl"></i>
                 <span class="text-xs mt-1">업무</span>
             </a>
-            <a href="map.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="map.html" class="flex flex-col items-center justify-center text-gray-400 hover:text-primary-blue transition-colors">
                 <i class="fas fa-map-marked-alt text-xl"></i>
                 <span class="text-xs mt-1">지도</span>
             </a>
-            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-400 hover:text-primary-blue transition-colors">
                 <i class="fas fa-user text-xl"></i>
                 <span class="text-xs mt-1">내정보</span>
             </a>
@@ -220,11 +220,11 @@
                 // 오늘 업무 중에서 현재 팀과 관련된 업무만
                 if (!isToday) return false;
                 
-                // 완료된 업무는 모든 팀 포함
-                if (task.status === 'resolved') return true;
+                // 팀이 없으면 업무 표시 안함
+                if (!userTeamData) return false;
                 
-                // 진행중인 업무는 현재 팀에 배정된 것만
-                return userTeamData && task.assignedTeam === userTeamData.id;
+                // 현재 팀에 배정된 업무만 표시 (모든 상태)
+                return task.assignedTeam === userTeamData.id;
             });
             
             console.log('오늘 업무:', todayTasks.length);
@@ -238,11 +238,11 @@
             const statusHTML = `
                 <div class="text-center">
                     <p class="text-2xl font-bold text-orange-500">${assigned}</p>
-                    <p class="text-xs text-gray-600">출동중</p>
+                    <p class="text-xs text-gray-400">출동중</p>
                 </div>
                 <div class="text-center">
                     <p class="text-2xl font-bold text-green-500">${completed}</p>
-                    <p class="text-xs text-gray-600">완료</p>
+                    <p class="text-xs text-gray-400">완료</p>
                 </div>
             `;
             
@@ -265,19 +265,30 @@
             const tasks = getTasksData();
             const currentUser = window.dataManager.getCurrentUser();
             
+            console.log('Current user:', currentUser);
+            console.log('All tasks:', tasks);
+            
             // 사용자의 teamId로 팀 정보 찾기
             let userTeamData = null;
             if (currentUser && currentUser.teamId) {
                 const teams = JSON.parse(localStorage.getItem('teams') || '[]');
                 userTeamData = teams.find(t => t.id === currentUser.teamId);
+                console.log('User team data:', userTeamData);
             }
             
+            // 사용자의 팀에 배정된 업무만 필터링
             const relevantTasks = tasks.filter(task => {
-                // 배정된 업무만 (신규 제외)
-                if (!task.assignedTeam) return false;
-                // 사용자 팀에 배정된 업무만
-                return userTeamData && task.assignedTeam === userTeamData.id;
+                // 팀이 없으면 업무 표시 안함
+                if (!userTeamData) return false;
+                
+                // 해당 팀에 배정된 업무만 표시
+                if (task.assignedTeam !== userTeamData.id) return false;
+                
+                // 배정된 상태의 업무만 표시 (pending 제외)
+                return task.status === 'assigned' || task.status === 'in_progress' || task.status === 'resolved';
             });
+            
+            console.log('Relevant tasks:', relevantTasks);
             
             const activeTasks = relevantTasks.filter(t => t.status !== 'resolved').slice(0, 2);
             
@@ -288,16 +299,16 @@
                 
                 switch(task.status) {
                     case 'pending':
-                        statusBadge = 'bg-red-100 text-red-600';
+                        statusBadge = 'bg-red-900/50 text-red-400 border border-red-500/30';
                         statusText = '신규';
                         break;
                     case 'assigned':
                     case 'in_progress':
-                        statusBadge = 'bg-orange-100 text-orange-600';
+                        statusBadge = 'bg-amber-900/50 text-amber-400 border border-amber-500/30';
                         statusText = '출동중';
                         break;
                     default:
-                        statusBadge = 'bg-gray-100 text-gray-600';
+                        statusBadge = 'bg-gray-800 text-gray-400 border border-gray-600';
                         statusText = '미정';
                 }
                 
@@ -312,15 +323,15 @@
                 }[task.riskLevel] || '중간';
                 
                 taskHTML += `
-                    <a href="task-detail.html?id=${task.id}" class="block p-4 hover:bg-gray-50 transition-colors">
+                    <a href="task-detail.html?id=${task.id}" class="block p-4 hover:bg-dark-bg transition-colors">
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <div class="flex items-center mb-1">
                                     <span class="${statusBadge} text-xs px-2 py-1 rounded-full font-semibold">${statusText}</span>
-                                    <span class="text-xs text-gray-500 ml-2">${time}</span>
+                                    <span class="text-xs text-gray-400 ml-2">${time}</span>
                                 </div>
-                                <p class="font-medium text-gray-900">${task.location || 'T1-1F'} 수하물 확인</p>
-                                <p class="text-sm text-gray-600 mt-1">${task.objectType || '미확인 물품'} - AI 위험도: ${riskLevel}</p>
+                                <p class="font-medium text-gray-200">${task.location || 'T1-1F'} 수하물 확인</p>
+                                <p class="text-sm text-gray-400 mt-1">${task.objectType || '미확인 물품'} - AI 위험도: ${riskLevel}</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400"></i>
                         </div>
@@ -328,18 +339,33 @@
                 `;
             });
             
-            const taskContainer = document.querySelector('.divide-y.divide-gray-100');
+            const taskContainer = document.querySelector('.divide-y.divide-gray-700');
             if (taskContainer) {
                 if (taskHTML) {
                     taskContainer.innerHTML = taskHTML;
                 } else {
+                    // 업무가 없는 경우의 상세 메시지
+                    let emptyMessage = '';
+                    if (tasks.length === 0) {
+                        emptyMessage = '등록된 업무가 없습니다';
+                    } else if (relevantTasks.length === 0) {
+                        emptyMessage = '배정된 업무가 없습니다';
+                    } else {
+                        emptyMessage = '활성 업무가 없습니다';
+                    }
+                    
                     taskContainer.innerHTML = `
-                        <div class="p-4 text-center text-gray-500">
+                        <div class="p-4 text-center text-gray-400">
                             <i class="fas fa-inbox text-2xl mb-2"></i>
-                            <p class="text-sm">배정된 업무가 없습니다</p>
+                            <p class="text-sm">${emptyMessage}</p>
+                            <button onclick="window.location.href='tasks.html'" class="mt-2 text-xs text-primary-blue">
+                                전체 업무 보기 <i class="fas fa-arrow-right"></i>
+                            </button>
                         </div>
                     `;
                 }
+            } else {
+                console.error('Task container not found - selector: .divide-y.divide-gray-700');
             }
         }
 
@@ -445,12 +471,22 @@
             setInterval(updateClock, 1000);
         });
         
-        // 서비스 워커 등록 (PWA)
+        // 서비스 워커 등록 (PWA) - 개선된 버전
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(function(registration) {
-                console.log('Service Worker 등록 성공:', registration);
-            }).catch(function(error) {
-                console.log('Service Worker 등록 실패:', error);
+            // 페이지 로드 완료 후 등록
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js', { scope: './' })
+                    .then(function(registration) {
+                        console.log('Service Worker 등록 성공');
+                        // 주기적 업데이트 체크
+                        if (registration.active) {
+                            registration.update();
+                        }
+                    })
+                    .catch(function(error) {
+                        console.warn('Service Worker 등록 실패 (앱은 정상 동작):', error.message);
+                        // Service Worker 없이도 앱 기능은 모두 동작
+                    });
             });
         }
         

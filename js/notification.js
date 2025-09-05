@@ -26,39 +26,39 @@ const Notification = {
         const container = this.createContainer();
         const id = 'notification-' + Date.now();
         
-        // 타입별 스타일 설정
+        // 타입별 스타일 설정 (다크 테마)
         const styles = {
             success: {
-                bg: 'bg-gradient-to-r from-green-900 to-emerald-900',
-                border: 'border-2 border-green-700',
-                text: 'text-green-900',
+                bg: 'bg-gradient-to-r from-green-900/90 to-emerald-900/90',
+                border: 'border-2 border-green-500/50',
+                text: 'text-green-200',
                 icon: 'fa-check-circle',
-                iconColor: 'text-green-600',
-                iconBg: 'bg-green-900'
+                iconColor: 'text-green-400',
+                iconBg: 'bg-green-500/20'
             },
             error: {
-                bg: 'bg-gradient-to-r from-red-900 to-pink-900',
-                border: 'border-2 border-red-700',
-                text: 'text-red-900',
+                bg: 'bg-gradient-to-r from-red-900/90 to-pink-900/90',
+                border: 'border-2 border-red-500/50',
+                text: 'text-red-200',
                 icon: 'fa-exclamation-circle',
-                iconColor: 'text-red-600',
-                iconBg: 'bg-red-900'
+                iconColor: 'text-red-400',
+                iconBg: 'bg-red-500/20'
             },
             warning: {
-                bg: 'bg-gradient-to-r from-yellow-50 to-orange-50',
-                border: 'border-2 border-yellow-200',
-                text: 'text-yellow-900',
+                bg: 'bg-gradient-to-r from-yellow-900/90 to-orange-900/90',
+                border: 'border-2 border-yellow-500/50',
+                text: 'text-yellow-200',
                 icon: 'fa-exclamation-triangle',
-                iconColor: 'text-yellow-600',
-                iconBg: 'bg-yellow-900'
+                iconColor: 'text-yellow-400',
+                iconBg: 'bg-yellow-500/20'
             },
             info: {
-                bg: 'bg-gradient-to-r from-blue-50 to-cyan-50',
-                border: 'border-2 border-blue-700',
-                text: 'text-blue-900',
+                bg: 'bg-gradient-to-r from-blue-900/90 to-cyan-900/90',
+                border: 'border-2 border-blue-500/50',
+                text: 'text-blue-200',
                 icon: 'fa-info-circle',
-                iconColor: 'text-blue-600',
-                iconBg: 'bg-blue-900'
+                iconColor: 'text-blue-400',
+                iconBg: 'bg-blue-500/20'
             }
         };
 

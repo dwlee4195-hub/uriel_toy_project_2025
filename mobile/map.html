@@ -19,9 +19,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -60,10 +60,10 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-dark-bg text-gray-200">
     
     <!-- 상단 헤더 -->
-    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+    <header class="bg-dark-secondary border-b border-gray-700 fixed top-0 left-0 right-0 z-50 safe-top">
         <div class="px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <button onclick="history.back()" class="mr-3">
@@ -73,7 +73,7 @@
             </div>
             <div class="flex items-center space-x-3">
                 <button onclick="refreshMap()" class="p-2">
-                    <i class="fas fa-sync-alt text-gray-600"></i>
+                    <i class="fas fa-sync-alt text-gray-400"></i>
                 </button>
             </div>
         </div>
@@ -84,7 +84,7 @@
         <!-- 지도 영역 -->
         <div class="map-container map-grid h-screen relative">
             <!-- 터미널 구조 표시 -->
-            <div class="absolute top-10 left-10 bg-white/80 rounded-lg p-3 shadow-sm">
+            <div class="absolute top-10 left-10 bg-dark-secondary/80 rounded-lg p-3 shadow-sm">
                 <h3 class="font-bold text-sm mb-2">터미널 1</h3>
                 <div class="grid grid-cols-3 gap-1 text-xs">
                     <div class="bg-blue-100 p-1 rounded text-center">1F</div>
@@ -93,7 +93,7 @@
                 </div>
             </div>
             
-            <div class="absolute top-10 right-10 bg-white/80 rounded-lg p-3 shadow-sm">
+            <div class="absolute top-10 right-10 bg-dark-secondary/80 rounded-lg p-3 shadow-sm">
                 <h3 class="font-bold text-sm mb-2">터미널 2</h3>
                 <div class="grid grid-cols-3 gap-1 text-xs">
                     <div class="bg-green-100 p-1 rounded text-center">1F</div>
@@ -107,7 +107,7 @@
         </div>
         
         <!-- 범례 -->
-        <div class="fixed bottom-24 left-4 bg-white/90 rounded-lg p-3 shadow-lg">
+        <div class="fixed bottom-24 left-4 bg-dark-secondary/90 rounded-lg p-3 shadow-lg">
             <h4 class="font-bold text-sm mb-2">범례</h4>
             <div class="space-y-1 text-xs">
                 <div class="flex items-center">
@@ -127,13 +127,13 @@
     </main>
     
     <!-- 하단 탭 메뉴 -->
-    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+    <nav class="bg-dark-secondary border-t border-gray-700 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
         <div class="grid grid-cols-4 h-14">
-            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-home text-xl"></i>
                 <span class="text-xs mt-1">홈</span>
             </a>
-            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-clipboard-list text-xl"></i>
                 <span class="text-xs mt-1">업무</span>
             </a>
@@ -141,7 +141,7 @@
                 <i class="fas fa-map-marked-alt text-xl"></i>
                 <span class="text-xs mt-1">지도</span>
             </a>
-            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-user text-xl"></i>
                 <span class="text-xs mt-1">내정보</span>
             </a>
@@ -205,7 +205,7 @@
                 marker.style.top = top + '%';
                 
                 marker.innerHTML = `
-                    <div class="bg-white rounded-full p-2 shadow-lg border-2 border-${color}-500">
+                    <div class="bg-dark-secondary rounded-full p-2 shadow-lg border-2 border-${color}-500">
                         <i class="fas fa-exclamation-triangle text-${color}-500 text-lg"></i>
                     </div>
                     <div class="bg-${color}-500 text-white text-xs px-2 py-1 rounded-full mt-1 whitespace-nowrap">
@@ -224,10 +224,10 @@
             if (activeTasks.length === 0) {
                 container.innerHTML = `
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="bg-white/80 rounded-lg p-6 text-center">
+                        <div class="bg-dark-secondary/80 rounded-lg p-6 text-center">
                             <i class="fas fa-check-circle text-green-500 text-3xl mb-3"></i>
-                            <p class="text-gray-700">현재 배정된 업무가 없습니다</p>
-                            <p class="text-sm text-gray-500">모든 지역이 안전합니다</p>
+                            <p class="text-gray-200">현재 배정된 업무가 없습니다</p>
+                            <p class="text-sm text-gray-400">모든 지역이 안전합니다</p>
                         </div>
                     </div>
                 `;

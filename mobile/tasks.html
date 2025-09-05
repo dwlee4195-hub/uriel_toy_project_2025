@@ -19,9 +19,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -35,31 +35,31 @@
         .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-dark-bg text-gray-200">
     
     <!-- 상단 헤더 -->
-    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+    <header class="bg-dark-secondary border-b border-gray-700 fixed top-0 left-0 right-0 z-50 safe-top">
         <div class="px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <button onclick="history.back()" class="mr-3">
-                    <i class="fas fa-arrow-left text-xl"></i>
+                    <i class="fas fa-arrow-left text-xl text-gray-400"></i>
                 </button>
-                <h1 class="font-bold text-lg">팀 업무 내역</h1>
+                <h1 class="font-bold text-lg text-gray-100">팀 업무 내역</h1>
             </div>
             <div class="flex items-center space-x-3">
-                <span class="text-sm text-gray-500">3팀</span>
+                <span class="text-sm text-gray-400">3팀</span>
             </div>
         </div>
         
         <!-- 상태 필터 탭 -->
-        <div class="bg-light-secondary px-4 py-2 flex space-x-2 overflow-x-auto">
+        <div class="bg-dark-tertiary px-4 py-2 flex space-x-2 overflow-x-auto">
             <button onclick="filterTasks('all')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-primary-blue text-white whitespace-nowrap">
                 전체
             </button>
-            <button onclick="filterTasks('progress')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-white text-gray-600 whitespace-nowrap">
+            <button onclick="filterTasks('progress')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-300 whitespace-nowrap">
                 처리중
             </button>
-            <button onclick="filterTasks('completed')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-white text-gray-600 whitespace-nowrap">
+            <button onclick="filterTasks('completed')" class="filter-btn px-4 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-300 whitespace-nowrap">
                 완료
             </button>
         </div>
@@ -68,28 +68,15 @@
     <!-- 메인 콘텐츠 -->
     <main class="pt-32 pb-20 safe-top">
         
-        <!-- 통계 요약 -->
-        <div class="p-4 bg-white border-b border-gray-200">
-            <div class="grid grid-cols-2 gap-3 text-center">
-                <div>
-                    <p class="text-2xl font-bold text-orange-500">2</p>
-                    <p class="text-xs text-gray-600">출동중</p>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-green-500">8</p>
-                    <p class="text-xs text-gray-600">완료</p>
-                </div>
-            </div>
-        </div>
         
         <div class="px-4 py-4">
             
             <!-- 오늘 업무 섹션 -->
             <div class="mb-6">
-                <h2 class="text-sm font-semibold text-gray-500 mb-3">오늘 (2025년 1월 3일)</h2>
+                <h2 class="text-sm font-semibold text-gray-400 mb-3">오늘 (2025년 1월 3일)</h2>
                 
                 <!-- 처리중 업무 -->
-                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-blue-500 shadow-sm" data-status="progress">
+                <div class="task-item bg-dark-secondary rounded-xl mb-3 border-l-4 border-blue-500 shadow-sm" data-status="progress">
                     <a href="task-detail.html" class="block p-4">
                         <div class="flex items-start">
                             <div class="bg-blue-100 p-2 rounded-full mr-3">
@@ -98,10 +85,10 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full font-semibold">처리중</span>
-                                    <span class="text-xs text-gray-500">10:45 AM</span>
+                                    <span class="text-xs text-gray-400">10:45 AM</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-900 mb-1">T2-2F-G15 방치물품</h3>
-                                <p class="text-sm text-gray-600">검은색 캐리어 - 김철수 담당</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">T2-2F-G15 방치물품</h3>
+                                <p class="text-sm text-gray-400">검은색 캐리어 - 김철수 담당</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
@@ -109,7 +96,7 @@
                 </div>
                 
                 <!-- 대기중 업무 -->
-                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm" data-status="pending">
+                <div class="task-item bg-dark-secondary rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm" data-status="pending">
                     <a href="task-detail.html" class="block p-4">
                         <div class="flex items-start">
                             <div class="bg-orange-100 p-2 rounded-full mr-3">
@@ -118,10 +105,10 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-semibold">대기중</span>
-                                    <span class="text-xs text-gray-500">11:30 AM</span>
+                                    <span class="text-xs text-gray-400">11:30 AM</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-900 mb-1">T1-2F-G07 방치물품</h3>
-                                <p class="text-sm text-gray-600">회색 백팩 - 미배정</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">T1-2F-G07 방치물품</h3>
+                                <p class="text-sm text-gray-400">회색 백팩 - 미배정</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
@@ -129,7 +116,7 @@
                 </div>
                 
                 <!-- 대기중 업무 2 -->
-                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm" data-status="pending">
+                <div class="task-item bg-dark-secondary rounded-xl mb-3 border-l-4 border-orange-500 shadow-sm" data-status="pending">
                     <a href="task-detail.html" class="block p-4">
                         <div class="flex items-start">
                             <div class="bg-orange-100 p-2 rounded-full mr-3">
@@ -138,10 +125,10 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-semibold">대기중</span>
-                                    <span class="text-xs text-gray-500">12:15 PM</span>
+                                    <span class="text-xs text-gray-400">12:15 PM</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-900 mb-1">T2-3F-G22 방치물품</h3>
-                                <p class="text-sm text-gray-600">파란색 캐리어 - 미배정</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">T2-3F-G22 방치물품</h3>
+                                <p class="text-sm text-gray-400">파란색 캐리어 - 미배정</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
@@ -149,7 +136,7 @@
                 </div>
                 
                 <!-- 완료 업무 -->
-                <div class="task-item bg-gray-50 rounded-xl mb-3 opacity-75" data-status="completed">
+                <div class="task-item bg-dark-bg rounded-xl mb-3 opacity-75" data-status="completed">
                     <a href="task-detail.html" class="block p-4">
                         <div class="flex items-start">
                             <div class="bg-green-100 p-2 rounded-full mr-3">
@@ -158,10 +145,10 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-semibold">완료</span>
-                                    <span class="text-xs text-gray-500">09:30 AM</span>
+                                    <span class="text-xs text-gray-400">09:30 AM</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-700 mb-1">T1-1F-G03 방치물품</h3>
-                                <p class="text-sm text-gray-500">노란색 가방 - 박영수 처리완료</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">T1-1F-G03 방치물품</h3>
+                                <p class="text-sm text-gray-400">노란색 가방 - 박영수 처리완료</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
@@ -171,10 +158,10 @@
             
             <!-- 어제 업무 섹션 -->
             <div class="mb-6">
-                <h2 class="text-sm font-semibold text-gray-500 mb-3">어제 (2025년 1월 2일)</h2>
+                <h2 class="text-sm font-semibold text-gray-400 mb-3">어제 (2025년 1월 2일)</h2>
                 
                 <!-- 완료 업무들 -->
-                <div class="task-item bg-gray-50 rounded-xl mb-3 opacity-75" data-status="completed">
+                <div class="task-item bg-dark-bg rounded-xl mb-3 opacity-75" data-status="completed">
                     <a href="task-detail.html" class="block p-4">
                         <div class="flex items-start">
                             <div class="bg-green-100 p-2 rounded-full mr-3">
@@ -183,17 +170,17 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-semibold">완료</span>
-                                    <span class="text-xs text-gray-500">어제 4:30 PM</span>
+                                    <span class="text-xs text-gray-400">어제 4:30 PM</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-700 mb-1">T2-1F-G03 방치물품</h3>
-                                <p class="text-sm text-gray-500">검은색 백팩 - 김철수 처리완료</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">T2-1F-G03 방치물품</h3>
+                                <p class="text-sm text-gray-400">검은색 백팩 - 김철수 처리완료</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
                     </a>
                 </div>
                 
-                <div class="task-item bg-gray-50 rounded-xl mb-3 opacity-75" data-status="completed">
+                <div class="task-item bg-dark-bg rounded-xl mb-3 opacity-75" data-status="completed">
                     <a href="task-detail.html" class="block p-4">
                         <div class="flex items-start">
                             <div class="bg-green-100 p-2 rounded-full mr-3">
@@ -202,10 +189,10 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-semibold">완료</span>
-                                    <span class="text-xs text-gray-500">어제 2:15 PM</span>
+                                    <span class="text-xs text-gray-400">어제 2:15 PM</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-700 mb-1">T1-3F-G28 방치물품</h3>
-                                <p class="text-sm text-gray-500">빨간색 가방 - 이영희 처리완료</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">T1-3F-G28 방치물품</h3>
+                                <p class="text-sm text-gray-400">빨간색 가방 - 이영희 처리완료</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
@@ -217,9 +204,9 @@
     </main>
     
     <!-- 하단 탭 메뉴 -->
-    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+    <nav class="bg-dark-secondary border-t border-gray-700 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
         <div class="grid grid-cols-4 h-14">
-            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-home text-xl"></i>
                 <span class="text-xs mt-1">홈</span>
             </a>
@@ -227,11 +214,11 @@
                 <i class="fas fa-clipboard-list text-xl"></i>
                 <span class="text-xs mt-1">업무</span>
             </a>
-            <a href="map.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="map.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-map-marked-alt text-xl"></i>
                 <span class="text-xs mt-1">지도</span>
             </a>
-            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="profile.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-user text-xl"></i>
                 <span class="text-xs mt-1">내정보</span>
             </a>
@@ -283,12 +270,14 @@
             
             // 현재 팀에 배정된 업무만 필터링
             const tasks = allTasks.filter(task => {
-                // 신규 상태는 제외하지만, 완료된 업무는 assignedTeam이 없어도 포함
-                if (task.status === 'pending' && !task.assignedTeam) return false;
-                // 완료된 업무는 팀 배정 여부 관계없이 모두 포함
-                if (task.status === 'resolved') return true;
-                // 나머지는 사용자 팀에 배정된 업무만
-                return userTeamData && task.assignedTeam === userTeamData.id;
+                // 팀이 없으면 업무 표시 안함
+                if (!userTeamData) return false;
+                
+                // pending 상태는 제외
+                if (task.status === 'pending') return false;
+                
+                // 사용자 팀에 배정된 업무만 표시
+                return task.assignedTeam === userTeamData.id;
             });
             
             // 팀 표시 업데이트
@@ -321,32 +310,12 @@
                        taskDate.toDateString() !== yesterday;
             }).slice(0, 10); // 최대 10개만
             
-            // 통계 업데이트 (전체 팀 업무 기준)
-            const processing = tasks.filter(t => t.status === 'assigned' || t.status === 'in_progress').length;
-            const completed = tasks.filter(t => t.status === 'resolved').length;
-            
-            // 통계 HTML 업데이트 (2열 레이아웃)
-            const statsHTML = `
-                <div>
-                    <p class="text-2xl font-bold text-orange-500">${processing}</p>
-                    <p class="text-xs text-gray-600">출동중</p>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-green-500">${completed}</p>
-                    <p class="text-xs text-gray-600">완료</p>
-                </div>
-            `;
-            
-            const statsContainer = document.querySelector('.grid.grid-cols-2.gap-3');
-            if (statsContainer) {
-                statsContainer.innerHTML = statsHTML;
-            }
             
             // 오늘 업무 렌더링
             const todaySection = document.querySelector('.mb-6');
             if (todaySection) {
                 const todayDate = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-                let todayHTML = `<h2 class="text-sm font-semibold text-gray-500 mb-3">오늘 (${todayDate})</h2>`;
+                let todayHTML = `<h2 class="text-sm font-semibold text-gray-400 mb-3">오늘 (${todayDate})</h2>`;
                 
                 todayTasks.forEach(task => {
                     todayHTML += createTaskHTML(task);
@@ -354,7 +323,7 @@
                 
                 if (todayTasks.length === 0) {
                     todayHTML += `
-                        <div class="bg-gray-50 rounded-xl p-4 text-center text-gray-500">
+                        <div class="bg-dark-bg rounded-xl p-4 text-center text-gray-400">
                             <i class="fas fa-check-circle text-2xl mb-2"></i>
                             <p>오늘 배정된 업무가 없습니다</p>
                         </div>
@@ -386,7 +355,7 @@
             // 어제 업무가 있으면 추가
             if (yesterdayTasks.length > 0) {
                 const yesterdayDate = new Date(Date.now() - 86400000).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-                let yesterdayHTML = `<div class="mb-6"><h2 class="text-sm font-semibold text-gray-500 mb-3">어제 (${yesterdayDate})</h2>`;
+                let yesterdayHTML = `<div class="mb-6"><h2 class="text-sm font-semibold text-gray-400 mb-3">어제 (${yesterdayDate})</h2>`;
                 
                 yesterdayTasks.forEach(task => {
                     yesterdayHTML += createTaskHTML(task);
@@ -398,7 +367,7 @@
             
             // 최근 완료 업무가 있으면 추가
             if (recentCompletedTasks.length > 0) {
-                let recentHTML = `<div class="mb-6"><h2 class="text-sm font-semibold text-gray-500 mb-3">최근 완료 업무</h2>`;
+                let recentHTML = `<div class="mb-6"><h2 class="text-sm font-semibold text-gray-400 mb-3">최근 완료 업무</h2>`;
                 
                 recentCompletedTasks.forEach(task => {
                     recentHTML += createTaskHTML(task);
@@ -435,7 +404,7 @@
                         color: 'green',
                         icon: 'check',
                         label: '완료',
-                        opacity: 'bg-gray-50 opacity-75'
+                        opacity: 'bg-dark-bg opacity-75'
                     };
                     break;
                 default:
@@ -460,19 +429,19 @@
             }
             
             return `
-                <div class="task-item bg-white rounded-xl mb-3 border-l-4 border-${statusConfig.color}-500 shadow-sm ${statusConfig.opacity}" data-status="${task.status}">
+                <div class="task-item bg-dark-secondary rounded-xl mb-3 border-l-4 border-${statusConfig.color}-500 shadow-sm ${statusConfig.opacity}" data-status="${task.status}">
                     <a href="task-detail.html?id=${task.id}" class="block p-4">
                         <div class="flex items-start">
-                            <div class="bg-${statusConfig.color}-100 p-2 rounded-full mr-3">
-                                <i class="fas fa-${statusConfig.icon} text-${statusConfig.color}-600"></i>
+                            <div class="bg-${statusConfig.color}-900/50 p-2 rounded-full mr-3 border border-${statusConfig.color}-500/30">
+                                <i class="fas fa-${statusConfig.icon} text-${statusConfig.color}-400"></i>
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between mb-1">
-                                    <span class="bg-${statusConfig.color}-100 text-${statusConfig.color}-600 text-xs px-2 py-0.5 rounded-full font-semibold">${statusConfig.label}</span>
-                                    <span class="text-xs text-gray-500">${time}</span>
+                                    <span class="bg-${statusConfig.color}-900/50 text-${statusConfig.color}-400 border border-${statusConfig.color}-500/30 text-xs px-2 py-0.5 rounded-full font-semibold">${statusConfig.label}</span>
+                                    <span class="text-xs text-gray-400">${time}</span>
                                 </div>
-                                <h3 class="font-semibold text-gray-900 mb-1">${task.location || 'T1-1F'} 방치물품</h3>
-                                <p class="text-sm text-gray-600">${task.objectType || task.item || '미확인 물품'} - ${assignedInfo}</p>
+                                <h3 class="font-semibold text-gray-200 mb-1">${task.location || 'T1-1F'} 방치물품</h3>
+                                <p class="text-sm text-gray-400">${task.objectType || task.item || '미확인 물품'} - ${assignedInfo}</p>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                         </div>
@@ -575,11 +544,11 @@
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('bg-primary-blue', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-600');
+                btn.classList.add('bg-dark-secondary', 'text-gray-400');
             });
             
             // 선택된 버튼 활성화
-            event.target.classList.remove('bg-white', 'text-gray-600');
+            event.target.classList.remove('bg-dark-secondary', 'text-gray-400');
             event.target.classList.add('bg-primary-blue', 'text-white');
             
             // 상태 매핑 (UI 상태 -> 실제 데이터 상태)

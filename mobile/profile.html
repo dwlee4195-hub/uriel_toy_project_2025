@@ -19,9 +19,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -35,10 +35,10 @@
         .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-dark-bg text-gray-200">
     
     <!-- 상단 헤더 -->
-    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 safe-top">
+    <header class="bg-dark-secondary border-b border-gray-700 fixed top-0 left-0 right-0 z-50 safe-top">
         <div class="px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <button onclick="history.back()" class="mr-3">
@@ -54,38 +54,38 @@
         
         <!-- 프로필 섹션 -->
         <div class="p-4">
-            <div class="bg-white rounded-xl shadow-sm p-6 text-center mb-6">
+            <div class="bg-dark-secondary rounded-xl shadow-sm p-6 text-center mb-6">
                 <div class="bg-primary-blue rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-user text-white text-2xl"></i>
                 </div>
-                <h2 class="font-bold text-xl text-gray-900 mb-1" id="user-name">로딩중...</h2>
-                <p class="text-gray-600 mb-2" id="user-role">역할 확인중...</p>
-                <p class="text-sm text-gray-500" id="user-team">팀 정보 확인중...</p>
+                <h2 class="font-bold text-xl text-gray-200 mb-1" id="user-name">로딩중...</h2>
+                <p class="text-gray-400 mb-2" id="user-role">역할 확인중...</p>
+                <p class="text-sm text-gray-400" id="user-team">팀 정보 확인중...</p>
             </div>
             
             <!-- 활동 통계 -->
-            <div class="bg-white rounded-xl shadow-sm mb-6">
-                <div class="p-4 border-b border-gray-100">
-                    <h3 class="font-bold text-gray-700">이번 달 활동</h3>
+            <div class="bg-dark-secondary rounded-xl shadow-sm mb-6">
+                <div class="p-4 border-b border-gray-700">
+                    <h3 class="font-bold text-gray-200">이번 달 활동</h3>
                 </div>
                 <div class="p-4">
                     <div class="grid grid-cols-2 gap-4 text-center">
                         <div>
                             <p class="text-2xl font-bold text-primary-blue" id="completed-count">-</p>
-                            <p class="text-sm text-gray-600">완료한 업무</p>
+                            <p class="text-sm text-gray-400">완료한 업무</p>
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-orange-500" id="active-count">-</p>
-                            <p class="text-sm text-gray-600">진행중인 업무</p>
+                            <p class="text-sm text-gray-400">진행중인 업무</p>
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- 설정 메뉴 -->
-            <div class="bg-white rounded-xl shadow-sm mb-6">
-                <div class="p-4 border-b border-gray-100">
-                    <h3 class="font-bold text-gray-700">설정</h3>
+            <div class="bg-dark-secondary rounded-xl shadow-sm mb-6">
+                <div class="p-4 border-b border-gray-700">
+                    <h3 class="font-bold text-gray-200">설정</h3>
                 </div>
                 <div class="divide-y divide-gray-100">
                     <button onclick="toggleNotifications()" class="w-full flex items-center justify-between p-4 text-left">
@@ -110,7 +110,7 @@
             </div>
             
             <!-- 로그아웃 -->
-            <div class="bg-white rounded-xl shadow-sm">
+            <div class="bg-dark-secondary rounded-xl shadow-sm">
                 <button onclick="logout()" class="w-full flex items-center justify-center p-4 text-red-600">
                     <i class="fas fa-sign-out-alt mr-2"></i>
                     <span>로그아웃</span>
@@ -121,17 +121,17 @@
     </main>
     
     <!-- 하단 탭 메뉴 -->
-    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+    <nav class="bg-dark-secondary border-t border-gray-700 fixed bottom-0 left-0 right-0 z-50 safe-bottom">
         <div class="grid grid-cols-4 h-14">
-            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-home text-xl"></i>
                 <span class="text-xs mt-1">홈</span>
             </a>
-            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="tasks.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-clipboard-list text-xl"></i>
                 <span class="text-xs mt-1">업무</span>
             </a>
-            <a href="map.html" class="flex flex-col items-center justify-center text-gray-600">
+            <a href="map.html" class="flex flex-col items-center justify-center text-gray-400">
                 <i class="fas fa-map-marked-alt text-xl"></i>
                 <span class="text-xs mt-1">지도</span>
             </a>
@@ -225,7 +225,7 @@
         function toggleNotifications() {
             const currentStatus = document.getElementById('notification-status').textContent;
             const newStatus = currentStatus === '활성화됨' ? '비활성화됨' : '활성화됨';
-            const newClass = newStatus === '활성화됨' ? 'text-green-600' : 'text-gray-500';
+            const newClass = newStatus === '활성화됨' ? 'text-green-600' : 'text-gray-400';
             
             document.getElementById('notification-status').textContent = newStatus;
             document.getElementById('notification-status').className = `text-sm ${newClass} mr-2`;
