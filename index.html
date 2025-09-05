@@ -361,7 +361,7 @@
             incidents.push(newIncident);
             localStorage.setItem('incidents', JSON.stringify(incidents));
             
-            showNotification(`방치물품 경고 발생!\n위치: ${newIncident.location}\n물품: ${newIncident.objectType}\n위험도: ${newIncident.riskLevel === 'high' ? '높음' : newIncident.riskLevel === 'medium' ? '중간' : '낮음'}\n방치시간: 30분 경과`);
+            showNotification(`방치물품 경고 발생!\n위치: ${newIncident.location}\n물품: ${newIncident.objectType}\n위험도: ${newIncident.riskLevel === 'high' ? '높음' : newIncident.riskLevel === 'medium' ? '중간' : '낮음'}\n방치 시간: 30분 경과`);
         }
         
         // 간단한 알림 함수

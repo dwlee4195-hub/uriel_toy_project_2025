@@ -33,7 +33,7 @@ function getSidebarHTML() {
                     <li>
                         <a href="incident-list.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="incident-list">
                             <i class="fas fa-desktop mr-3 w-5"></i>
-                            <span>방치물품 처리현황</span>
+                            <span>방치물품 처리 현황</span>
                         </a>
                     </li>
                 </ul>
