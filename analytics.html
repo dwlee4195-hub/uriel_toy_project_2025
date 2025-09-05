@@ -23,9 +23,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -41,14 +41,14 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #e9ecef;
+            background: #1e293b;
         }
         ::-webkit-scrollbar-thumb {
-            background: #adb5bd;
+            background: #475569;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #868e96;
+            background: #64748b;
         }
         
         /* 히트맵 스타일 */
@@ -83,7 +83,7 @@
         }
     </style>
 </head>
-<body class="bg-white text-gray-700 min-h-screen flex">
+<body class="bg-dark-bg text-gray-200 min-h-screen flex">
     
     <!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
     <script src="js/notification.js"></script>
@@ -105,15 +105,15 @@
         <section class="px-8 py-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- 총 발생 건수 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-primary-blue/20 rounded-lg p-3">
                             <i class="fas fa-exclamation-triangle text-primary-blue text-2xl"></i>
                         </div>
                         <span class="text-xs text-gray-500">최근 7일</span>
                     </div>
-                    <h3 class="text-gray-600 text-sm font-medium mb-1">총 발생 건수</h3>
-                    <p class="text-3xl font-bold text-gray-900" id="totalIncidents">0</p>
+                    <h3 class="text-gray-400 text-sm font-medium mb-1">총 발생 건수</h3>
+                    <p class="text-3xl font-bold text-gray-100" id="totalIncidents">0</p>
                     <div class="flex items-center mt-3">
                         <i class="fas fa-arrow-up text-primary-green text-sm mr-1"></i>
                         <span class="text-primary-green text-sm">12.5%</span>
@@ -122,15 +122,15 @@
                 </div>
                 
                 <!-- 평균 대응 시간 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-yellow-500/20 rounded-lg p-3">
                             <i class="fas fa-clock text-yellow-500 text-2xl"></i>
                         </div>
                         <span class="text-xs text-gray-500">최근 7일</span>
                     </div>
-                    <h3 class="text-gray-600 text-sm font-medium mb-1">평균 대응 시간</h3>
-                    <p class="text-3xl font-bold text-gray-900" id="avgResponseTime">0분</p>
+                    <h3 class="text-gray-400 text-sm font-medium mb-1">평균 대응 시간</h3>
+                    <p class="text-3xl font-bold text-gray-100" id="avgResponseTime">0분</p>
                     <div class="flex items-center mt-3">
                         <i class="fas fa-arrow-down text-primary-green text-sm mr-1"></i>
                         <span class="text-primary-green text-sm">8.2%</span>
@@ -139,15 +139,15 @@
                 </div>
                 
                 <!-- 오탐지 비율 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-red-500/20 rounded-lg p-3">
                             <i class="fas fa-percentage text-red-500 text-2xl"></i>
                         </div>
                         <span class="text-xs text-gray-500">최근 7일</span>
                     </div>
-                    <h3 class="text-gray-600 text-sm font-medium mb-1">처리중 건수</h3>
-                    <p class="text-3xl font-bold text-gray-900" id="processingCount">0</p>
+                    <h3 class="text-gray-400 text-sm font-medium mb-1">처리중 건수</h3>
+                    <p class="text-3xl font-bold text-gray-100" id="processingCount">0</p>
                     <div class="flex items-center mt-3">
                         <i class="fas fa-arrow-down text-primary-green text-sm mr-1"></i>
                         <span class="text-primary-green text-sm">3.1%</span>
@@ -162,22 +162,22 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 <!-- 위치 기반 히트맵 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-map-marked-alt mr-2 text-primary-blue"></i>
                         위치 기반 히트맵
                     </h2>
-                    <div class="relative bg-light-tertiary rounded-lg p-4 h-80 border border-gray-200">
+                    <div class="relative bg-dark-tertiary rounded-lg p-4 h-80 border border-gray-700">
                         <!-- 공항 맵 배경 -->
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-gray-600">
+                            <div class="text-gray-400">
                                 <i class="fas fa-plane text-6xl opacity-20"></i>
                             </div>
                         </div>
                         
                         <!-- 터미널 레이블 -->
-                        <div class="absolute top-4 left-4 text-xs text-gray-600 font-semibold">T1</div>
-                        <div class="absolute top-4 right-4 text-xs text-gray-600 font-semibold">T2</div>
+                        <div class="absolute top-4 left-4 text-xs text-gray-400 font-semibold">T1</div>
+                        <div class="absolute top-4 right-4 text-xs text-gray-400 font-semibold">T2</div>
                         
                         <!-- 히트맵 포인트들 -->
                         <div class="heatmap-overlay">
@@ -200,15 +200,15 @@
                         <div class="absolute bottom-4 left-4 flex items-center space-x-4 text-xs">
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
-                                <span class="text-gray-600">높음</span>
+                                <span class="text-gray-400">높음</span>
                             </div>
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
-                                <span class="text-gray-600">중간</span>
+                                <span class="text-gray-400">중간</span>
                             </div>
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
-                                <span class="text-gray-600">낮음</span>
+                                <span class="text-gray-400">낮음</span>
                             </div>
                         </div>
                     </div>
@@ -219,8 +219,8 @@
                 </div>
                 
                 <!-- 시간대별 발생 건수 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-chart-bar mr-2 text-primary-blue"></i>
                         시간대별 발생 건수
                     </h2>
@@ -234,8 +234,8 @@
                 </div>
                 
                 <!-- 처리 결과 분포 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-chart-pie mr-2 text-primary-blue"></i>
                         처리 결과 분포
                     </h2>
@@ -245,22 +245,22 @@
                     <div class="grid grid-cols-3 gap-2 mt-4 text-sm">
                         <div class="text-center">
                             <p id="lost-items-percent" class="text-2xl font-bold text-primary-green">0%</p>
-                            <p class="text-gray-600">단순분실물</p>
+                            <p class="text-gray-400">단순분실물</p>
                         </div>
                         <div class="text-center">
                             <p id="false-positive-percent" class="text-2xl font-bold text-yellow-500">0%</p>
-                            <p class="text-gray-600">오탐지</p>
+                            <p class="text-gray-400">오탐지</p>
                         </div>
                         <div class="text-center">
                             <p id="no-danger-percent" class="text-2xl font-bold text-primary-blue">0%</p>
-                            <p class="text-gray-600">위험물 없음</p>
+                            <p class="text-gray-400">위험물 없음</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- 방치 물품 유형별 통계 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-luggage-cart mr-2 text-primary-blue"></i>
                         방치 물품 유형별 통계
                     </h2>
@@ -276,8 +276,8 @@
             <!-- 추가 통계 정보 -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
                 <!-- 주간 트렌드 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-trending-up mr-2 text-primary-green"></i>
                         요일별 발생 건수
                     </h3>
@@ -287,8 +287,8 @@
                 </div>
                 
                 <!-- 팀별 처리 성과 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-users mr-2 text-primary-blue"></i>
                         팀별 처리 성과
                     </h3>
@@ -298,15 +298,15 @@
                 </div>
                 
                 <!-- AI 모델 성능 -->
-                <div class="bg-white rounded-lg shadow-xl p-6 border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-100 mb-4 flex items-center">
                         <i class="fas fa-robot mr-2 text-purple-400"></i>
                         AI 모델 성능
                     </h3>
                     <div class="space-y-4">
                         <div class="bg-dark-tertiary rounded-lg p-3">
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-gray-600 text-sm">정확도</span>
+                                <span class="text-gray-400 text-sm">정확도</span>
                                 <span class="text-primary-green font-bold">94.7%</span>
                             </div>
                             <div class="text-xs text-gray-500">
@@ -316,7 +316,7 @@
                         </div>
                         <div class="bg-dark-tertiary rounded-lg p-3">
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-gray-600 text-sm">평균 처리 시간</span>
+                                <span class="text-gray-400 text-sm">평균 처리 시간</span>
                                 <span class="text-yellow-400 font-bold">1.2초</span>
                             </div>
                             <div class="text-xs text-gray-500">
@@ -326,7 +326,7 @@
                         </div>
                         <div class="bg-dark-tertiary rounded-lg p-3">
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-gray-600 text-sm">학습 데이터</span>
+                                <span class="text-gray-400 text-sm">학습 데이터</span>
                                 <span class="text-primary-blue font-bold">285K</span>
                             </div>
                             <div class="text-xs text-gray-500">
@@ -371,8 +371,8 @@
         });
         
         // Chart.js 기본 설정
-        Chart.defaults.color = '#6b7280';
-        Chart.defaults.borderColor = '#d1d5db';
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = '#374151';
         
         // 시간대별 발생 추이 Bar Chart
         const barCtx = document.getElementById('barChart').getContext('2d');
@@ -397,10 +397,10 @@
                         display: false
                     },
                     tooltip: {
-                        backgroundColor: '#ffffff',
-                        titleColor: '#111827',
-                        bodyColor: '#6b7280',
-                        borderColor: '#d1d5db',
+                        backgroundColor: '#1f2937',
+                        titleColor: '#f3f4f6',
+                        bodyColor: '#d1d5db',
+                        borderColor: '#374151',
                         borderWidth: 1
                     }
                 },
@@ -472,10 +472,10 @@
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#ffffff',
-                        titleColor: '#111827',
-                        bodyColor: '#6b7280',
-                        borderColor: '#d1d5db',
+                        backgroundColor: '#1f2937',
+                        titleColor: '#f3f4f6',
+                        bodyColor: '#d1d5db',
+                        borderColor: '#374151',
                         borderWidth: 1,
                         callbacks: {
                             label: function(context) {
@@ -523,10 +523,10 @@
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#ffffff',
-                        titleColor: '#111827',
-                        bodyColor: '#6b7280',
-                        borderColor: '#d1d5db',
+                        backgroundColor: '#1f2937',
+                        titleColor: '#f3f4f6',
+                        bodyColor: '#d1d5db',
+                        borderColor: '#374151',
                         borderWidth: 1,
                         callbacks: {
                             label: function(context) {
@@ -550,10 +550,10 @@
                 const percentage = Math.round(type[1] / totalObjects * 100);
                 const color = colors[index % colors.length];
                 return `
-                    <div class="bg-light-tertiary rounded p-3 border border-gray-200">
+                    <div class="bg-dark-tertiary rounded p-3 border border-gray-700">
                         <div class="flex items-center justify-between">
-                            <span class="text-gray-600 text-sm">${type[0]}</span>
-                            <span class="text-gray-900 font-bold">${percentage}%</span>
+                            <span class="text-gray-400 text-sm">${type[0]}</span>
+                            <span class="text-gray-100 font-bold">${percentage}%</span>
                         </div>
                         <div class="w-full bg-gray-300 rounded-full h-2 mt-2">
                             <div class="bg-${color} h-2 rounded-full" style="width: ${percentage}%"></div>
@@ -574,10 +574,10 @@
         
         weeklyTrend.innerHTML = daysOfWeek.map((day, index) => {
             const count = dailyCounts[index];
-            const colorClass = count > 20 ? 'text-red-400' : count > 10 ? 'text-orange-400' : 'text-gray-900';
+            const colorClass = count > 20 ? 'text-red-400' : count > 10 ? 'text-orange-400' : 'text-gray-100';
             return `
                 <div class="flex items-center justify-between">
-                    <span class="text-gray-600">${day}</span>
+                    <span class="text-gray-400">${day}</span>
                     <span class="${colorClass} font-medium">${count}건</span>
                 </div>
             `;
@@ -597,8 +597,8 @@
                 return `
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-gray-600">${team.name}</span>
-                            <span class="text-gray-900 font-medium">${resolved}건</span>
+                            <span class="text-gray-400">${team.name}</span>
+                            <span class="text-gray-100 font-medium">${resolved}건</span>
                         </div>
                         <div class="w-full bg-gray-300 rounded-full h-2">
                             <div class="${colors[index % colors.length]} h-2 rounded-full" style="width: ${percentage}%"></div>

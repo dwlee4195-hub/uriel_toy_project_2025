@@ -17,7 +17,7 @@ function loadTeams() {
     
     if (teams.length === 0) {
         container.innerHTML = `
-            <div class="col-span-full text-center py-8 text-gray-500">
+            <div class="col-span-full text-center py-8 text-gray-400">
                 <i class="fas fa-users text-4xl mb-2"></i>
                 <p>등록된 팀이 없습니다.</p>
             </div>
@@ -34,13 +34,13 @@ function loadTeams() {
 // 팀 카드 생성
 function createTeamCard(team, users) {
     const card = document.createElement('div');
-    card.className = 'bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow';
+    card.className = 'bg-gray-800/50 border border-gray-700/50 rounded-xl shadow-lg hover:shadow-xl hover:bg-gray-800/70 transition-all duration-200';
     
-    // 팀 상태별 색상
+    // 팀 상태별 색상 (다크테마 최적화)
     const statusColors = {
-        available: { bg: 'bg-green-100', text: 'text-green-800', label: '대기중' },
-        busy: { bg: 'bg-orange-100', text: 'text-orange-800', label: '출동중' },
-        'off-duty': { bg: 'bg-gray-100', text: 'text-gray-800', label: '비번' }
+        available: { bg: 'bg-emerald-500/10 border border-emerald-500/30', text: 'text-emerald-400', label: '대기중' },
+        busy: { bg: 'bg-amber-500/10 border border-amber-500/30', text: 'text-amber-400', label: '출동중' },
+        'off-duty': { bg: 'bg-gray-700/50 border border-gray-600/50', text: 'text-gray-400', label: '비번' }
     };
     
     const status = statusColors[team.status] || statusColors.available;
@@ -59,19 +59,22 @@ function createTeamCard(team, users) {
         <div class="p-6">
             <div class="flex items-start justify-between mb-4">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800">${team.name}</h3>
-                    <span class="inline-block px-2 py-1 rounded text-xs font-medium ${status.bg} ${status.text} mt-2">
+                    <h3 class="text-lg font-semibold text-gray-100">${team.name}</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${status.bg} ${status.text} mt-2">
+                        <span class="relative flex h-2 w-2">
+                            <span class="relative inline-flex rounded-full h-2 w-2 ${team.status === 'busy' ? 'animate-pulse' : ''} ${team.status === 'available' ? 'bg-emerald-400' : team.status === 'busy' ? 'bg-amber-400' : 'bg-gray-500'}"></span>
+                        </span>
                         ${status.label}
                     </span>
                 </div>
                 <div class="flex gap-1">
-                    <button onclick="editTeam('${team.id}')" class="p-1.5 hover:bg-gray-100 rounded transition-colors" title="팀명 수정">
-                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button onclick="editTeam('${team.id}')" class="p-2 hover:bg-gray-700/50 rounded-lg transition-all duration-200 group" title="팀명 수정">
+                        <svg class="w-4 h-4 text-gray-500 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                     </button>
-                    <button onclick="deleteTeam('${team.id}')" class="p-1.5 hover:bg-red-50 rounded transition-colors" title="팀 삭제">
-                        <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button onclick="deleteTeam('${team.id}')" class="p-2 hover:bg-red-500/10 rounded-lg transition-all duration-200 group" title="팀 삭제">
+                        <svg class="w-4 h-4 text-red-500 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                     </button>
@@ -80,40 +83,46 @@ function createTeamCard(team, users) {
             
             <div class="space-y-3">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">팀장</p>
+                    <p class="text-sm text-gray-400 mb-1">팀장</p>
                     <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
-                            <span class="text-xs font-bold text-yellow-700">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30 flex items-center justify-center">
+                            <span class="text-xs font-bold text-amber-400">
                                 ${leaderName.charAt(0)}
                             </span>
                         </div>
-                        <p class="font-medium text-gray-800">${leaderName}</p>
+                        <p class="font-medium text-gray-200">
+                            <i class="fas fa-crown text-amber-400 text-xs mr-1"></i>
+                            ${leaderName}
+                        </p>
                     </div>
                 </div>
                 
                 <div>
-                    <p class="text-sm text-gray-600">팀원 (${team.members.length}명)</p>
+                    <p class="text-sm text-gray-400">팀원 (${team.members.length}명)</p>
                     <div class="mt-1">
                         ${memberNames.length > 0 ? 
                             memberNames.map(name => `
-                                <span class="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs mr-1 mb-1">
+                                <span class="inline-flex items-center gap-1 bg-gray-700/50 border border-gray-600/50 text-gray-300 px-2.5 py-1 rounded-lg text-xs mr-1 mb-1">
+                                    <i class="fas fa-user text-gray-500 text-xs"></i>
                                     ${name}
                                 </span>
                             `).join('') : 
-                            '<span class="text-sm text-gray-400">팀원 없음</span>'
+                            '<span class="text-sm text-gray-500 italic">팀원 없음</span>'
                         }
                     </div>
                 </div>
                 
-                <div class="pt-3 border-t border-gray-100">
+                <div class="pt-3 border-t border-gray-700">
                     <div class="flex justify-between items-center">
                         ${team.currentAssignment ? 
-                            `<span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
+                            `<span class="inline-flex items-center gap-1 text-xs bg-red-500/10 border border-red-500/30 text-red-400 px-2.5 py-1 rounded-full">
+                                <i class="fas fa-exclamation-triangle text-xs"></i>
                                 ${team.currentAssignment} 처리중
                             </span>` :
                             '<span></span>'
                         }
-                        <button onclick="openManageMembersModal('${team.id}')" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-sm font-medium transition-colors">
+                        <button onclick="openManageMembersModal('${team.id}')" class="px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/30 hover:border-blue-500/50 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5">
+                            <i class="fas fa-users-cog text-xs"></i>
                             팀원 관리
                         </button>
                     </div>
@@ -178,11 +187,11 @@ function loadAvailableUsers() {
         );
         
         if (availableUsers.length === 0) {
-            memberCheckboxes.innerHTML = '<p class="text-sm text-gray-500">배정 가능한 팀원이 없습니다.</p>';
+            memberCheckboxes.innerHTML = '<p class="text-sm text-gray-400">배정 가능한 팀원이 없습니다.</p>';
         } else {
             availableUsers.forEach(user => {
                 const label = document.createElement('label');
-                label.className = 'flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded';
+                label.className = 'flex items-center space-x-2 cursor-pointer hover:bg-gray-900 p-1 rounded';
                 label.innerHTML = `
                     <input type="checkbox" name="members" value="${user.id}" class="rounded text-blue-500">
                     <span class="text-sm">${user.name} (${user.username})</span>
@@ -225,40 +234,44 @@ function openManageMembersModal(teamId) {
     memberCount.textContent = `${team.members.length}명`;
     
     if (team.members.length === 0) {
-        membersList.innerHTML = '<p class="text-gray-500 text-center py-4">팀원이 없습니다</p>';
+        membersList.innerHTML = '<p class="text-gray-400 text-center py-4">팀원이 없습니다</p>';
     } else {
         team.members.forEach(memberId => {
             const user = users.find(u => u.id === memberId);
             if (user) {
                 const memberDiv = document.createElement('div');
-                memberDiv.className = 'flex items-center justify-between p-3 bg-white hover:bg-gray-50 rounded-lg transition-colors';
+                memberDiv.className = 'flex items-center justify-between p-3 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg transition-all duration-200 border border-gray-700/50';
                 
                 const isLeader = team.leader === memberId;
                 memberDiv.innerHTML = `
                     <div class="flex items-center gap-3 flex-1">
-                        <div class="w-10 h-10 rounded-full ${isLeader ? 'bg-yellow-100' : 'bg-gray-100'} flex items-center justify-center">
-                            <span class="text-sm font-bold ${isLeader ? 'text-yellow-700' : 'text-gray-600'}">
+                        <div class="w-10 h-10 rounded-full ${isLeader ? 'bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30' : 'bg-gray-700/50 border border-gray-600/50'} flex items-center justify-center">
+                            <span class="text-sm font-bold ${isLeader ? 'text-amber-400' : 'text-gray-400'}">
                                 ${user.name.charAt(0)}
                             </span>
                         </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2">
-                                <p class="font-medium text-gray-800">${user.name}</p>
+                                <p class="font-medium text-gray-200">${user.name}</p>
                                 ${isLeader ? 
-                                    '<span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full font-medium">팀장</span>' : 
+                                    `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs rounded-full font-bold uppercase tracking-wide">
+                                        <i class="fas fa-crown text-xs"></i>
+                                        팀장
+                                    </span>` : 
                                     ''
                                 }
                             </div>
-                            <p class="text-xs text-gray-500">${user.username} • ${user.department || '소속 없음'}</p>
+                            <p class="text-xs text-gray-400">${user.username} • ${user.department || '소속 없음'}</p>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         ${!isLeader ? 
                             `<button 
                                 onclick="makeLeader('${teamId}', '${memberId}')" 
-                                class="px-3 py-1 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 rounded text-xs font-medium transition-colors"
+                                class="px-3 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-500/50 rounded-lg text-xs font-medium transition-all duration-200"
                                 title="팀장으로 지정"
                             >
+                                <i class="fas fa-crown text-xs mr-1"></i>
                                 팀장 지정
                             </button>` : 
                             ''
@@ -266,8 +279,9 @@ function openManageMembersModal(teamId) {
                         ${!isLeader ?
                             `<button 
                                 onclick="removeMember('${teamId}', '${memberId}')" 
-                                class="px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-xs font-medium transition-colors"
+                                class="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/30 hover:border-red-500/50 rounded-lg text-xs font-medium transition-all duration-200"
                             >
+                                <i class="fas fa-user-minus text-xs mr-1"></i>
                                 제거
                             </button>` :
                             ''
@@ -492,13 +506,17 @@ function deleteTeam(teamId) {
 // 알림 표시
 function showNotification(type, message) {
     const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${
-        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-    }`;
+    const colors = {
+        success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+        error: 'bg-red-500/10 border-red-500/30 text-red-400',
+        info: 'bg-blue-500/10 border-blue-500/30 text-blue-400'
+    };
+    
+    notification.className = `fixed top-4 right-4 px-6 py-4 rounded-xl shadow-2xl z-50 border-2 ${colors[type] || colors.info} backdrop-blur-sm`;
     notification.innerHTML = `
         <div class="flex items-center gap-3">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} text-lg"></i>
+            <span class="font-medium">${message}</span>
         </div>
     `;
     

@@ -23,9 +23,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -41,14 +41,14 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #e9ecef;
+            background: #1e293b;
         }
         ::-webkit-scrollbar-thumb {
-            background: #adb5bd;
+            background: #475569;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #868e96;
+            background: #64748b;
         }
         
         /* 3D 뷰 컨테이너 스타일 */
@@ -59,7 +59,7 @@
         }
     </style>
 </head>
-<body class="bg-white text-gray-700 min-h-screen flex">
+<body class="bg-dark-bg text-gray-200 min-h-screen flex">
     
     <!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
     <script src="js/notification.js"></script>
@@ -80,33 +80,33 @@
         
         <!-- 요약 정보 카드 -->
         <section class="px-8 py-6">
-            <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6 border border-blue-100">
+            <div class="bg-dark-secondary rounded-2xl shadow-2xl p-8 mb-6 border border-gray-700">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- 상태 정보 -->
-                    <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl p-6 border-2 border-red-200 shadow-lg hover:shadow-xl transition-all duration-300">
-                        <h3 class="text-sm font-bold text-red-700 mb-3 uppercase tracking-wider">상태</h3>
+                    <div class="bg-dark-tertiary rounded-2xl p-6 border border-red-900/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">상태</h3>
                         <div class="flex items-center">
                             <span class="relative flex h-4 w-4 mr-3">
-                                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+                                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 animate-pulse"></span>
                             </span>
-                            <div id="processing-status" class="text-red-600 text-xl font-bold">로딩중...</div>
+                            <div id="processing-status" class="text-red-400 text-2xl font-bold">로딩중...</div>
                         </div>
-                        <div id="risk-level" class="text-xs text-red-600 mt-3 font-semibold">⚠️ 위험도 확인중...</div>
+                        <div id="risk-level" class="text-sm text-gray-300 mt-3 font-semibold">⚠️ 위험도 확인중...</div>
                     </div>
                     
                     <!-- 발생 위치 정보 -->
-                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300">
-                        <h3 class="text-sm font-bold text-blue-700 mb-3 uppercase tracking-wider">발생 위치</h3>
-                        <p class="text-gray-900 text-lg font-bold" id="terminal-info">터미널 확인중...</p>
-                        <p class="text-blue-600 font-semibold text-lg">📍 <span id="incident-location">위치 확인중...</span></p>
-                        <p class="text-xs text-blue-700 mt-3 font-medium bg-blue-100 inline-block px-3 py-1 rounded-full" id="zone-info">✈️ 구역 정보 로딩중...</p>
+                    <div class="bg-dark-tertiary rounded-2xl p-6 border border-blue-900/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">발생 위치</h3>
+                        <p class="text-gray-100 text-xl font-bold" id="terminal-info">터미널 확인중...</p>
+                        <p class="text-blue-400 font-semibold text-lg mt-1">📍 <span id="incident-location" class="text-gray-200">위치 확인중...</span></p>
+                        <p class="text-sm text-gray-300 mt-3 font-medium bg-blue-900/20 inline-block px-3 py-1 rounded-full" id="zone-info">✈️ 구역 정보 로딩중...</p>
                     </div>
                     
                     <!-- 경과 시간 정보 -->
-                    <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all duration-300">
-                        <h3 class="text-sm font-bold text-orange-700 mb-3 uppercase tracking-wider">경과 시간</h3>
-                        <p class="text-orange-600 text-3xl font-bold" id="elapsed-time">계산중...</p>
-                        <p class="text-xs text-orange-700 mt-3 font-medium bg-orange-100 inline-block px-3 py-1 rounded-full">⏰ 최초 감지: <span id="detected-time">확인중...</span></p>
+                    <div class="bg-dark-tertiary rounded-2xl p-6 border border-orange-900/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">경과 시간</h3>
+                        <p class="text-orange-400 text-3xl font-bold" id="elapsed-time">계산중...</p>
+                        <p class="text-sm text-gray-300 mt-3 font-medium bg-orange-900/20 inline-block px-3 py-1 rounded-full">⏰ 최초 감지: <span id="detected-time" class="text-gray-200">확인중...</span></p>
                     </div>
                 </div>
             </div>
@@ -119,8 +119,8 @@
                 <!-- 왼쪽 열: 시각 자료 -->
                 <div class="space-y-6">
                     <!-- 인터랙티브 3D 뷰 -->
-                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
-                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                    <div class="bg-dark-secondary rounded-2xl shadow-2xl p-8 border border-gray-700 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center border-b border-gray-700 pb-4">
                             <i class="fas fa-cube mr-2 text-primary-blue"></i>
                             AI 3D 포인트클라우드 분석뷰
                         </h2>
@@ -129,20 +129,20 @@
                             <div id="3d-canvas" style="width: 100%; height: 100%; border-radius: 1rem;"></div>
                             
                             <!-- 컨트롤 버튼들 -->
-                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-white/90 backdrop-blur-sm rounded-xl px-4 py-2">
-                                <button id="play-pause-btn" class="bg-white hover:bg-blue-50 hover:text-blue-700 px-3 py-1.5 rounded-lg text-sm border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
+                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-dark-tertiary/90 backdrop-blur-sm rounded-xl px-4 py-2">
+                                <button id="play-pause-btn" class="bg-dark-tertiary hover:bg-gray-700 text-gray-300 hover:text-gray-100 px-3 py-1.5 rounded-lg text-sm border border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
                                     <i class="fas fa-play"></i> 재생
                                 </button>
-                                <button id="reset-3d-btn" class="bg-white hover:bg-blue-50 hover:text-blue-700 px-3 py-1.5 rounded-lg text-sm border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
+                                <button id="reset-3d-btn" class="bg-dark-tertiary hover:bg-gray-700 text-gray-300 hover:text-gray-100 px-3 py-1.5 rounded-lg text-sm border border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
                                     <i class="fas fa-undo"></i> 리셋
                                 </button>
-                                <button id="wireframe-btn" class="bg-white hover:bg-blue-50 hover:text-blue-700 px-3 py-1.5 rounded-lg text-sm border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
+                                <button id="wireframe-btn" class="bg-dark-tertiary hover:bg-gray-700 text-gray-300 hover:text-gray-100 px-3 py-1.5 rounded-lg text-sm border border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 font-medium">
                                     <i class="fas fa-circle"></i> 포인트 크기
                                 </button>
                             </div>
                             
                             <!-- 안내 텍스트 -->
-                            <div class="absolute top-4 left-4 text-xs text-gray-600 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2">
+                            <div class="absolute top-4 left-4 text-xs text-gray-400 bg-dark-tertiary/80 backdrop-blur-sm rounded-lg px-3 py-2">
                                 <p>🖼️ 마우스 드래그: 회전</p>
                                 <p>🔍 스크롤: 확대/축소</p>
                             </div>
@@ -150,12 +150,12 @@
                     </div>
                     
                     <!-- 상황 2D 스크린샷 -->
-                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
-                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                    <div class="bg-dark-secondary rounded-2xl shadow-2xl p-8 border border-gray-700 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center border-b border-gray-700 pb-4">
                             <i class="fas fa-camera mr-2 text-primary-blue"></i>
                             라이다 화면
                         </h2>
-                        <div class="bg-gradient-to-br from-gray-100 to-blue-50 rounded-2xl overflow-hidden border-2 border-blue-200 shadow-inner">
+                        <div class="bg-dark-tertiary rounded-2xl overflow-hidden border border-gray-700 shadow-inner">
                             <div class="relative">
                                 <div class="bg-gradient-to-br from-gray-700 to-gray-800 h-64 flex items-center justify-center">
                                     <img src="image/라이다.gif" style="width:100%; height:100%;">
@@ -165,8 +165,8 @@
                     </div>
                     
                     <!-- 감식반 현장 사진 -->
-                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
-                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                    <div class="bg-dark-secondary rounded-2xl shadow-2xl p-8 border border-gray-700 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center border-b border-gray-700 pb-4">
                             <i class="fas fa-images mr-2 text-primary-blue"></i>
                             감식반 현장 사진
                         </h2>
@@ -183,12 +183,12 @@
                 <!-- 오른쪽 열: 정보 -->
                 <div class="space-y-6">
                     <!-- 지도 뷰 -->
-                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
-                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                    <div class="bg-dark-secondary rounded-2xl shadow-2xl p-8 border border-gray-700 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center border-b border-gray-700 pb-4">
                             <i class="fas fa-map-marked-alt mr-2 text-primary-blue"></i>
                             위치 정보 (Mini-Map)
                         </h2>
-                        <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 relative h-64 border-2 border-blue-200 shadow-inner">
+                        <div class="bg-dark-tertiary rounded-2xl p-6 relative h-64 border border-gray-700 shadow-inner">
                             <div class="bg-gradient-to-br from-blue-900/20 to-blue-800/20 h-full rounded flex items-center justify-center">
                                 <img src="image/평면도.png" style="width:100%; height:100%;">
                             </div>
@@ -198,7 +198,7 @@
                                     <div class="relative">
                                 <i class="fas fa-map-marker-alt text-3xl text-red-500 relative"></i>
                             </div>
-                                    <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-red-500 text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap">
+                                    <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-red-500 text-gray-100 text-xs px-2 py-1 rounded whitespace-nowrap">
 
                                     </span>
                                 </div>
@@ -207,8 +207,8 @@
                     </div>
                     
                     <!-- 사건 타임라인 -->
-                    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100 hover:shadow-3xl transition-all duration-300">
-                        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center border-b-2 border-blue-100 pb-4">
+                    <div class="bg-dark-secondary rounded-2xl shadow-2xl p-8 border border-gray-700 hover:shadow-3xl transition-all duration-300">
+                        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center border-b border-gray-700 pb-4">
                             <i class="fas fa-clock mr-2 text-primary-blue"></i>
                             사건 타임라인
                         </h2>
@@ -223,26 +223,26 @@
                     </div>
                     
                     <!-- AI 분석 정보 -->
-                    <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 border-2 border-purple-300 rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300">
-                        <h3 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-5 flex items-center border-b-2 border-purple-200 pb-3">
+                    <div class="bg-dark-secondary border border-purple-900/50 rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300">
+                        <h3 class="text-xl font-bold text-gray-100 mb-5 flex items-center border-b border-gray-700 pb-3">
                             <i class="fas fa-brain mr-2 text-purple-400"></i>
                             AI 분석 요약
                         </h3>
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
-                                <span class="text-gray-600">객체 유형:</span>
-                                <span class="text-gray-900 font-medium" id="ai-object-type">확인중...</span>
+                                <span class="text-gray-400">객체 유형:</span>
+                                <span class="text-gray-100 font-medium" id="ai-object-type">확인중...</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">신뢰도:</span>
-                                <span class="text-blue-600 font-medium" id="ai-confidence">분석중...</span>
+                                <span class="text-gray-400">신뢰도:</span>
+                                <span class="text-blue-400 font-medium" id="ai-confidence">분석중...</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">위험 점수:</span>
-                                <span class="text-orange-600 font-medium" id="risk-score">계산중...</span>
+                                <span class="text-gray-400">위험 점수:</span>
+                                <span class="text-orange-500 font-medium" id="risk-score">계산중...</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">의심 특징:</span>
+                                <span class="text-gray-400">의심 특징:</span>
                                 <div class="text-right">
                                     <div id="suspicious-features" class="text-xs">분석중...</div>
                                 </div>
@@ -648,17 +648,17 @@
     
     <!-- 사진 모달 -->
     <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
-        <div class="relative bg-white rounded-lg max-w-4xl max-h-full overflow-auto">
+        <div class="relative bg-gray-800 rounded-lg max-w-4xl max-h-full overflow-auto">
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 id="modal-photo-title" class="text-lg font-semibold">현장 사진</h3>
-                <button onclick="closePhotoModal()" class="text-gray-500 hover:text-gray-700">
+                <button onclick="closePhotoModal()" class="text-gray-500 hover:text-gray-300">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
             <div class="p-4">
                 <img id="modal-photo-image" src="" alt="현장 사진" class="max-w-full h-auto">
                 <div class="mt-4">
-                    <p id="modal-photo-caption" class="text-gray-700 mb-2"></p>
+                    <p id="modal-photo-caption" class="text-gray-300 mb-2"></p>
                     <p id="modal-photo-time" class="text-sm text-gray-500"></p>
                 </div>
             </div>

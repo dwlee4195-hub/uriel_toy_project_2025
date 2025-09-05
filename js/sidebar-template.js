@@ -8,9 +8,9 @@ function getSidebarHTML() {
     const showManagement = userRole === 'admin'; // 관리자만 시스템 관리 메뉴 표시
     
     return `
-    <aside class="w-64 bg-light-secondary min-h-screen flex flex-col border-r border-gray-200">
+    <aside class="w-64 bg-gray-800 min-h-screen flex flex-col border-r border-gray-700">
         <!-- 로고 영역 -->
-        <div class="h-20 flex items-center px-6 border-b border-gray-200">
+        <div class="h-20 flex items-center px-6 border-b border-gray-700">
             <a href="dashboard.html" class="hover:opacity-80 transition-opacity">
                 <img src="Uriel_CI(png)/Uriel_logo.png" alt="Uriel Logo" class="h-10 w-auto cursor-pointer">
             </a>
@@ -20,18 +20,18 @@ function getSidebarHTML() {
         <nav class="flex-1 py-6">
             <!-- 관제 운영 섹션 -->
             <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     관제 운영
                 </h2>
                 <ul>
                     <li>
-                        <a href="dashboard.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="dashboard">
+                        <a href="dashboard.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="dashboard">
                             <i class="fas fa-tachometer-alt mr-3 w-5"></i>
                             <span>대시보드</span>
                         </a>
                     </li>
                     <li>
-                        <a href="incident-list.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="incident-list">
+                        <a href="incident-list.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="incident-list">
                             <i class="fas fa-desktop mr-3 w-5"></i>
                             <span>방치물품 처리 현황</span>
                         </a>
@@ -41,24 +41,24 @@ function getSidebarHTML() {
             
             <!-- 분석 및 통계 섹션 -->
             <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     분석 및 통계
                 </h2>
                 <ul>
                     <li>
-                        <a href="analytics.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="analytics">
+                        <a href="analytics.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="analytics">
                             <i class="fas fa-chart-bar mr-3 w-5"></i>
                             <span>주간 통계</span>
                         </a>
                     </li>
                     <li>
-                        <a href="monthly-analytics.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="monthly-analytics">
+                        <a href="monthly-analytics.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="monthly-analytics">
                             <i class="fas fa-chart-line mr-3 w-5"></i>
                             <span>월간 통계</span>
                         </a>
                     </li>
                     <li>
-                        <a href="ai-analytics.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="ai-analytics">
+                        <a href="ai-analytics.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="ai-analytics">
                             <i class="fas fa-brain mr-3 w-5"></i>
                             <span>AI 분석 통계</span>
                         </a>
@@ -70,18 +70,18 @@ function getSidebarHTML() {
             showManagement ? `
             <!-- 시스템 관리 섹션 (관리자만) -->
             <div class="mb-6">
-                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <h2 class="px-6 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     시스템 관리
                 </h2>
                 <ul>
                     <li>
-                        <a href="user-management.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="user-management">
+                        <a href="user-management.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="user-management">
                             <i class="fas fa-users mr-3 w-5"></i>
                             <span>계정 관리</span>
                         </a>
                     </li>
                     <li>
-                        <a href="team-management.html" class="nav-link flex items-center px-6 py-3 hover:bg-light-tertiary transition-colors" data-page="team-management">
+                        <a href="team-management.html" class="nav-link flex items-center px-6 py-3 hover:bg-gray-900 transition-colors" data-page="team-management">
                             <i class="fas fa-users-cog mr-3 w-5"></i>
                             <span>감식팀 관리</span>
                         </a>
@@ -109,7 +109,7 @@ function initSidebar() {
         navLinks.forEach(link => {
             const page = link.dataset.page;
             if (page && currentPage === page) {
-                link.classList.add('bg-light-tertiary', 'border-l-4', 'border-primary-blue', 'text-gray-900');
+                link.classList.add('bg-gray-900', 'border-l-4', 'border-primary-blue', 'text-gray-100');
             }
         });
     }

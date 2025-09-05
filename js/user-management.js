@@ -23,38 +23,69 @@ function loadUsers() {
 // 사용자 행 생성
 function createUserRow(user) {
     const tr = document.createElement('tr');
-    tr.className = 'hover:bg-gray-50 transition-colors';
+    tr.className = 'hover:bg-gray-800/50 transition-all duration-200 border-b border-gray-700/50';
     
     const roleLabels = {
-        admin: { text: '관리자', color: 'bg-green-100 text-green-800' },
-        control: { text: '관재팀', color: 'bg-orange-100 text-orange-800' },
-        supervisor: { text: '관재팀', color: 'bg-orange-100 text-orange-800' },
-        inspector: { text: '감식팀', color: 'bg-blue-100 text-blue-800' },
-        team_leader: { text: '감식팀', color: 'bg-blue-100 text-blue-800' },
-        team_member: { text: '감식팀', color: 'bg-blue-100 text-blue-800' }
+        admin: { text: '관리자', color: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' },
+        control: { text: '관재팀', color: 'bg-amber-500/10 text-amber-400 border border-amber-500/30' },
+        supervisor: { text: '관재팀', color: 'bg-amber-500/10 text-amber-400 border border-amber-500/30' },
+        inspector: { text: '감식팀', color: 'bg-purple-500/10 text-purple-400 border border-purple-500/30' },
+        team_leader: { text: '감식팀', color: 'bg-purple-500/10 text-purple-400 border border-purple-500/30' },
+        team_member: { text: '감식팀', color: 'bg-purple-500/10 text-purple-400 border border-purple-500/30' }
     };
     
-    const role = roleLabels[user.role] || { text: user.role, color: 'bg-gray-100 text-gray-800' };
+    const role = roleLabels[user.role] || { text: user.role, color: 'bg-gray-700/50 text-gray-400 border border-gray-600/50' };
     
     tr.innerHTML = `
-        <td class="px-6 py-4 font-medium">${user.username}</td>
-        <td class="px-6 py-4">${user.name}</td>
         <td class="px-6 py-4">
-            <span class="px-2 py-1 text-xs font-semibold rounded-full ${role.color}">
+            <span class="text-blue-400 font-medium flex items-center gap-2">
+                <i class="fas fa-user-circle text-gray-500 text-sm"></i>
+                ${user.username}
+            </span>
+        </td>
+        <td class="px-6 py-4 text-gray-300">${user.name}</td>
+        <td class="px-6 py-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wide rounded-full ${role.color}">
+                <i class="fas ${
+                    user.role === 'admin' ? 'fa-shield-alt' : 
+                    user.role === 'control' || user.role === 'supervisor' ? 'fa-desktop' : 
+                    'fa-hard-hat'
+                } text-xs"></i>
                 ${role.text}
             </span>
         </td>
-        <td class="px-6 py-4">${user.department}</td>
-        <td class="px-6 py-4">${user.email}</td>
-        <td class="px-6 py-4">${user.phone}</td>
-        <td class="px-6 py-4">${formatDate(user.createdAt)}</td>
+        <td class="px-6 py-4">
+            <span class="text-gray-400 bg-gray-800/50 px-2 py-1 rounded-md text-sm">
+                ${user.department}
+            </span>
+        </td>
+        <td class="px-6 py-4">
+            <div class="flex items-center gap-2 text-gray-400">
+                <i class="far fa-envelope text-xs"></i>
+                <span class="text-sm">${user.email}</span>
+            </div>
+        </td>
+        <td class="px-6 py-4">
+            <div class="flex items-center gap-2 text-gray-400">
+                <i class="fas fa-phone text-xs"></i>
+                <span class="text-sm">${user.phone}</span>
+            </div>
+        </td>
+        <td class="px-6 py-4">
+            <div class="flex items-center gap-2 text-gray-400">
+                <i class="far fa-calendar text-xs"></i>
+                <span class="text-sm">${formatDate(user.createdAt)}</span>
+            </div>
+        </td>
         <td class="px-6 py-4">
             <div class="flex gap-2">
-                <button onclick="editUser('${user.id}')" class="text-blue-600 hover:text-blue-800">
-                    <i class="fas fa-edit"></i>
+                <button onclick="editUser('${user.id}')" 
+                    class="px-2.5 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 rounded-lg transition-all duration-200 border border-blue-500/30 hover:border-blue-500/50">
+                    <i class="fas fa-edit text-sm"></i>
                 </button>
-                <button onclick="deleteUser('${user.id}')" class="text-red-600 hover:text-red-800">
-                    <i class="fas fa-trash"></i>
+                <button onclick="deleteUser('${user.id}')" 
+                    class="px-2.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-lg transition-all duration-200 border border-red-500/30 hover:border-red-500/50">
+                    <i class="fas fa-trash text-sm"></i>
                 </button>
             </div>
         </td>
@@ -232,13 +263,17 @@ function deleteUser(userId) {
 // 알림 표시
 function showNotification(type, message) {
     const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${
-        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-    }`;
+    const colors = {
+        success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+        error: 'bg-red-500/10 border-red-500/30 text-red-400',
+        info: 'bg-blue-500/10 border-blue-500/30 text-blue-400'
+    };
+    
+    notification.className = `fixed top-4 right-4 px-6 py-4 rounded-xl shadow-2xl z-50 border-2 ${colors[type] || colors.info} backdrop-blur-sm`;
     notification.innerHTML = `
         <div class="flex items-center gap-3">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} text-lg"></i>
+            <span class="font-medium">${message}</span>
         </div>
     `;
     

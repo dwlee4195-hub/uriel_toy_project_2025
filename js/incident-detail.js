@@ -107,12 +107,12 @@ function updateBasicInfo(incident) {
     const riskElement = document.getElementById('risk-level');
     if (riskElement) {
         const riskLabels = {
-            high: { text: '⚠️ 높음 - 즉시 처리 필요', color: 'bg-red-100 text-red-600' },
-            medium: { text: '⚠️ 중간 - 주의 관찰', color: 'bg-yellow-100 text-yellow-600' },
-            low: { text: '✓ 낮음 - 일반 확인', color: 'bg-green-100 text-green-600' }
+            high: { text: '⚠️ 위험도: 높음 - 즉시 처리 필요', color: 'bg-red-900/30 text-red-400' },
+            medium: { text: '⚠️ 위험도: 중간 - 주의 관찰', color: 'bg-yellow-900/30 text-yellow-400' },
+            low: { text: '✓ 위험도: 낮음 - 일반 확인', color: 'bg-green-900/30 text-green-400' }
         };
-        const risk = riskLabels[incident.riskLevel] || { text: '⚠️ 확인 필요', color: 'bg-gray-100 text-gray-600' };
-        riskElement.innerHTML = `<span class="px-3 py-1 rounded-full text-xs font-semibold ${risk.color}">${risk.text}</span>`;
+        const risk = riskLabels[incident.riskLevel] || { text: '⚠️ 위험도 확인 필요', color: 'bg-gray-700 text-gray-300' };
+        riskElement.innerHTML = `<span class="inline-block px-3 py-1 rounded-full text-sm font-medium ${risk.color}">${risk.text}</span>`;
     }
 }
 
@@ -121,23 +121,73 @@ function updateElapsedTime(incident) {
     const elapsedTimeElement = document.getElementById('elapsed-time');
     if (!elapsedTimeElement) return;
     
+    // 처리 완료된 경우 처리 시간 고정
+    if (incident.status === 'resolved') {
+        let resolvedTime;
+        
+        // resolution 객체에서 timestamp 또는 resolvedAt 확인
+        if (incident.resolution) {
+            resolvedTime = new Date(incident.resolution.timestamp || incident.resolution.resolvedAt || Date.now());
+        } else {
+            // resolution이 없으면 현재 시간 사용
+            resolvedTime = new Date();
+        }
+        
+        const detectedTime = new Date(incident.detectedAt || incident.timestamp || Date.now());
+        const diffMs = resolvedTime - detectedTime;
+        
+        const hours = Math.floor(diffMs / 3600000);
+        const minutes = Math.floor((diffMs % 3600000) / 60000);
+        const seconds = Math.floor((diffMs % 60000) / 1000);
+        
+        // 처리완료 상태에서는 초 단위 제외하고 표시
+        if (hours > 0) {
+            elapsedTimeElement.textContent = `${hours}시간 ${minutes}분 (처리완료)`;
+        } else if (minutes > 0) {
+            elapsedTimeElement.textContent = `${minutes}분 (처리완료)`;
+        } else {
+            elapsedTimeElement.textContent = `${seconds}초 (처리완료)`;
+        }
+        
+        // 처리 완료 상태에서는 시간 업데이트 중지
+        return;
+    }
+    
+    // 처리중인 경우 실시간 업데이트
     function calculateElapsed() {
         const detectedTime = new Date(incident.detectedAt || incident.timestamp || Date.now());
         const now = new Date();
         const diffMs = now - detectedTime;
         
-        const minutes = Math.floor(diffMs / 60000);
+        const hours = Math.floor(diffMs / 3600000);
+        const minutes = Math.floor((diffMs % 3600000) / 60000);
         const seconds = Math.floor((diffMs % 60000) / 1000);
         
-        return `${minutes}분 ${seconds}초`;
+        if (hours > 0) {
+            return `${hours}시간 ${minutes}분 ${seconds}초`;
+        } else if (minutes > 0) {
+            return `${minutes}분 ${seconds}초`;
+        } else {
+            return `${seconds}초`;
+        }
     }
     
     // 초기 설정
     elapsedTimeElement.textContent = calculateElapsed();
     
-    // 1초마다 업데이트
-    setInterval(() => {
-        elapsedTimeElement.textContent = calculateElapsed();
+    // 1초마다 업데이트 (처리중인 경우에만)
+    const intervalId = setInterval(() => {
+        // 현재 상태 다시 확인
+        const currentIncidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+        const currentIncident = currentIncidents.find(i => i.id === incident.id);
+        
+        if (currentIncident && currentIncident.status === 'resolved') {
+            // 처리완료로 변경된 경우 타이머 중지
+            clearInterval(intervalId);
+            updateElapsedTime(currentIncident); // 최종 시간 표시를 위해 재호출
+        } else {
+            elapsedTimeElement.textContent = calculateElapsed();
+        }
     }, 1000);
 }
 
@@ -216,12 +266,12 @@ function updateAIAnalysis(incident) {
         }
         
         const featureHTML = features.map(f => 
-            `<span class="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs mr-1 mb-1">
+            `<span class="inline-block bg-gray-900 text-gray-300 px-2 py-1 rounded text-xs mr-1 mb-1">
                 ${featureLabels[f] || f}
             </span>`
         ).join('');
         
-        featuresElement.innerHTML = featureHTML || '<span class="text-gray-500">특징 없음</span>';
+        featuresElement.innerHTML = featureHTML || '<span class="text-gray-400">특징 없음</span>';
     }
 }
 
@@ -234,34 +284,34 @@ function updateProcessingStatus(incident, teams) {
     if (statusElement) {
         const statusConfig = {
             pending: { 
-                text: '신규', 
-                cardClass: 'from-red-50 to-pink-50 border-red-200',
-                textClass: 'text-red-600'
+                text: '신규 경고', 
+                cardClass: 'bg-dark-tertiary border-red-900/50',
+                textClass: 'text-red-400'
             },
             assigned: { 
                 text: '출동중', 
-                cardClass: 'from-orange-50 to-amber-50 border-orange-200',
-                textClass: 'text-orange-600'
+                cardClass: 'bg-dark-tertiary border-orange-900/50',
+                textClass: 'text-orange-400'
             },
             in_progress: { 
-                text: '출동중', 
-                cardClass: 'from-orange-50 to-amber-50 border-orange-200',
-                textClass: 'text-orange-600'
+                text: '처리중', 
+                cardClass: 'bg-dark-tertiary border-orange-900/50',
+                textClass: 'text-orange-400'
             },
             resolved: { 
                 text: '처리완료', 
-                cardClass: 'from-green-50 to-emerald-50 border-green-200',
-                textClass: 'text-green-600'
+                cardClass: 'bg-dark-tertiary border-green-900/50',
+                textClass: 'text-green-400'
             }
         };
         
         const config = statusConfig[incident.status] || statusConfig.pending;
         statusElement.textContent = config.text;
-        statusElement.className = `text-xl font-bold ${config.textClass}`;
+        statusElement.className = `text-2xl font-bold ${config.textClass}`;
         
-        // 카드 배경색 업데이트
+        // 카드 배경색 업데이트 (상태에 따라 테두리 색상 변경)
         if (statusCard) {
-            statusCard.className = `bg-gradient-to-br ${config.cardClass} rounded-2xl p-6 border-2 shadow-lg hover:shadow-xl transition-all duration-300`;
+            statusCard.className = `${config.cardClass} rounded-2xl p-6 border shadow-lg hover:shadow-xl transition-all duration-300`;
         }
     }
     
@@ -291,15 +341,15 @@ function updateProcessingStatus(incident, teams) {
     if (resolutionElement) {
         if (incident.resolution) {
             resolutionElement.innerHTML = `
-                <div class="bg-green-50 p-4 rounded-lg">
-                    <p class="text-sm text-gray-700">${incident.resolution.description || '처리 완료'}</p>
-                    <p class="text-xs text-gray-500 mt-2">
+                <div class="bg-green-900 p-4 rounded-lg">
+                    <p class="text-sm text-gray-300">${incident.resolution.description || '처리 완료'}</p>
+                    <p class="text-xs text-gray-400 mt-2">
                         처리 시간: ${new Date(incident.resolution.resolvedAt).toLocaleString('ko-KR')}
                     </p>
                 </div>
             `;
         } else {
-            resolutionElement.innerHTML = '<p class="text-gray-500">아직 처리되지 않음</p>';
+            resolutionElement.innerHTML = '<p class="text-gray-400">아직 처리되지 않음</p>';
         }
     }
 }
@@ -364,7 +414,7 @@ function updateIncidentTimeline(incident, teams) {
     
     if (timelineEvents.length === 0) {
         timelineHTML = `
-            <div class="text-center text-gray-500 py-8">
+            <div class="text-center text-gray-400 py-8">
                 <i class="fas fa-info-circle mb-2"></i>
                 <p>타임라인 정보가 없습니다</p>
             </div>
@@ -386,10 +436,10 @@ function updateIncidentTimeline(incident, teams) {
                     </div>
                     <div class="flex-1 pb-8">
                         <div class="flex items-center justify-between mb-1">
-                            <h3 class="text-lg font-semibold text-gray-900">${event.title}</h3>
-                            <span class="text-sm text-gray-500">${relativeTime}</span>
+                            <h3 class="text-lg font-semibold text-gray-100">${event.title}</h3>
+                            <span class="text-sm text-gray-400">${relativeTime}</span>
                         </div>
-                        <p class="text-gray-600 mb-1">${event.description}</p>
+                        <p class="text-gray-400 mb-1">${event.description}</p>
                         <p class="text-xs text-gray-400">${formattedTime}</p>
                     </div>
                 </div>
@@ -464,7 +514,7 @@ function updateFieldPhotos(incident) {
     if (fieldPhotos.length === 0) {
         // 현장 사진이 없는 경우
         photosHTML = `
-            <div class="text-center text-gray-500 py-8">
+            <div class="text-center text-gray-400 py-8">
                 <i class="fas fa-camera text-3xl mb-3 text-gray-300"></i>
                 <p class="text-lg font-medium">현장 사진 없음</p>
                 <p class="text-sm">아직 감식팀에서 현장 사진을 업로드하지 않았습니다.</p>
@@ -493,8 +543,8 @@ function updateFieldPhotos(incident) {
                              onerror="this.onerror=null; this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\' viewBox=\\'0 0 200 200\\' fill=\\'none\\'%3E%3Crect width=\\'200\\' height=\\'200\\' fill=\\'%23F3F4F6\\' /%3E%3Ctext x=\\'100\\' y=\\'100\\' text-anchor=\\'middle\\' fill=\\'%239CA3AF\\' font-size=\\'16\\'%3E이미지 오류%3C/text%3E%3C/svg%3E'">
                     </div>
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-200"></div>
-                    <div class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <i class="fas fa-expand text-gray-700 text-sm"></i>
+                    <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-80 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <i class="fas fa-expand text-gray-300 text-sm"></i>
                     </div>
                     ${uploadTime ? `
                         <div class="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -509,7 +559,7 @@ function updateFieldPhotos(incident) {
         
         // 사진 정보 요약
         photosHTML += `
-            <div class="mt-4 text-sm text-gray-600 text-center">
+            <div class="mt-4 text-sm text-gray-400 text-center">
                 총 <span class="font-semibold text-blue-600">${fieldPhotos.length}장</span>의 현장 사진이 등록되어 있습니다.
             </div>
         `;
@@ -526,11 +576,11 @@ function openPhotoModal(photoUrl, caption, uploadTime) {
     
     modal.innerHTML = `
         <div class="max-w-4xl max-h-full p-4" onclick="event.stopPropagation()">
-            <div class="bg-white rounded-lg overflow-hidden">
+            <div class="bg-gray-800 rounded-lg overflow-hidden">
                 <div class="p-4 border-b">
                     <div class="flex justify-between items-center">
                         <h3 class="text-lg font-semibold">현장 사진</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-300">
                             <i class="fas fa-times text-xl"></i>
                         </button>
                     </div>
@@ -539,9 +589,9 @@ function openPhotoModal(photoUrl, caption, uploadTime) {
                     <img src="${photoUrl}" alt="현장 사진 원본" class="w-full max-h-96 object-contain">
                 </div>
                 ${caption || uploadTime ? `
-                    <div class="p-4 bg-gray-50">
-                        ${caption ? `<p class="text-gray-800 mb-2">${caption}</p>` : ''}
-                        ${uploadTime ? `<p class="text-sm text-gray-600">업로드 시간: ${uploadTime}</p>` : ''}
+                    <div class="p-4 bg-gray-900">
+                        ${caption ? `<p class="text-gray-200 mb-2">${caption}</p>` : ''}
+                        ${uploadTime ? `<p class="text-sm text-gray-400">업로드 시간: ${uploadTime}</p>` : ''}
                     </div>
                 ` : ''}
             </div>

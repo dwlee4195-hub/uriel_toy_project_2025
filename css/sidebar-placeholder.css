@@ -4,8 +4,8 @@
 #sidebar-container {
     width: 16rem; /* w-64 = 256px = 16rem */
     min-height: 100vh;
-    background-color: #f8f9fa; /* light-secondary */
-    border-right: 1px solid #e5e7eb; /* border-gray-200 */
+    background-color: #1f2937; /* gray-800 - dark theme */
+    border-right: 1px solid #374151; /* border-gray-700 */
     position: relative;
     flex-shrink: 0;
 }

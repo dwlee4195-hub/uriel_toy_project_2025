@@ -29,20 +29,20 @@ const Notification = {
         // 타입별 스타일 설정
         const styles = {
             success: {
-                bg: 'bg-gradient-to-r from-green-50 to-emerald-50',
-                border: 'border-2 border-green-200',
+                bg: 'bg-gradient-to-r from-green-900 to-emerald-900',
+                border: 'border-2 border-green-700',
                 text: 'text-green-900',
                 icon: 'fa-check-circle',
                 iconColor: 'text-green-600',
-                iconBg: 'bg-green-100'
+                iconBg: 'bg-green-900'
             },
             error: {
-                bg: 'bg-gradient-to-r from-red-50 to-pink-50',
-                border: 'border-2 border-red-200',
+                bg: 'bg-gradient-to-r from-red-900 to-pink-900',
+                border: 'border-2 border-red-700',
                 text: 'text-red-900',
                 icon: 'fa-exclamation-circle',
                 iconColor: 'text-red-600',
-                iconBg: 'bg-red-100'
+                iconBg: 'bg-red-900'
             },
             warning: {
                 bg: 'bg-gradient-to-r from-yellow-50 to-orange-50',
@@ -50,15 +50,15 @@ const Notification = {
                 text: 'text-yellow-900',
                 icon: 'fa-exclamation-triangle',
                 iconColor: 'text-yellow-600',
-                iconBg: 'bg-yellow-100'
+                iconBg: 'bg-yellow-900'
             },
             info: {
                 bg: 'bg-gradient-to-r from-blue-50 to-cyan-50',
-                border: 'border-2 border-blue-200',
+                border: 'border-2 border-blue-700',
                 text: 'text-blue-900',
                 icon: 'fa-info-circle',
                 iconColor: 'text-blue-600',
-                iconBg: 'bg-blue-100'
+                iconBg: 'bg-blue-900'
             }
         };
 

@@ -40,19 +40,19 @@ const CommonHeader = {
         const user = this.getUserInfo();
         
         return `
-        <header class="bg-light-secondary shadow-lg">
+        <header class="bg-gray-800 shadow-lg">
             <div class="h-20 px-8 flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-100 flex items-center">
                         ${title}
                     </h1>
-                    ${subtitle ? `<p class="text-sm text-gray-600 mt-1">${subtitle}</p>` : ''}
+                    ${subtitle ? `<p class="text-sm text-gray-400 mt-1">${subtitle}</p>` : ''}
                 </div>
                 
                 <!-- 상단 우측 영역 -->
                 <div class="flex items-center space-x-6">
                     <!-- 현재 시간 표시 -->
-                    <div class="text-sm text-gray-600">
+                    <div class="text-sm text-gray-400">
                         <i class="far fa-clock mr-2"></i>
                         <span id="current-time">${new Date().toLocaleString('ko-KR')}</span>
                     </div>
@@ -64,12 +64,12 @@ const CommonHeader = {
                             <i class="fas fa-user text-white"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-gray-900">${user.name}</p>
-                            <p class="text-xs text-gray-500">${user.role}</p>
+                            <p class="text-sm font-medium text-gray-100">${user.name}</p>
+                            <p class="text-xs text-gray-400">${user.role}</p>
                         </div>
                         
                         <!-- 로그아웃 버튼 -->
-                        <button onclick="CommonHeader.handleLogout()" class="ml-4 text-gray-500 hover:text-gray-700" title="로그아웃">
+                        <button onclick="CommonHeader.handleLogout()" class="ml-4 text-gray-400 hover:text-gray-300" title="로그아웃">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
                     </div>

@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Airport Security - 실시간 대시보드</title>
-    
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Custom Dark Theme Configuration -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'light-bg': '#ffffff',
-                        'light-secondary': '#f8f9fa',
-                        'light-tertiary': '#e9ecef',
+                        'dark-bg': '#0f172a',
+                        'dark-secondary': '#1e293b',
+                        'dark-tertiary': '#334155',
                         'primary-blue': '#3b82f6',
                         'primary-green': '#10b981'
                     }
@@ -30,7 +30,7 @@
             }
         }
     </script>
-    
+
     <style>
         /* 커스텀 스크롤바 스타일 */
         ::-webkit-scrollbar {
@@ -38,14 +38,14 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #e9ecef;
+            background: #1e293b;
         }
         ::-webkit-scrollbar-thumb {
-            background: #adb5bd;
+            background: #475569;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #868e96;
+            background: #64748b;
         }
 
         /* 라이다 맵 스타일 */
@@ -56,9 +56,9 @@
         }
 
         .lidar-grid {
-            background-image: 
-                linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
+            background-image:
+                    linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
@@ -89,385 +89,385 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-700 min-h-screen flex">
-    
-    <!-- 사이드바 컨테이너 -->
-    <div id="sidebar-container"></div>
-    
-    <!-- 사이드바 스크립트 즉시 로드 -->
-    <script src="js/sidebar-template.js"></script>
-    
-    <!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
-    <script src="js/notification.js"></script>
-    <script src="js/data-manager.js"></script>
-    <script src="js/common-auth.js"></script>
+<body class="bg-dark-bg text-gray-200 min-h-screen flex">
 
-    <!-- 메인 콘텐츠 영역 -->
-    <main class="flex-1 overflow-y-auto">
-        <!-- 헤더 영역 (공통 헤더) -->
-        <div id="header-container"></div>
-        
-        <!-- 대시보드 메인 콘텐츠 -->
-        <section class="p-4">
-            <!-- 상단 통계 카드들 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <!-- 신규 경고 -->
-                <div class="bg-white rounded-xl shadow-lg p-4 border-l-4 border-red-500">
+<!-- 사이드바 컨테이너 -->
+<div id="sidebar-container"></div>
+
+<!-- 사이드바 스크립트 즉시 로드 -->
+<script src="js/sidebar-template.js"></script>
+
+<!-- 데이터 매니저 및 공통 인증 스크립트 로드 -->
+<script src="js/notification.js"></script>
+<script src="js/data-manager.js"></script>
+<script src="js/common-auth.js"></script>
+
+<!-- 메인 콘텐츠 영역 -->
+<main class="flex-1 overflow-y-auto">
+    <!-- 헤더 영역 (공통 헤더) -->
+    <div id="header-container"></div>
+
+    <!-- 대시보드 메인 콘텐츠 -->
+    <section class="p-4">
+        <!-- 상단 통계 카드들 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <!-- 신규 경고 -->
+            <div class="bg-gray-800 rounded-xl shadow-lg p-4 border-l-4 border-red-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-400">신규 경고</p>
+                        <p id="pending-count" class="text-3xl font-bold text-red-600">0</p>
+                        <p class="text-xs text-gray-500 mt-1">대기 중인 사건</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 출동 중 -->
+            <div class="bg-gray-800 rounded-xl shadow-lg p-4 border-l-4 border-orange-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-400">출동 중</p>
+                        <p id="in-progress-count" class="text-3xl font-bold text-orange-600">0</p>
+                        <p class="text-xs text-gray-500 mt-1">처리 진행 중</p>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full">
+                        <i class="fas fa-users text-orange-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 처리 완료 -->
+            <div class="bg-gray-800 rounded-xl shadow-lg p-4 border-l-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-400">처리 완료</p>
+                        <p id="resolved-count" class="text-3xl font-bold text-green-600">0</p>
+                        <p class="text-xs text-gray-500 mt-1">총 해결 건수</p>
+                    </div>
+                    <div class="bg-green-900/30 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 대시보드 영역 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- 실시간 모니터링 (2/3 영역) -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                <!-- 헤더 -->
+                <div class="p-4 border-b border-gray-700">
                     <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">신규 경고</p>
-                            <p id="pending-count" class="text-3xl font-bold text-red-600">0</p>
-                            <p class="text-xs text-gray-500 mt-1">대기 중인 사건</p>
+                        <div class="flex items-center">
+                            <div class="bg-blue-900/30 p-2 rounded-lg mr-3">
+                                <i class="fas fa-map-marked-alt text-blue-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-200">실시간 모니터링</h3>
+                                <p class="text-sm text-gray-400">공항 터미널 방치물품 감지 현황</p>
+                            </div>
                         </div>
-                        <div class="bg-red-100 p-3 rounded-full">
-                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-2 status-indicator"></div>
+                                <span class="text-xs text-gray-400">실시간 연결</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 출동 중 -->
-                <div class="bg-white rounded-xl shadow-lg p-4 border-l-4 border-orange-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">출동 중</p>
-                            <p id="in-progress-count" class="text-3xl font-bold text-orange-600">0</p>
-                            <p class="text-xs text-gray-500 mt-1">처리 진행 중</p>
-                        </div>
-                        <div class="bg-orange-100 p-3 rounded-full">
-                            <i class="fas fa-users text-orange-600 text-xl"></i>
+                <!-- 탭 네비게이션 -->
+                <div class="flex border-b border-gray-700">
+                    <button id="lidar-tab" class="flex-1 px-4 py-2 text-sm font-medium text-blue-400 bg-dark-tertiary border-b-2 border-blue-500 transition-colors" onclick="switchTab('lidar')">
+                        <i class="fas fa-radar mr-2"></i>
+                        라이다 맵
+                    </button>
+                    <button id="cctv-tab" class="flex-1 px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-300 transition-colors" onclick="switchTab('cctv')">
+                        <i class="fas fa-video mr-2"></i>
+                        CCTV 현황
+                    </button>
+                </div>
+
+                <!-- 라이다 맵 콘텐츠 -->
+                <div id="lidar-content" class="tab-content">
+                    <div class="bg-gray-100 h-100 flex items-center justify-center">
+                        <div class="text-center">
+                            <img src="image/김포-국제선-1층-라이다-동영상.gif" style="width:1550px; height:550px;">
                         </div>
                     </div>
                 </div>
 
-                <!-- 처리 완료 -->
-                <div class="bg-white rounded-xl shadow-lg p-4 border-l-4 border-green-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">처리 완료</p>
-                            <p id="resolved-count" class="text-3xl font-bold text-green-600">0</p>
-                            <p class="text-xs text-gray-500 mt-1">총 해결 건수</p>
-                        </div>
-                        <div class="bg-green-100 p-3 rounded-full">
-                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                <!-- CCTV 현황 콘텐츠 -->
+                <div id="cctv-content" class="tab-content hidden">
+                    <div class="bg-gray-100 h-100 flex items-center justify-center">
+                        <div class="text-center">
+                            <img src="image/cctv-버튼-눌렀을때-영상.gif" style="width:1550px; height:550px;">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 메인 대시보드 영역 -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <!-- 실시간 모니터링 (2/3 영역) -->
-                <div class="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
-                    <!-- 헤더 -->
-                    <div class="p-4 border-b border-gray-200">
+            <!-- 우측 통계 및 정보 패널 (1/3 영역) -->
+            <div class="space-y-4">
+
+                <!-- 최근 경고 알림 -->
+                <div class="bg-gray-800 rounded-xl shadow-lg p-4">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-red-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-bell text-red-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-200">최근 경고</h4>
+                            <p class="text-sm text-gray-400">실시간 알림</p>
+                        </div>
+                    </div>
+                    <div id="recent-alerts" class="space-y-3">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+
+                <!-- 시간대별 감지 추이 -->
+                <div class="bg-gray-800 rounded-xl shadow-lg p-4">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-chart-bar text-purple-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-200">실시간 발생 건수 그래프</h4>
+                            <p class="text-sm text-gray-400">지난 24시간</p>
+                        </div>
+                    </div>
+                    <div class="h-48">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 위험도별 분포 -->
+                <div class="bg-gray-800 rounded-xl shadow-lg p-4">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-shield-alt text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-200">위험도별 분포</h4>
+                            <p class="text-sm text-gray-400">현재 활성 경고</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div class="bg-blue-100 p-2 rounded-lg mr-3">
-                                    <i class="fas fa-map-marked-alt text-blue-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-800">실시간 모니터링</h3>
-                                    <p class="text-sm text-gray-600">공항 터미널 방치물품 감지 현황</p>
-                                </div>
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                                <span class="text-sm text-gray-300">고위험</span>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-red-500 rounded-full mr-2 status-indicator"></div>
-                                    <span class="text-xs text-gray-600">실시간 연결</span>
-                                </div>
-                            </div>
+                            <span id="high-risk" class="text-sm font-bold text-red-600">3건</span>
                         </div>
-                    </div>
-                    
-                    <!-- 탭 네비게이션 -->
-                    <div class="flex border-b border-gray-200">
-                        <button id="lidar-tab" class="flex-1 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border-b-2 border-blue-600 transition-colors" onclick="switchTab('lidar')">
-                            <i class="fas fa-radar mr-2"></i>
-                            라이다 맵
-                        </button>
-                        <button id="cctv-tab" class="flex-1 px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors" onclick="switchTab('cctv')">
-                            <i class="fas fa-video mr-2"></i>
-                            CCTV 현황
-                        </button>
-                    </div>
-                    
-                    <!-- 라이다 맵 콘텐츠 -->
-                    <div id="lidar-content" class="tab-content">
-                        <div class="bg-gray-100 h-100 flex items-center justify-center">
-                            <div class="text-center">
-                                <i class="fas fa-radar text-4xl text-gray-400 mb-4"></i>
-<!--                                <p class="text-gray-500">라이다 맵 데이터</p>-->
-                                <img src="image/김포-국제선-1층-라이다-동영상.gif" style="width:1550px; height:550px;">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+                                <span class="text-sm text-gray-300">중위험</span>
                             </div>
+                            <span id="medium-risk" class="text-sm font-bold text-orange-600">8건</span>
                         </div>
-                    </div>
-                    
-                    <!-- CCTV 현황 콘텐츠 -->
-                    <div id="cctv-content" class="tab-content hidden">
-                        <div class="bg-gray-100 h-100 flex items-center justify-center">
-                            <div class="text-center">
-                                <i class="fas fa-video text-4xl text-gray-400 mb-4"></i>
-<!--                                <p class="text-gray-500">CCTV 현황 데이터</p>-->
-                                <img src="image/cctv-버튼-눌렀을때-영상.gif" style="width:1550px; height:550px;">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                                <span class="text-sm text-gray-300">저위험</span>
                             </div>
+                            <span id="low-risk" class="text-sm font-bold text-yellow-600">12건</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 우측 통계 및 정보 패널 (1/3 영역) -->
-                <div class="space-y-4">
 
-                    <!-- 최근 경고 알림 -->
-                    <div class="bg-white rounded-xl shadow-lg p-4">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-red-100 p-2 rounded-lg mr-3">
-                                <i class="fas fa-bell text-red-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-gray-800">최근 경고</h4>
-                                <p class="text-sm text-gray-600">실시간 알림</p>
-                            </div>
-                        </div>
-                        <div id="recent-alerts" class="space-y-3">
-                            <!-- 동적으로 생성됨 -->
-                        </div>
-                    </div>
-
-                    <!-- 시간대별 감지 추이 -->
-                    <div class="bg-white rounded-xl shadow-lg p-4">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-purple-100 p-2 rounded-lg mr-3">
-                                <i class="fas fa-chart-bar text-purple-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-gray-800">실시간 발생 건수 그래프</h4>
-                                <p class="text-sm text-gray-600">지난 24시간</p>
-                            </div>
-                        </div>
-                        <div class="h-48">
-                            <canvas id="hourlyChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- 위험도별 분포 -->
-                    <div class="bg-white rounded-xl shadow-lg p-4">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-yellow-100 p-2 rounded-lg mr-3">
-                                <i class="fas fa-shield-alt text-yellow-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-gray-800">위험도별 분포</h4>
-                                <p class="text-sm text-gray-600">현재 활성 경고</p>
-                            </div>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-700">고위험</span>
-                                </div>
-                                <span id="high-risk" class="text-sm font-bold text-red-600">3건</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-700">중위험</span>
-                                </div>
-                                <span id="medium-risk" class="text-sm font-bold text-orange-600">8건</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                                    <span class="text-sm text-gray-700">저위험</span>
-                                </div>
-                                <span id="low-risk" class="text-sm font-bold text-yellow-600">12건</span>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+</main>
 
-    <!-- JavaScript -->
-    <script>
-        let detectionChart = null;
+<!-- JavaScript -->
+<script>
+    let detectionChart = null;
 
-        // 페이지 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeDashboard();
-            
-            // 3초마다 데이터 업데이트
-            setInterval(updateDashboard, 3000);
+    // 페이지 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDashboard();
+
+        // 3초마다 데이터 업데이트
+        setInterval(updateDashboard, 3000);
+    });
+
+    // 탭 전환 함수
+    function switchTab(tabName) {
+        // 모든 탭 버튼 비활성화
+        document.getElementById('lidar-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-300 transition-colors';
+        document.getElementById('cctv-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-300 transition-colors';
+
+        // 모든 콘텐츠 숨기기
+        document.getElementById('lidar-content').classList.add('hidden');
+        document.getElementById('cctv-content').classList.add('hidden');
+
+        // 선택된 탭 활성화
+        if (tabName === 'lidar') {
+            document.getElementById('lidar-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-blue-400 bg-dark-tertiary border-b-2 border-blue-500 transition-colors';
+            document.getElementById('lidar-content').classList.remove('hidden');
+        } else if (tabName === 'cctv') {
+            document.getElementById('cctv-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-blue-400 bg-dark-tertiary border-b-2 border-blue-500 transition-colors';
+            document.getElementById('cctv-content').classList.remove('hidden');
+        }
+    }
+
+    // 대시보드 초기화
+    function initializeDashboard() {
+        updateStatistics();
+        createHourlyChart();
+        updateRecentAlerts();
+    }
+
+    // 통계 업데이트
+    function updateDashboard() {
+        updateStatistics();
+        updateRecentAlerts();
+    }
+
+    // 상단 통계 카드 업데이트
+    function updateStatistics() {
+        const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+        const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+
+        // 상태별 사건 개수 계산
+        const pendingCount = incidents.filter(i => i.status === 'pending').length;
+        const inProgressCount = incidents.filter(i => i.status === 'assigned' || i.status === 'in_progress').length;
+        const resolvedCount = incidents.filter(i => i.status === 'resolved').length;
+
+        document.getElementById('pending-count').textContent = pendingCount.toLocaleString();
+        document.getElementById('in-progress-count').textContent = inProgressCount.toLocaleString();
+        document.getElementById('resolved-count').textContent = resolvedCount.toLocaleString();
+
+        // 위험도별 분포 업데이트 (미해결 건만)
+        const activeIncidents = incidents.filter(i => i.status !== 'resolved');
+        const highRisk = activeIncidents.filter(i => i.riskLevel === 'high').length;
+        const mediumRisk = activeIncidents.filter(i => i.riskLevel === 'medium').length;
+        const lowRisk = activeIncidents.filter(i => i.riskLevel === 'low').length;
+
+        document.getElementById('high-risk').textContent = `${highRisk}건`;
+        document.getElementById('medium-risk').textContent = `${mediumRisk}건`;
+        document.getElementById('low-risk').textContent = `${lowRisk}건`;
+    }
+
+
+    // 시간대별 차트 생성
+    function createHourlyChart() {
+        // Chart.js 기본 설정
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = '#374151';
+
+        const ctx = document.getElementById('hourlyChart').getContext('2d');
+
+        // 실제 데이터 기반 시간대별 통계
+        const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+        const hourlyData = Array.from({length: 24}, () => 0);
+
+        // 오늘 발생한 사건들을 시간대별로 집계
+        const today = new Date().toDateString();
+        incidents.forEach(incident => {
+            const incidentDate = new Date(incident.detectedAt);
+            if (incidentDate.toDateString() === today) {
+                const hour = incidentDate.getHours();
+                hourlyData[hour]++;
+            }
         });
 
-        // 탭 전환 함수
-        function switchTab(tabName) {
-            // 모든 탭 버튼 비활성화
-            document.getElementById('lidar-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors';
-            document.getElementById('cctv-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors';
-            
-            // 모든 콘텐츠 숨기기
-            document.getElementById('lidar-content').classList.add('hidden');
-            document.getElementById('cctv-content').classList.add('hidden');
-            
-            // 선택된 탭 활성화
-            if (tabName === 'lidar') {
-                document.getElementById('lidar-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border-b-2 border-blue-600 transition-colors';
-                document.getElementById('lidar-content').classList.remove('hidden');
-            } else if (tabName === 'cctv') {
-                document.getElementById('cctv-tab').className = 'flex-1 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border-b-2 border-blue-600 transition-colors';
-                document.getElementById('cctv-content').classList.remove('hidden');
+        // 데이터가 없으면 샘플 데이터로 시각화
+        const hasData = hourlyData.some(count => count > 0);
+        if (!hasData) {
+            // 과거 데이터 시뮬레이션 (9시-18시 업무시간에 더 많은 사건)
+            for (let i = 0; i < 24; i++) {
+                if (i >= 6 && i <= 22) {
+                    hourlyData[i] = Math.floor(Math.random() * 3) + (i >= 9 && i <= 18 ? 2 : 1);
+                } else {
+                    hourlyData[i] = Math.floor(Math.random() * 2);
+                }
             }
         }
 
-        // 대시보드 초기화
-        function initializeDashboard() {
-            updateStatistics();
-            createHourlyChart();
-            updateRecentAlerts();
+        if (detectionChart) {
+            detectionChart.destroy();
         }
 
-        // 통계 업데이트
-        function updateDashboard() {
-            updateStatistics();
-            updateRecentAlerts();
-        }
-
-        // 상단 통계 카드 업데이트
-        function updateStatistics() {
-            const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
-            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
-            
-            // 상태별 사건 개수 계산
-            const pendingCount = incidents.filter(i => i.status === 'pending').length;
-            const inProgressCount = incidents.filter(i => i.status === 'assigned' || i.status === 'in_progress').length;
-            const resolvedCount = incidents.filter(i => i.status === 'resolved').length;
-            
-            document.getElementById('pending-count').textContent = pendingCount.toLocaleString();
-            document.getElementById('in-progress-count').textContent = inProgressCount.toLocaleString();
-            document.getElementById('resolved-count').textContent = resolvedCount.toLocaleString();
-            
-            // 위험도별 분포 업데이트 (미해결 건만)
-            const activeIncidents = incidents.filter(i => i.status !== 'resolved');
-            const highRisk = activeIncidents.filter(i => i.riskLevel === 'high').length;
-            const mediumRisk = activeIncidents.filter(i => i.riskLevel === 'medium').length;
-            const lowRisk = activeIncidents.filter(i => i.riskLevel === 'low').length;
-            
-            document.getElementById('high-risk').textContent = `${highRisk}건`;
-            document.getElementById('medium-risk').textContent = `${mediumRisk}건`;
-            document.getElementById('low-risk').textContent = `${lowRisk}건`;
-        }
-
-
-        // 시간대별 차트 생성
-        function createHourlyChart() {
-            const ctx = document.getElementById('hourlyChart').getContext('2d');
-            
-            // 실제 데이터 기반 시간대별 통계
-            const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
-            const hourlyData = Array.from({length: 24}, () => 0);
-            
-            // 오늘 발생한 사건들을 시간대별로 집계
-            const today = new Date().toDateString();
-            incidents.forEach(incident => {
-                const incidentDate = new Date(incident.detectedAt);
-                if (incidentDate.toDateString() === today) {
-                    const hour = incidentDate.getHours();
-                    hourlyData[hour]++;
-                }
-            });
-            
-            // 데이터가 없으면 샘플 데이터로 시각화
-            const hasData = hourlyData.some(count => count > 0);
-            if (!hasData) {
-                // 과거 데이터 시뮬레이션 (9시-18시 업무시간에 더 많은 사건)
-                for (let i = 0; i < 24; i++) {
-                    if (i >= 6 && i <= 22) {
-                        hourlyData[i] = Math.floor(Math.random() * 3) + (i >= 9 && i <= 18 ? 2 : 1);
-                    } else {
-                        hourlyData[i] = Math.floor(Math.random() * 2);
+        detectionChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Array.from({length: 24}, (_, i) => i + '시'),
+                datasets: [{
+                    label: '감지 건수',
+                    data: hourlyData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
                     }
-                }
-            }
-            
-            if (detectionChart) {
-                detectionChart.destroy();
-            }
-            
-            detectionChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({length: 24}, (_, i) => i + '시'),
-                    datasets: [{
-                        label: '감지 건수',
-                        data: hourlyData,
-                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 10
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 10
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                maxTicksLimit: 12
-                            }
+                    x: {
+                        ticks: {
+                            maxTicksLimit: 12
                         }
                     }
                 }
-            });
+            }
+        });
+    }
+
+    // 최근 경고 알림 업데이트
+    function updateRecentAlerts() {
+        const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+        const recentIncidents = incidents
+            .filter(i => i.status === 'pending')
+            .sort((a, b) => new Date(b.detectedAt) - new Date(a.detectedAt))
+            .slice(0, 3);
+
+        const container = document.getElementById('recent-alerts');
+
+        if (recentIncidents.length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">현재 활성 경고가 없습니다</p>';
+            return;
         }
 
-        // 최근 경고 알림 업데이트
-        function updateRecentAlerts() {
-            const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
-            const recentIncidents = incidents
-                .filter(i => i.status === 'pending')
-                .sort((a, b) => new Date(b.detectedAt) - new Date(a.detectedAt))
-                .slice(0, 3);
-            
-            const container = document.getElementById('recent-alerts');
-            
-            if (recentIncidents.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">현재 활성 경고가 없습니다</p>';
-                return;
-            }
-            
-            container.innerHTML = recentIncidents.map(incident => {
-                const time = new Date(incident.detectedAt).toLocaleTimeString('ko-KR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                let riskColor = 'text-yellow-600 bg-yellow-50';
-                if (incident.riskLevel === 'high') riskColor = 'text-red-600 bg-red-50';
-                else if (incident.riskLevel === 'medium') riskColor = 'text-orange-600 bg-orange-50';
-                
-                return `
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" 
+        container.innerHTML = recentIncidents.map(incident => {
+            const time = new Date(incident.detectedAt).toLocaleTimeString('ko-KR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            let riskColor = 'text-yellow-500 bg-yellow-900/30';
+            if (incident.riskLevel === 'high') riskColor = 'text-red-500 bg-red-900/30';
+            else if (incident.riskLevel === 'medium') riskColor = 'text-orange-500 bg-orange-900/30';
+
+            return `
+                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-900 transition-colors cursor-pointer"
                          onclick="window.location.href='incident-detail.html?id=${incident.id}'">
                         <div class="flex items-center">
                             <div class="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></div>
                             <div>
-                                <p class="text-sm font-medium text-gray-800">${incident.location}</p>
-                                <p class="text-xs text-gray-600">${incident.objectType}</p>
+                                <p class="text-sm font-medium text-gray-200">${incident.location}</p>
+                                <p class="text-xs text-gray-400">${incident.objectType}</p>
                             </div>
                         </div>
                         <div class="text-right">
@@ -478,19 +478,19 @@
                         </div>
                     </div>
                 `;
-            }).join('');
-        }
-    </script>
-    
-    <!-- 공통 헤더 스크립트 -->
-    <script src="js/common-header.js"></script>
-    
-    <!-- 페이지 초기화 -->
-    <script>
-        // 헤더 초기화
-        CommonHeader.init('header-container', 
-            '<i class="fas fa-tachometer-alt mr-3 text-primary-blue"></i>실시간 대시보드', 
-            '공항 보안 통합 관제 현황');
-    </script>
+        }).join('');
+    }
+</script>
+
+<!-- 공통 헤더 스크립트 -->
+<script src="js/common-header.js"></script>
+
+<!-- 페이지 초기화 -->
+<script>
+    // 헤더 초기화
+    CommonHeader.init('header-container',
+        '<i class="fas fa-tachometer-alt mr-3 text-primary-blue"></i>실시간 대시보드',
+        '공항 보안 통합 관제 현황');
+</script>
 </body>
 </html>
