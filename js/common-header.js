@@ -26,8 +26,8 @@ const CommonHeader = {
     getRoleLabel: function(role) {
         const roleLabels = {
             admin: '관리자',
-            control: '관제팀',
-            supervisor: '관제팀',
+            control: '관재팀',
+            supervisor: '관재팀',
             inspector: '감식팀',
             team_leader: '감식팀',
             team_member: '감식팀'

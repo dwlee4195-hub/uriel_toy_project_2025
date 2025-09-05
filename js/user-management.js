@@ -27,8 +27,8 @@ function createUserRow(user) {
     
     const roleLabels = {
         admin: { text: '관리자', color: 'bg-green-100 text-green-800' },
-        control: { text: '관제팀', color: 'bg-orange-100 text-orange-800' },
-        supervisor: { text: '관제팀', color: 'bg-orange-100 text-orange-800' },
+        control: { text: '관재팀', color: 'bg-orange-100 text-orange-800' },
+        supervisor: { text: '관재팀', color: 'bg-orange-100 text-orange-800' },
         inspector: { text: '감식팀', color: 'bg-blue-100 text-blue-800' },
         team_leader: { text: '감식팀', color: 'bg-blue-100 text-blue-800' },
         team_member: { text: '감식팀', color: 'bg-blue-100 text-blue-800' }

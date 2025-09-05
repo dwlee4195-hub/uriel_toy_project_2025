@@ -54,7 +54,7 @@ class DataManager {
                 id: 'USER-002',
                 username: 'control',
                 password: 'control123',
-                name: '이관제',
+                name: '이관재',
                 role: 'control',
                 department: '관제센터',
                 email: 'control@urielsoft.com',
