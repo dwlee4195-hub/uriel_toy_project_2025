@@ -140,20 +140,20 @@ function updateElapsedTime(incident) {
         const minutes = Math.floor((diffMs % 3600000) / 60000);
         const seconds = Math.floor((diffMs % 60000) / 1000);
         
-        // 처리완료 상태에서는 초 단위 제외하고 표시
+        // 처리 완료 상태에서는 초 단위 제외하고 표시
         if (hours > 0) {
-            elapsedTimeElement.textContent = `${hours}시간 ${minutes}분 (처리완료)`;
+            elapsedTimeElement.textContent = `${hours}시간 ${minutes}분 (처리 완료)`;
         } else if (minutes > 0) {
-            elapsedTimeElement.textContent = `${minutes}분 (처리완료)`;
+            elapsedTimeElement.textContent = `${minutes}분 (처리 완료)`;
         } else {
-            elapsedTimeElement.textContent = `${seconds}초 (처리완료)`;
+            elapsedTimeElement.textContent = `${seconds}초 (처리 완료)`;
         }
         
         // 처리 완료 상태에서는 시간 업데이트 중지
         return;
     }
     
-    // 처리중인 경우 실시간 업데이트
+    // 처리 중인 경우 실시간 업데이트
     function calculateElapsed() {
         const detectedTime = new Date(incident.detectedAt || incident.timestamp || Date.now());
         const now = new Date();
@@ -175,14 +175,14 @@ function updateElapsedTime(incident) {
     // 초기 설정
     elapsedTimeElement.textContent = calculateElapsed();
     
-    // 1초마다 업데이트 (처리중인 경우에만)
+    // 1초마다 업데이트 (처리 중인 경우에만)
     const intervalId = setInterval(() => {
         // 현재 상태 다시 확인
         const currentIncidents = JSON.parse(localStorage.getItem('incidents') || '[]');
         const currentIncident = currentIncidents.find(i => i.id === incident.id);
         
         if (currentIncident && currentIncident.status === 'resolved') {
-            // 처리완료로 변경된 경우 타이머 중지
+            // 처리 완료로 변경된 경우 타이머 중지
             clearInterval(intervalId);
             updateElapsedTime(currentIncident); // 최종 시간 표시를 위해 재호출
         } else {
@@ -289,17 +289,17 @@ function updateProcessingStatus(incident, teams) {
                 textClass: 'text-red-400'
             },
             assigned: { 
-                text: '출동중', 
+                text: '출동 중',
                 cardClass: 'bg-dark-tertiary border-orange-900/50',
                 textClass: 'text-orange-400'
             },
             in_progress: { 
-                text: '처리중', 
+                text: '처리 중',
                 cardClass: 'bg-dark-tertiary border-orange-900/50',
                 textClass: 'text-orange-400'
             },
             resolved: { 
-                text: '처리완료', 
+                text: '처리 완료',
                 cardClass: 'bg-dark-tertiary border-green-900/50',
                 textClass: 'text-green-400'
             }

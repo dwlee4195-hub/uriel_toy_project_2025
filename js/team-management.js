@@ -117,7 +117,7 @@ function createTeamCard(team, users) {
                         ${team.currentAssignment ? 
                             `<span class="inline-flex items-center gap-1 text-xs bg-red-500/10 border border-red-500/30 text-red-400 px-2.5 py-1 rounded-full">
                                 <i class="fas fa-exclamation-triangle text-xs"></i>
-                                ${team.currentAssignment} 처리중
+                                ${team.currentAssignment} 처리 중
                             </span>` :
                             '<span></span>'
                         }

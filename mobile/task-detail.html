@@ -138,7 +138,7 @@
                 </div>
             </div>
             
-            <!-- 처리완료 버튼 (처리중인 경우만 표시) -->
+            <!-- 처리 완료 버튼 (처리 중인 경우만 표시) -->
             <div id="completion-section" class="hidden">
                 <button onclick="showCompletionModal()" class="w-full bg-primary-blue text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
                     처리 완료
@@ -148,7 +148,7 @@
         </div>
     </main>
     
-    <!-- 처리완료 모달 -->
+    <!-- 처리 완료 모달 -->
     <div id="completion-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
         <div class="bg-dark-secondary rounded-xl max-w-md w-full p-6">
             <h3 class="font-bold text-lg mb-4">처리 결과 선택</h3>
@@ -287,7 +287,7 @@
             // 기존 사진들 로드
             loadExistingPhotos();
             
-            // 처리완료 버튼 표시 여부
+            // 처리 완료 버튼 표시 여부
             const completionSection = document.getElementById('completion-section');
             if (task.status === 'assigned' || task.status === 'in_progress') {
                 completionSection.classList.remove('hidden');
@@ -309,9 +309,9 @@
             
             const statusLabel = {
                 'pending': '신규 경고',
-                'assigned': '출동중',
-                'in_progress': '처리중',
-                'resolved': '처리완료'
+                'assigned': '출동 중',
+                'in_progress': '처리 중',
+                'resolved': '처리 완료'
             }[task.status] || '미정';
             
             const detectedTime = new Date(task.detectedAt);
@@ -347,7 +347,7 @@
                         <span class="font-medium ml-1">${teamName}</span>
                     </div>
                     <div class="col-span-2">
-                        <span class="text-gray-400">감지시각:</span>
+                        <span class="text-gray-400">감지 시간:</span>
                         <span class="font-medium ml-1">${timeStr}</span>
                     </div>
                 </div>
@@ -709,15 +709,15 @@
                     }
                 }
             }
-        }
+        }ㄴ
         
-        // 처리완료 모달 표시
+        // 처리 완료 모달 표시
         function showCompletionModal() {
             document.getElementById('completion-modal').classList.remove('hidden');
             initializeRatingSystem();
         }
         
-        // 처리완료 모달 숨기기
+        // 처리 완료 모달 숨기기
         function hideCompletionModal() {
             document.getElementById('completion-modal').classList.add('hidden');
             resetRatingSystem();

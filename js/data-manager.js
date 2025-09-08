@@ -228,7 +228,7 @@ class DataManager {
                 },
                 resolution: {
                     description: '단순 분실물로 확인되어 처리 완료',
-                    resolvedAt: getTimeString(-75), // 1시간 15분 전 처리완료
+                    resolvedAt: getTimeString(-75), // 1시간 15분 전 처리 완료
                     type: 'lost'
                 }
             },
@@ -255,7 +255,7 @@ class DataManager {
                 },
                 resolution: {
                     description: '오탐지로 확인됨',
-                    resolvedAt: getTimeString(-145), // 2시간 25분 전 처리완료
+                    resolvedAt: getTimeString(-145), // 2시간 25분 전 처리 완료
                     type: 'false'
                 }
             }

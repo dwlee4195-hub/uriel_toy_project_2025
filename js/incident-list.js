@@ -142,7 +142,7 @@ function createIncidentRow(incident, teams) {
             elapsedTimeText = `${elapsedMinutes}분`;
         }
     } else {
-        // 처리중인 경우: 감지시간부터 현재까지
+        // 처리 중인 경우: 감지시간부터 현재까지
         const detectedTime = new Date(incident.detectedAt);
         const now = new Date();
         const elapsedMs = now - detectedTime;
@@ -172,13 +172,13 @@ function createIncidentRow(incident, teams) {
         },
         in_progress: { 
             color: 'yellow-400', 
-            text: '처리중', 
+            text: '처리 중',
             icon: 'bg-yellow-500/20', 
             badge: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30' 
         },
         resolved: { 
             color: 'blue-400', 
-            text: '처리완료', 
+            text: '처리 완료',
             icon: 'bg-blue-500/20', 
             badge: 'bg-blue-500/10 text-blue-400 border border-blue-500/30' 
         }
