@@ -301,6 +301,8 @@ function updateProcessingStatus(incident, teams) {
             resolved: { 
                 text: '처리 완료',
                 cardClass: 'bg-dark-tertiary border-green-900/50',
+
+
                 textClass: 'text-green-400'
             }
         };
