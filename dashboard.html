@@ -87,6 +87,14 @@
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0.3; }
         }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
     </style>
 </head>
 <body class="bg-dark-bg text-gray-200 min-h-screen flex">
@@ -435,51 +443,170 @@
         });
     }
 
-    // 최근 경고 알림 업데이트
+    // 중복 방지용 Set
+    const shownToastIds = new Set();
+
+    function showToast(message, riskLevel, id) {
+      // 이미 표시된 경우 중복 방지
+      if (id && shownToastIds.has(id)) return;
+      if (id) shownToastIds.add(id);
+
+      const container = document.getElementById('toast-container');
+
+      // 위험도별 컬러 (다크모드 최적화)
+      let riskColor = 'bg-yellow-600 text-gray-900 shadow-lg';
+      if (riskLevel === 'high') riskColor = 'bg-red-700 text-white shadow-lg shadow-red-500/50';
+      else if (riskLevel === 'medium') riskColor = 'bg-orange-600 text-white shadow-lg shadow-orange-500/50';
+
+      const toast = document.createElement('div');
+      toast.className = `flex items-center p-3 rounded-lg ${riskColor} animate-slide-in transform transition-all duration-300`;
+      toast.style.boxShadow = '0 0 10px rgba(255,0,0,0.5)';
+      toast.innerHTML = `
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span>${message}</span>
+        `;
+
+      container.appendChild(toast);
+
+      // 펄스 애니메이션 효과
+      toast.animate([
+        { transform: 'scale(1)', opacity: 1 },
+        { transform: 'scale(1.1)', opacity: 0.8 },
+        { transform: 'scale(1)', opacity: 1 }
+      ], {
+        duration: 1500,
+        iterations: 1
+      });
+
+      // 5초 후 자동 제거
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-x-20');
+        setTimeout(() => {
+          toast.remove();
+          if (id) shownToastIds.delete(id);
+        }, 500);
+      }, 5000);
+    }
+
     function updateRecentAlerts() {
-        const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
-        const recentIncidents = incidents
-            .filter(i => i.status === 'pending')
-            .sort((a, b) => new Date(b.detectedAt) - new Date(a.detectedAt))
-            .slice(0, 3);
+      const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+      const recentIncidents = incidents
+      .filter(i => i.status === 'pending')
+      .sort((a, b) => new Date(b.detectedAt) - new Date(a.detectedAt))
+      .slice(0, 3);
 
-        const container = document.getElementById('recent-alerts');
+      const container = document.getElementById('recent-alerts');
 
-        if (recentIncidents.length === 0) {
-            container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">현재 활성 경고가 없습니다</p>';
-            return;
-        }
+      if (recentIncidents.length === 0) {
+        container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">현재 활성 경고가 없습니다</p>';
+        return;
+      }
 
-        container.innerHTML = recentIncidents.map(incident => {
-            const time = new Date(incident.detectedAt).toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+      container.innerHTML = recentIncidents.map(incident => {
+        const time = new Date(incident.detectedAt).toLocaleTimeString('ko-KR', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
 
-            let riskColor = 'text-yellow-500 bg-yellow-900/30';
-            if (incident.riskLevel === 'high') riskColor = 'text-red-500 bg-red-900/30';
-            else if (incident.riskLevel === 'medium') riskColor = 'text-orange-500 bg-orange-900/30';
+        // 토스트 표시 (중복 방지)
+        showToast(`${incident.location}에서 ${incident.objectType} 감지됨`, incident.riskLevel, incident.id);
 
-            return `
-                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-900 transition-colors cursor-pointer"
-                         onclick="window.location.href='incident-detail.html?id=${incident.id}'">
-                        <div class="flex items-center">
-                            <div class="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-200">${incident.location}</p>
-                                <p class="text-xs text-gray-400">${incident.objectType}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="${riskColor} text-xs px-2 py-1 rounded-full font-medium">
-                                ${incident.riskLevel === 'high' ? '고위험' : incident.riskLevel === 'medium' ? '중위험' : '저위험'}
-                            </span>
-                            <p class="text-xs text-gray-500 mt-1">${time}</p>
+        let riskColor = 'text-yellow-500 bg-yellow-900/30';
+        if (incident.riskLevel === 'high') riskColor = 'text-red-500 bg-red-900/30';
+        else if (incident.riskLevel === 'medium') riskColor = 'text-orange-500 bg-orange-900/30';
+
+        return `
+                <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-900 transition-colors cursor-pointer"
+                     onclick="window.location.href='incident-detail.html?id=${incident.id}'">
+                    <div class="flex items-center">
+                        <div class="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-200">${incident.location}</p>
+                            <p class="text-xs text-gray-400">${incident.objectType}</p>
                         </div>
                     </div>
-                `;
-        }).join('');
+                    <div class="text-right">
+                        <span class="${riskColor} text-xs px-2 py-1 rounded-full font-medium">
+                            ${incident.riskLevel === 'high' ? '고위험' : incident.riskLevel === 'medium' ? '중위험' : '저위험'}
+                        </span>
+                        <p class="text-xs text-gray-500 mt-1">${time}</p>
+                    </div>
+                </div>
+            `;
+      }).join('');
     }
+
+// function showToast(message, riskLevel) {
+    //     const container = document.getElementById('toast-container');
+    //
+    //     let riskColor = 'bg-yellow-600';
+    //     if (riskLevel === 'high') riskColor = 'bg-red-600';
+    //     else if (riskLevel === 'medium') riskColor = 'bg-orange-600';
+    //
+    //     const toast = document.createElement('div');
+    //     toast.className = `flex items-center p-3 rounded-lg shadow-lg text-white ${riskColor} animate-slide-in`;
+    //     toast.innerHTML = `
+    //     <i class="fas fa-exclamation-circle mr-2"></i>
+    //     <span>${message}</span>
+    // `;
+    //
+    //     container.appendChild(toast);
+    //
+    //     // 5초 후 자동 제거
+    //     setTimeout(() => {
+    //         toast.classList.add('opacity-0', 'translate-x-20', 'transition-all', 'duration-500');
+    //         setTimeout(() => toast.remove(), 500);
+    //     }, 5000);
+    // }
+    //
+    //
+    // function updateRecentAlerts() {
+    //     const incidents = JSON.parse(localStorage.getItem('incidents') || '[]');
+    //     const recentIncidents = incidents
+    //     .filter(i => i.status === 'pending')
+    //     .sort((a, b) => new Date(b.detectedAt) - new Date(a.detectedAt))
+    //     .slice(0, 3);
+    //
+    //     const container = document.getElementById('recent-alerts');
+    //
+    //     if (recentIncidents.length === 0) {
+    //         container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">현재 활성 경고가 없습니다</p>';
+    //         return;
+    //     }
+    //
+    //     container.innerHTML = recentIncidents.map(incident => {
+    //         const time = new Date(incident.detectedAt).toLocaleTimeString('ko-KR', {
+    //             hour: '2-digit',
+    //             minute: '2-digit'
+    //         });
+    //
+    //         // 🚨 팝업 알림 실행
+    //         showToast(`${incident.location}에서 ${incident.objectType} 감지됨`, incident.riskLevel);
+    //
+    //         let riskColor = 'text-yellow-500 bg-yellow-900/30';
+    //         if (incident.riskLevel === 'high') riskColor = 'text-red-500 bg-red-900/30';
+    //         else if (incident.riskLevel === 'medium') riskColor = 'text-orange-500 bg-orange-900/30';
+    //
+    //         return `
+    //         <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-900 transition-colors cursor-pointer"
+    //              onclick="window.location.href='incident-detail.html?id=${incident.id}'">
+    //             <div class="flex items-center">
+    //                 <div class="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></div>
+    //                 <div>
+    //                     <p class="text-sm font-medium text-gray-200">${incident.location}</p>
+    //                     <p class="text-xs text-gray-400">${incident.objectType}</p>
+    //                 </div>
+    //             </div>
+    //             <div class="text-right">
+    //                 <span class="${riskColor} text-xs px-2 py-1 rounded-full font-medium">
+    //                     ${incident.riskLevel === 'high' ? '고위험' : incident.riskLevel === 'medium' ? '중위험' : '저위험'}
+    //                 </span>
+    //                 <p class="text-xs text-gray-500 mt-1">${time}</p>
+    //             </div>
+    //         </div>
+    //     `;
+    //     }).join('');
+    // }
 </script>
 
 <!-- 공통 헤더 스크립트 -->
@@ -492,5 +619,7 @@
         '<i class="fas fa-tachometer-alt mr-3 text-primary-blue"></i>실시간 대시보드',
         '공항 보안 통합 관제 현황');
 </script>
+<!-- 팝업 알림 컨테이너 -->
+<div id="toast-container" class="fixed top-4 right-4 space-y-2 z-50"></div>
 </body>
 </html>

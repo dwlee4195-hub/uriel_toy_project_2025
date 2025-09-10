@@ -624,5 +624,7 @@
         document.getElementById('avgResponseTime').textContent = Math.round(pageIncidents.reduce((sum, i) => sum + (i.duration || 0), 0) / pageIncidents.length || 0) + '분';
         document.getElementById('processingCount').textContent = pageIncidents.filter(i => i.status === 'assigned' || i.status === 'in_progress').length;
     </script>
+
+    <script src="js/toast.js"></script>
 </body>
 </html>
