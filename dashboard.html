@@ -466,6 +466,11 @@
             <span>${message}</span>
         `;
 
+        // 클릭 시 상세 페이지 이동
+        toast.addEventListener('click', () => {
+            window.location.href = `incident-detail.html?id=${id}`;
+        });
+
       container.appendChild(toast);
 
       // 펄스 애니메이션 효과
