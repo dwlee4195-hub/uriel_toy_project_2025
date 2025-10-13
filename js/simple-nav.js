@@ -8,7 +8,7 @@
             <div class="p-6 border-b border-gray-700">
                 <a href="index.html" class="block">
                     <h2 class="text-xl font-bold">공항 관제 시스템</h2>
-                    <p class="text-sm text-gray-400 mt-1">UrielSoft</p>
+                    <p class="text-sm text-gray-400 mt-1">Urielsoft</p>
                 </a>
             </div>
             
